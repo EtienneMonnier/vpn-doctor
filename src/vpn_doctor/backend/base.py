@@ -1,24 +1,31 @@
-"""Common VPN backend interface."""
+"""Base VPN backend interfaces."""
 
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
+from vpn_doctor.models.diagnostic import DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
-from vpn_doctor.models.status import ConnectionStatus
+from vpn_doctor.models.status import VPNStatus
 
 
 class VPNBackend(ABC):
-    """Base class for all VPN backends."""
+    """Common interface for all VPN backends."""
+
+    name: str
 
     @abstractmethod
     def connect(self, profile: VPNProfile) -> None:
-        """Start a VPN connection."""
+        """Connect using the supplied profile."""
 
     @abstractmethod
     def disconnect(self) -> None:
-        """Stop the VPN connection."""
+        """Disconnect the active VPN session."""
 
     @abstractmethod
-    def status(self) -> ConnectionStatus:
-        """Return current connection status."""
+    def status(self) -> VPNStatus:
+        """Return current backend status."""
+
+    @abstractmethod
+    def diagnose(self, profile: VPNProfile) -> DiagnosticReport:
+        """Run backend-specific diagnostics."""
