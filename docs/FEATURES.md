@@ -1,45 +1,26 @@
-# Feature Ideas
+# Features
 
-## Diagnostic checks
+## MVP
 
-- Gateway TCP port test.
-- SSL certificate inspection.
-- Certificate fingerprint comparison.
-- NetworkManager profile validation.
-- VPN interface detection.
-- Route table analysis.
-- DNS server and suffix analysis.
-- Split tunnel versus full tunnel detection.
-- MTU/MRU comparison.
-- Packet capture test.
-- Backend comparison.
+- OpenFortiVPN profile
+- Connect / disconnect
+- Connection timer
+- Logs
+- Notifications
 
-## Repair actions
+## Diagnostics
 
-- Add `trusted-cert` to NetworkManager Fortinet profile.
-- Correct gateway port format.
-- Enable `never-default` for split tunnel.
-- Add DNS search domain.
-- Generate `openfortivpn` command.
-- Generate `openfortivpn` config file.
-- Generate support report.
+- Gateway check
+- Certificate check
+- DNS check
+- Route check
+- Internal reachability check
+- Tunnel health check
 
-## User interface
+## Later
 
-- Main status card.
-- Profile selector.
-- Run diagnosis button.
-- Step-by-step diagnostic timeline.
-- Problem severity levels.
-- Copy/paste commands.
-- Apply fix button.
-- Export report button.
-
-## Long-term ideas
-
-- Secure secret storage.
-- Historical connection logs.
-- Backend health scoring.
-- Known issue database.
-- Fedora package.
-- Flatpak package.
+- Multiple backends
+- Reports
+- Auto-fixes
+- Packaging
+- Translations

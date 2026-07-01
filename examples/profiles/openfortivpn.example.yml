@@ -1,0 +1,12 @@
+name: Example FortiGate
+backend: openfortivpn
+gateway: vpn.example.com
+port: 44443
+username: user@example.com
+realm: EXAMPLE-AD
+trusted_cert: "<sha256-fingerprint>"
+expected_dns:
+  - 192.0.2.53
+expected_routes:
+  - 192.0.2.0/24
+notes: "This file is an example. Do not store passwords here."

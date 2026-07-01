@@ -1,0 +1,11 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: vpn-doctor 0.0.1\n"
+"Language: fr\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Connected"
+msgstr "Connecté"
+
+msgid "Disconnected"
+msgstr "Déconnecté"
