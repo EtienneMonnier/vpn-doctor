@@ -1,0 +1,33 @@
+[project]
+name = "vpn-doctor"
+version = "0.0.1"
+description = "A Linux VPN troubleshooting and connection assistant."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+  { name = "Etienne Monnier" }
+]
+dependencies = []
+
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: POSIX :: Linux",
+  "Topic :: System :: Networking",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.6",
+]
+
+[project.scripts]
+vpn-doctor = "vpn_doctor.app:main"
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
