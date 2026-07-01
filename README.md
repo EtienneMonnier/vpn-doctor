@@ -4,6 +4,36 @@
 
 VPN Doctor is a Linux VPN troubleshooting and connection assistant.
 
+🛡️ VPN Doctor
+
+Diagnose. Connect. Protect.
+
+A modern Linux VPN troubleshooting and connection assistant.
+
+Current Status
+
+✔ Foundation completed
+🚧 Sprint 1 in progress
+
+Supported backends
+
+✔ OpenFortiVPN
+⏳ WireGuard
+⏳ OpenVPN
+⏳ OpenConnect
+
+License
+
+MIT
+
+Foundation      ██████████ 100%
+Core            ░░░░░░░░░░   0%
+GUI             ░░░░░░░░░░   0%
+Diagnostics     ░░░░░░░░░░   0%
+Plugins         ░░░░░░░░░░   0%
+Release 1.0     ░░░░░░░░░░   0%
+
+
 It is not designed to replace NetworkManager. Its goal is to help users understand why a VPN connection fails, choose the best available backend, and apply safe fixes when possible.
 
 ## Project goals
@@ -48,3 +78,4 @@ Start here:
 2. [`ROADMAP.md`](ROADMAP.md)
 3. [`AGENTS.md`](AGENTS.md)
 4. [`docs/INDEX.md`](docs/INDEX.md)
+

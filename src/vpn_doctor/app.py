@@ -1,6 +1,10 @@
-def main() -> None:
-    print("VPN Doctor MVP placeholder")
+from vpn_doctor.core.application import VPNDoctorApplication
+
+
+def main() -> int:
+    app = VPNDoctorApplication()
+    return app.run()
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

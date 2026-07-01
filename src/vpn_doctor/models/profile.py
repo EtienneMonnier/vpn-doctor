@@ -1,28 +1,22 @@
-"""VPN profile model.
-
-Profiles must not contain secrets.
-"""
+"""VPN profile model."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
-
-
-class BackendType(str, Enum):
-    OPENFORTIVPN = "openfortivpn"
-    WIREGUARD = "wireguard"
-    OPENVPN = "openvpn"
-    OPENCONNECT = "openconnect"
-    STRONGSWAN = "strongswan"
 
 
 @dataclass(frozen=True)
 class VPNProfile:
+    """VPN profile definition.
+
+    Secrets must never be stored in this model.
+    Passwords belong in GNOME Keyring / Secret Service.
+    """
+
     name: str
-    backend: BackendType
-    gateway: str
-    port: int | None = None
+    backend: str
+    host: str
+    port: int
     username: str | None = None
-    realm: str | None = None
     trusted_cert: str | None = None
+    realm: str | None = None
