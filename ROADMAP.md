@@ -110,3 +110,15 @@ Goals:
 - report export;
 - automatic safe fixes;
 - health score.
+
+
+## Sprint 2.4 - GTK/libadwaita UI skeleton
+
+Status: implemented in feature pack.
+
+Goals:
+- Add experimental GUI entry point.
+- Display current VPN status.
+- Add Connect and Disconnect buttons.
+- Add log area.
+- Keep backend execution safe until UI wiring is implemented.

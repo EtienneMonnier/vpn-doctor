@@ -24,6 +24,7 @@ dev = [
 
 [project.scripts]
 vpn-doctor = "vpn_doctor.app:main"
+vpn-doctor-gui = "vpn_doctor.ui.app:main"
 
 [tool.ruff]
 line-length = 100

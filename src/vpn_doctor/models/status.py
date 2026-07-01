@@ -12,7 +12,7 @@ class VPNConnectionState(StrEnum):
     DISCONNECTED = "disconnected"
     CONNECTING = "connecting"
     AUTHENTICATING = "authenticating"
-    CONFIGURING = "configuring"
+    NEGOTIATING = "negotiating"
     CONNECTED = "connected"
     DISCONNECTING = "disconnecting"
     FAILED = "failed"
