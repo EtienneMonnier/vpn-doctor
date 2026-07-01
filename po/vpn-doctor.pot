@@ -1,0 +1,4 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: vpn-doctor 0.0.1\n"
+"Content-Type: text/plain; charset=UTF-8\n"

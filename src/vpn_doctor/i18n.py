@@ -1,3 +1,7 @@
+"""Internationalization helpers for VPN Doctor."""
+
+from __future__ import annotations
+
 import gettext
 
 APP_NAME = "vpn-doctor"

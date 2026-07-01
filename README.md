@@ -1,45 +1,50 @@
 # VPN Doctor
 
-VPN Doctor is a Linux desktop assistant designed to diagnose, repair and document VPN connection issues.
+**Diagnose. Connect. Protect.**
 
-It does not aim to replace NetworkManager. Instead, it helps users and administrators understand why a VPN profile fails, compares available backends, and suggests or applies safe corrections.
+VPN Doctor is a Linux VPN troubleshooting and connection assistant.
 
-## Goals
+It is not designed to replace NetworkManager. Its goal is to help users understand why a VPN connection fails, choose the best available backend, and apply safe fixes when possible.
 
-- Diagnose VPN problems clearly.
-- Work with NetworkManager when possible.
-- Detect backend-specific issues.
-- Compare NetworkManager plugins with direct CLI tools.
-- Provide human-readable explanations.
-- Generate support reports.
-- Offer safe corrective actions.
-- Integrate with GNOME and Linux desktops.
+## Project goals
 
-## Initial target
+- Provide a modern Linux desktop experience.
+- Diagnose common VPN failures.
+- Explain problems in plain language.
+- Support multiple VPN backends over time.
+- Start with OpenFortiVPN because it solves a real-world tested case.
+- Integrate with GNOME Keyring / Secret Service for secrets.
+- Use gettext for translations from the beginning.
 
-The first backend will focus on Fortinet SSL-VPN because `NetworkManager-fortisslvpn` can behave differently from `openfortivpn`.
+## First MVP
 
-The initial real-world case behind this project:
+The first version focuses on one working backend:
 
-- FortiGate SSL-VPN on custom port `44443`.
-- Self-signed FortiGate certificate.
-- `openfortivpn` works.
-- `NetworkManager-fortisslvpn` connects but traffic does not return.
-- Manual `trusted-cert` addition is required.
-- Split tunnel behavior must be checked.
+- OpenFortiVPN profile support
+- Connect / disconnect
+- Connection timer
+- Live log viewer
+- Basic diagnostics
+- GNOME notifications
+- Secure password handling
 
-## Project direction
+## Long-term vision
 
-VPN Doctor should be a diagnostic and repair assistant, not another generic VPN manager.
+VPN Doctor should become a backend-independent Linux VPN assistant supporting OpenFortiVPN, WireGuard, OpenVPN, OpenConnect, and StrongSwan.
 
-It should answer questions such as:
+## Branding
 
-- Is the VPN gateway reachable?
-- Is the certificate trusted?
-- Is the tunnel really up?
-- Are routes installed correctly?
-- Is DNS configured correctly?
-- Is traffic leaving the tunnel?
-- Is traffic returning?
-- Is the NetworkManager plugin failing while the CLI backend works?
-- What should be fixed?
+Name: **VPN Doctor**
+
+Tagline: **Diagnose. Connect. Protect.**
+
+Visual direction: blue shield + stethoscope.
+
+## Documentation
+
+Start here:
+
+1. [`ARCHITECTURE.md`](ARCHITECTURE.md)
+2. [`ROADMAP.md`](ROADMAP.md)
+3. [`AGENTS.md`](AGENTS.md)
+4. [`docs/INDEX.md`](docs/INDEX.md)

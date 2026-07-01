@@ -1,0 +1,1 @@
+GTK4 + Libadwaita chosen for GNOME integration.

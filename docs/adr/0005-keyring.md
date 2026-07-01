@@ -1,0 +1,1 @@
+Secrets stored in GNOME Keyring.

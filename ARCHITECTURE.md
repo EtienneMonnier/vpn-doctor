@@ -1,99 +1,201 @@
-# Architecture
+# VPN Doctor Architecture
 
-VPN Doctor should be structured around diagnostics, not around direct VPN ownership.
+## Purpose
 
-## High-level components
+This document defines the global architecture of VPN Doctor.
+
+VPN Doctor must remain modular. The GUI must not know how OpenFortiVPN, WireGuard or OpenVPN work internally. The UI asks application services to perform actions, and services delegate to backends and diagnostics providers.
+
+## High-level flow
 
 ```text
-GUI / CLI
-   |
-Diagnostic Engine
-   |
-   +-- NetworkManager Inspector
-   +-- Backend Test Runner
-   +-- Route Analyzer
-   +-- DNS Analyzer
-   +-- Certificate Analyzer
-   +-- Traffic Analyzer
-   +-- Report Generator
+User Interface
+     ↓
+Application Controller
+     ↓
+Services
+     ↓
+Diagnostics Engine
+     ↓
+Backend Interface
+     ↓
+Backend Implementations
+     ↓
+Linux System
 ```
 
-## Backend philosophy
+## Main layers
 
-VPN Doctor should not reimplement VPN protocols.
+### UI layer
 
-It should use existing tools:
+Location:
 
-- NetworkManager
-- openfortivpn
-- openconnect
-- openvpn
-- wg / wg-quick
-- strongSwan / nm-strongswan
+```text
+src/vpn_doctor/ui/
+```
 
-## Diagnostic flow
+Responsibilities:
 
-1. Read VPN profile.
-2. Identify backend type.
-3. Check gateway reachability.
-4. Check certificate and trust status.
-5. Start or inspect tunnel.
-6. Inspect interface.
-7. Inspect routes.
-8. Inspect DNS.
-9. Run connectivity tests.
-10. Compare with direct backend if available.
-11. Produce diagnosis.
-12. Suggest fixes.
+- Display profiles.
+- Display connection state.
+- Display logs.
+- Display diagnostics results.
+- Trigger user actions.
+- Show notifications and toasts.
 
-## Repair model
+Forbidden:
 
-Repairs must be explicit and reversible.
+- Direct subprocess calls.
+- Direct calls to `openfortivpn`, `wg`, `openvpn`, `ip`, `nmcli`.
+- Direct password storage.
+- Direct route manipulation.
 
-The application should show:
+### Controller layer
 
-- what will be changed;
-- why it will be changed;
-- the exact command or file modification;
-- how to undo it.
+Location:
 
-## Privileges
+```text
+src/vpn_doctor/core/
+```
 
-Most checks can run as user.
+Responsibilities:
 
-Privileged operations should be isolated:
+- Coordinate user actions.
+- Call services.
+- Convert service state to UI-friendly state.
+- Keep UI logic thin.
 
-- route changes;
-- NetworkManager profile modifications;
-- packet captures;
-- starting some VPN clients;
-- writing system configuration.
+### Services layer
 
-Potential approach:
+Location:
 
-- use `pkexec` for specific actions;
-- avoid running the whole GUI as root;
-- never store passwords in plain text.
+```text
+src/vpn_doctor/services/
+```
+
+Core services:
+
+- `ProfileService`
+- `ConnectionService`
+- `DiagnosticsService`
+- `SecretService`
+- `NotificationService`
+- `SettingsService`
+- `LogService`
+
+### Backend layer
+
+Location:
+
+```text
+src/vpn_doctor/backend/
+```
+
+Responsibilities:
+
+- Implement VPN-specific logic.
+- Run the underlying tool safely.
+- Parse backend output.
+- Report status changes.
+- Never expose raw secrets.
+
+Initial backend:
+
+- OpenFortiVPN
+
+Future backends:
+
+- WireGuard
+- OpenVPN
+- OpenConnect
+- StrongSwan
+
+### Diagnostics layer
+
+Location:
+
+```text
+src/vpn_doctor/diagnostics/
+```
+
+Responsibilities:
+
+- Run diagnostic checks.
+- Produce structured results.
+- Suggest safe fixes.
+- Explain failures in human-readable language.
+
+### Models layer
+
+Location:
+
+```text
+src/vpn_doctor/models/
+```
+
+Core models:
+
+- `VPNProfile`
+- `BackendType`
+- `ConnectionStatus`
+- `DiagnosticResult`
+- `DiagnosticSeverity`
+- `CertificateFingerprint`
+- `RouteInfo`
+- `DnsInfo`
+
+## Dependency rules
+
+Allowed direction:
+
+```text
+ui -> core -> services -> backend/diagnostics/models/utils
+```
+
+Not allowed:
+
+```text
+backend -> ui
+diagnostics -> ui
+models -> services
+utils -> services
+```
+
+## Error handling
+
+Every technical error should be mapped to a user-facing explanation when possible.
+
+Bad:
+
+```text
+Process exited with code 1
+```
+
+Better:
+
+```text
+The VPN gateway certificate is not trusted.
+VPN Doctor can store this fingerprint if you trust this gateway.
+```
 
 ## Internationalization
 
-VPN Doctor will use gettext for translations.
+All user-facing strings must go through gettext.
 
-The default language is English.
+See:
 
-Initial planned languages:
+```text
+docs/development/I18N_GUIDE.md
+```
 
-- English
-- French
+## Security
 
-All user-facing strings must be wrapped with `_()` from `vpn_doctor.i18n`.
+Secrets must never be stored in profile files.
 
-## Internationalization
+Use Secret Service / GNOME Keyring.
 
-VPN Doctor will be designed for internationalization from the beginning.
+See:
 
-- Default language: English
-- Initial translation target: French
-- Translation system: gettext
-- All user-facing strings must use `vpn_doctor.i18n._()`
-- Documentation starts in English, with French translations possible later
+```text
+docs/development/SECURITY_GUIDE.md
+```
