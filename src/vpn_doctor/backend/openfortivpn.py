@@ -4,17 +4,17 @@ from __future__ import annotations
 
 import shutil
 import socket
+from collections.abc import Callable
 from contextlib import closing
 from dataclasses import dataclass, field
-from collections.abc import Callable
 
 from vpn_doctor.backend.base import VPNBackend
 from vpn_doctor.backend.command import BackendCommand
-from vpn_doctor.backend.openfortivpn_process import OpenFortiVPNProcess
 from vpn_doctor.backend.log_parser import OpenFortiVPNLogParser
+from vpn_doctor.backend.openfortivpn_process import OpenFortiVPNProcess
 from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
-from vpn_doctor.models.status import VPNConnectionState, VPNStatus
+from vpn_doctor.models.status import VPNStatus
 
 
 @dataclass
@@ -34,9 +34,19 @@ class OpenFortiVPNBackend(VPNBackend):
         password: str | None = None,
         on_log: Callable[[str], None] | None = None,
         dry_run: bool = False,
-    ) -> list[str]:
+        wait: bool = False,
+        timeout_seconds: float = 60.0,
+    ) -> list[str] | VPNStatus:
         """Start openfortivpn or return the command when dry_run is enabled."""
-        return self.process.connect(profile, password=password, on_log=on_log, dry_run=dry_run)
+        command = self.process.connect(profile, password=password, on_log=on_log, dry_run=dry_run)
+
+        if dry_run:
+            return command
+
+        if wait:
+            return self.process.wait_until_terminal_or_connected(timeout_seconds=timeout_seconds)
+
+        return command
 
     def disconnect(self) -> None:
         """Disconnect the active VPN session."""

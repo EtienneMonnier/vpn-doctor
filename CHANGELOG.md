@@ -37,3 +37,12 @@
 - Added log parser and connection state machine.
 - Added safe CLI status and dry-run connect commands.
 
+
+
+## Sprint 2.3
+
+- Added real OpenFortiVPN CLI execution path.
+- Added `connect --wait` and `--timeout`.
+- Added environment-based temporary secret provider.
+- Added JSON profile loading from user configuration.
+- Added tests for settings, secrets and connection wait lifecycle.

@@ -88,3 +88,13 @@ private certificates must not be stored in source code, profile files, examples 
 
 Future secret storage will use the Linux Secret Service API through GNOME Keyring or a
 compatible backend.
+
+
+## Current development status
+
+- Foundation documentation: completed
+- Core CLI: completed
+- OpenFortiVPN process manager: completed
+- OpenFortiVPN real CLI execution path: in progress / Sprint 2.3
+- GTK/libadwaita UI: planned
+

@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import argparse
 
+from vpn_doctor.backend.errors import BackendProcessError
 from vpn_doctor.backend.manager import BackendManager
 from vpn_doctor.backend.openfortivpn import OpenFortiVPNBackend
 from vpn_doctor.backend.registry import BackendRegistry
+from vpn_doctor.models.status import VPNStatus
+from vpn_doctor.services.secret_service import EnvironmentSecretProvider
 from vpn_doctor.services.settings_service import SettingsService
 
 
@@ -15,6 +18,7 @@ class ApplicationController:
 
     def __init__(self) -> None:
         self.settings = SettingsService()
+        self.secret_provider = EnvironmentSecretProvider()
 
         registry = BackendRegistry()
         registry.register(OpenFortiVPNBackend())
@@ -36,6 +40,17 @@ class ApplicationController:
             action="store_true",
             help="Print the backend command without starting a VPN process",
         )
+        connect_parser.add_argument(
+            "--wait",
+            action="store_true",
+            help="Wait until the backend reports connected, failed or timeout",
+        )
+        connect_parser.add_argument(
+            "--timeout",
+            type=float,
+            default=60.0,
+            help="Maximum wait time in seconds when --wait is used",
+        )
 
         subparsers.add_parser("disconnect", help="Disconnect the active VPN session")
 
@@ -55,7 +70,11 @@ class ApplicationController:
             return self._status()
 
         if args.command == "connect":
-            return self._connect(dry_run=args.dry_run)
+            return self._connect(
+                dry_run=args.dry_run,
+                wait=args.wait,
+                timeout_seconds=args.timeout,
+            )
 
         if args.command == "disconnect":
             return self._disconnect()
@@ -77,25 +96,43 @@ class ApplicationController:
         return 0 if result.success else 1
 
     def _profiles(self) -> int:
-        profile = self.settings.load_default_profile()
-        print(f"- {profile.name} ({profile.backend})")
+        for profile in self.settings.load_profiles():
+            print(f"- {profile.name} ({profile.backend})")
         return 0
 
     def _status(self) -> int:
         profile = self.settings.load_default_profile()
         status = self.backend_manager.status(profile)
-        print(f"{status.backend}: {status.state}")
-        if status.message:
-            print(status.message)
+        self._print_status(status)
         return 0
 
-    def _connect(self, dry_run: bool = False) -> int:
+    def _connect(self, dry_run: bool = False, wait: bool = False, timeout_seconds: float = 60.0) -> int:
         profile = self.settings.load_default_profile()
-        command = self.backend_manager.connect(profile, dry_run=dry_run)
+        password = None if dry_run else self.secret_provider.get_password(profile)
+
+        def print_log(line: str) -> None:
+            print(line)
+
+        try:
+            result = self.backend_manager.connect(
+                profile,
+                password=password,
+                on_log=print_log,
+                dry_run=dry_run,
+                wait=wait,
+                timeout_seconds=timeout_seconds,
+            )
+        except BackendProcessError as exc:
+            print(f"Backend process error: {exc}")
+            return 1
 
         if dry_run:
-            print(" ".join(command))
+            print(" ".join(result))
             return 0
+
+        if isinstance(result, VPNStatus):
+            self._print_status(result)
+            return 0 if result.state.value == "connected" else 1
 
         print("Connection started")
         return 0
@@ -105,3 +142,9 @@ class ApplicationController:
         self.backend_manager.disconnect(profile)
         print("Disconnected")
         return 0
+
+    @staticmethod
+    def _print_status(status: VPNStatus) -> None:
+        print(f"{status.backend}: {status.state}")
+        if status.message:
+            print(status.message)

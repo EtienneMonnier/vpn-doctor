@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
@@ -58,6 +59,32 @@ class OpenFortiVPNProcess:
 
         self.runner.start(command, on_line=lambda line: self._handle_line(line, on_log), stdin_text=stdin_text)
         return command
+
+    def wait_until_terminal_or_connected(self, timeout_seconds: float = 60.0) -> VPNStatus:
+        """Wait until connected, failed, disconnected or timeout."""
+        deadline = time.monotonic() + timeout_seconds
+
+        while time.monotonic() < deadline:
+            status = self.status()
+            if status.state in {
+                VPNConnectionState.CONNECTED,
+                VPNConnectionState.FAILED,
+                VPNConnectionState.DISCONNECTED,
+            }:
+                return status
+
+            if self.runner.process is not None and self.runner.process.poll() is not None:
+                if status.state != VPNConnectionState.CONNECTED:
+                    self.state_machine.transition(
+                        VPNConnectionState.DISCONNECTED,
+                        "openfortivpn process exited",
+                    )
+                return self.status()
+
+            time.sleep(0.1)
+
+        self.state_machine.transition(VPNConnectionState.FAILED, "Connection timeout")
+        return self.status()
 
     def _handle_line(self, line: str, on_log: Callable[[str], None] | None = None) -> None:
         self.logs.append(line)

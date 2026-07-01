@@ -14,11 +14,7 @@ LineCallback = Callable[[str], None]
 
 @dataclass
 class ProcessRunner:
-    """Thin wrapper around subprocess.Popen.
-
-    It keeps process handling outside backend business logic and makes tests
-    easier to write.
-    """
+    """Thin wrapper around subprocess.Popen."""
 
     process: subprocess.Popen[str] | None = None
     _reader_thread: threading.Thread | None = field(default=None, init=False, repr=False)
@@ -63,6 +59,15 @@ class ProcessRunner:
     @property
     def is_running(self) -> bool:
         return self.process is not None and self.process.poll() is None
+
+    def wait(self, timeout: float | None = None) -> int | None:
+        """Wait for process termination and return the exit code.
+
+        Returns None when no process exists.
+        """
+        if self.process is None:
+            return None
+        return self.process.wait(timeout=timeout)
 
     def terminate(self, timeout: float = 5.0) -> None:
         if self.process is None:

@@ -110,3 +110,15 @@ Goals:
 - report export;
 - automatic safe fixes;
 - health score.
+
+
+## Sprint 2.3 - Real OpenFortiVPN CLI execution
+
+Status: implemented in feature pack.
+
+Goals:
+- Start OpenFortiVPN from the CLI.
+- Forward logs in real time.
+- Wait for connected / failed / timeout.
+- Load local profiles from the user config directory.
+- Keep secrets outside the repository.
