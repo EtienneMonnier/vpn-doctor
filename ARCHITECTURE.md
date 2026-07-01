@@ -74,3 +74,26 @@ Potential approach:
 - use `pkexec` for specific actions;
 - avoid running the whole GUI as root;
 - never store passwords in plain text.
+
+## Internationalization
+
+VPN Doctor will use gettext for translations.
+
+The default language is English.
+
+Initial planned languages:
+
+- English
+- French
+
+All user-facing strings must be wrapped with `_()` from `vpn_doctor.i18n`.
+
+## Internationalization
+
+VPN Doctor will be designed for internationalization from the beginning.
+
+- Default language: English
+- Initial translation target: French
+- Translation system: gettext
+- All user-facing strings must use `vpn_doctor.i18n._()`
+- Documentation starts in English, with French translations possible later
