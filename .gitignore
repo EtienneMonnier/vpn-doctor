@@ -34,3 +34,14 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Test/cache artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local generated files
+*.bak
+*.orig

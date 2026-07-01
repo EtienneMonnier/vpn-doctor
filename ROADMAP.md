@@ -1,56 +1,112 @@
 # Roadmap
 
-## v0.1 - Fortinet diagnostic prototype
+VPN Doctor is developed in small, reviewable sprints.
 
-- GTK/libadwaita application skeleton.
-- Fortinet SSL-VPN profile input.
-- Gateway reachability test.
-- Certificate fingerprint extraction.
-- `trusted-cert` recommendation.
-- NetworkManager profile inspection.
-- `openfortivpn` test mode.
-- Basic route, DNS and tunnel checks.
-- Exportable diagnostic report.
+## Version strategy
 
-## v0.2 - Guided repair
+| Version | Meaning |
+| --- | --- |
+| `v0.0.x` | foundation, architecture and prototypes |
+| `v0.1.x` | OpenFortiVPN MVP |
+| `v0.2.x` | diagnostics engine |
+| `v0.3.x` | profile management and secrets |
+| `v0.4.x` | GTK4 / Libadwaita UI |
+| `v0.5.x` | multiple backends |
+| `v1.0.0` | first stable release |
 
-- Add missing `trusted-cert` to NetworkManager profiles.
-- Detect wrong custom port configuration.
-- Detect full tunnel versus split tunnel.
-- Suggest `ipv4.never-default yes` when appropriate.
-- Detect DNS suffix issues.
-- Offer safe command preview before applying changes.
+## Sprint 0 - Foundation
 
-## v0.3 - Traffic analysis
+Status: complete.
 
-- Run controlled ping tests.
-- Capture traffic on VPN interface.
-- Detect packets leaving without replies.
-- Compare NetworkManager and CLI backend behavior.
-- Detect possible MTU/MRU problems.
+Delivered:
 
-## v0.4 - Multi-backend framework
+- repository structure;
+- documentation foundation;
+- branding direction;
+- initial architecture;
+- AGENTS.md;
+- ADR structure.
 
-- Backend abstraction layer.
-- Fortinet backend using `openfortivpn`.
-- NetworkManager backend inspection.
-- OpenConnect detection.
-- OpenVPN detection.
-- WireGuard detection.
+## Sprint 1 - Core foundation
 
-## v0.5 - Desktop integration
+Status: complete.
 
-- GNOME notifications.
-- System tray or background status where available.
-- Secure secret storage through GNOME Keyring / Secret Service.
-- Application launcher.
-- Light/dark theme support.
+Delivered:
 
-## v1.0 - Stable release
+- package structure;
+- application bootstrap;
+- CLI entry point;
+- controller;
+- models;
+- OpenFortiVPN backend skeleton;
+- basic diagnostics;
+- first tests.
 
-- RPM package for Fedora.
-- Flatpak packaging study.
-- Documentation.
-- Translation support.
-- Stable diagnostic reports.
-- Safe repair mode.
+## Sprint 2 - OpenFortiVPN backend design and safe lifecycle
+
+Status: in progress.
+
+Goals:
+
+- document backend lifecycle;
+- define connection state machine;
+- define log parsing strategy;
+- define process management rules;
+- add tests before real lifecycle implementation;
+- keep secrets out of command line and logs.
+
+Sprint 2 is intentionally careful. A VPN backend touches networking, subprocesses and
+secrets. The implementation must be testable and easy to reason about.
+
+## Sprint 3 - Diagnostics engine
+
+Goals:
+
+- global diagnostic result model;
+- route checks;
+- DNS checks;
+- gateway checks;
+- certificate checks;
+- PPP interface checks;
+- readable suggestions.
+
+## Sprint 4 - Profile and secret management
+
+Goals:
+
+- profile storage format;
+- Secret Service integration;
+- import/export;
+- safe sample profiles;
+- validation rules.
+
+## Sprint 5 - GTK4 / Libadwaita UI
+
+Goals:
+
+- main window;
+- profile selector;
+- connect/disconnect;
+- live logs;
+- status pill;
+- timer;
+- diagnostic report view.
+
+## Sprint 6 - Packaging
+
+Goals:
+
+- Flatpak manifest;
+- RPM packaging notes;
+- DEB packaging notes;
+- GitHub release assets.
+
+## Later
+
+- NetworkManager inspection;
+- WireGuard backend;
+- OpenVPN backend;
+- OpenConnect backend;
+- report export;
+- automatic safe fixes;
+- health score.
