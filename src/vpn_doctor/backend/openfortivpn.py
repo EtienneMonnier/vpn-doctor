@@ -1,89 +1,50 @@
-"""OpenFortiVPN backend.
-
-Sprint 2 keeps this backend safe: diagnostics, command construction and log parsing
-are implemented, while real connection lifecycle will be expanded carefully.
-"""
+"""OpenFortiVPN backend."""
 
 from __future__ import annotations
 
 import shutil
 import socket
 from contextlib import closing
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from collections.abc import Callable
 
 from vpn_doctor.backend.base import VPNBackend
-from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport, DiagnosticSeverity
+from vpn_doctor.backend.command import BackendCommand
+from vpn_doctor.backend.openfortivpn_process import OpenFortiVPNProcess
+from vpn_doctor.backend.log_parser import OpenFortiVPNLogParser
+from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
 
 
-@dataclass(frozen=True)
-class OpenFortiVPNCommand:
-    """Command parts for openfortivpn.
-
-    This object must never contain passwords.
-    """
-
-    argv: list[str]
-
-
-class OpenFortiVPNLogParser:
-    """Parse openfortivpn logs into normalized states."""
-
-    def parse_state(self, line: str) -> VPNConnectionState | None:
-        normalized = line.lower()
-
-        if "connected to gateway" in normalized:
-            return VPNConnectionState.CONNECTING
-        if "authenticated" in normalized:
-            return VPNConnectionState.AUTHENTICATING
-        if "remote gateway has allocated a vpn" in normalized:
-            return VPNConnectionState.CONFIGURING
-        if "tunnel is up and running" in normalized:
-            return VPNConnectionState.CONNECTED
-        if "gateway certificate validation failed" in normalized:
-            return VPNConnectionState.FAILED
-        if "could not authenticate" in normalized:
-            return VPNConnectionState.FAILED
-        if "connection terminated" in normalized:
-            return VPNConnectionState.DISCONNECTED
-
-        return None
-
-
+@dataclass
 class OpenFortiVPNBackend(VPNBackend):
     """Backend implementation for openfortivpn."""
 
-    name = "openfortivpn"
+    name: str = "openfortivpn"
+    process: OpenFortiVPNProcess = field(default_factory=OpenFortiVPNProcess)
 
-    def __init__(self) -> None:
-        self._status = VPNStatus(
-            backend=self.name,
-            state=VPNConnectionState.DISCONNECTED,
-            message="Not connected",
-        )
-        self.log_parser = OpenFortiVPNLogParser()
+    def build_command(self, profile: VPNProfile) -> BackendCommand:
+        """Build the openfortivpn command without starting a process."""
+        return BackendCommand(argv=self.process.build_command(profile))
 
-    def build_command(self, profile: VPNProfile) -> OpenFortiVPNCommand:
-        """Build an openfortivpn command without secrets."""
-        argv = ["openfortivpn", f"{profile.host}:{profile.port}"]
-
-        if profile.username:
-            argv.extend(["-u", profile.username])
-
-        if profile.trusted_cert:
-            argv.extend(["--trusted-cert", profile.trusted_cert])
-
-        return OpenFortiVPNCommand(argv=argv)
-
-    def connect(self, profile: VPNProfile) -> None:
-        raise NotImplementedError("Real OpenFortiVPN connection is planned for Sprint 2 implementation")
+    def connect(
+        self,
+        profile: VPNProfile,
+        password: str | None = None,
+        on_log: Callable[[str], None] | None = None,
+        dry_run: bool = False,
+    ) -> list[str]:
+        """Start openfortivpn or return the command when dry_run is enabled."""
+        return self.process.connect(profile, password=password, on_log=on_log, dry_run=dry_run)
 
     def disconnect(self) -> None:
-        raise NotImplementedError("Real OpenFortiVPN disconnection is planned for Sprint 2 implementation")
+        """Disconnect the active VPN session."""
+        self.process.disconnect()
 
     def status(self) -> VPNStatus:
-        return self._status
+        """Return current backend status."""
+        return self.process.status()
 
     def diagnose(self, profile: VPNProfile) -> DiagnosticReport:
         items: list[DiagnosticItem] = []
@@ -97,7 +58,6 @@ class OpenFortiVPNBackend(VPNBackend):
                 suggestion=None
                 if binary_found
                 else "Install openfortivpn using your distribution package manager",
-                severity=DiagnosticSeverity.ERROR if not binary_found else DiagnosticSeverity.INFO,
             )
         )
 
@@ -112,16 +72,6 @@ class OpenFortiVPNBackend(VPNBackend):
                 suggestion=None
                 if gateway_ok
                 else "Check hostname, port, firewall or network connectivity",
-                severity=DiagnosticSeverity.ERROR if not gateway_ok else DiagnosticSeverity.INFO,
-            )
-        )
-
-        command = self.build_command(profile)
-        items.append(
-            DiagnosticItem(
-                name="command build",
-                success="VPNpass" not in " ".join(command.argv),
-                message="openfortivpn command can be built without embedding secrets",
             )
         )
 
