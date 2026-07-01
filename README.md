@@ -88,3 +88,23 @@ private certificates must not be stored in source code, profile files, examples 
 
 Future secret storage will use the Linux Secret Service API through GNOME Keyring or a
 compatible backend.
+
+
+## Experimental GUI
+
+Sprint 2.4 introduces the first GTK4/libadwaita UI skeleton.
+
+Run:
+
+```bash
+vpn-doctor gui
+```
+
+or:
+
+```bash
+vpn-doctor-gui
+```
+
+The UI currently displays connection status and a log area. Real GUI-driven
+connect/disconnect will be added in the next sprint.
