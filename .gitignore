@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+
+# VSCode
+.vscode/
+
+# JetBrains
+.idea/
+
+# GNOME Builder
+_build/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# Python virtualenv
+.env
+
+# Packaging
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
