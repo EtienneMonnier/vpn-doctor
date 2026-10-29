@@ -8,6 +8,7 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
+from vpn_doctor import __version__
 from vpn_doctor.backend.errors import BackendProcessError
 from vpn_doctor.backend.manager import BackendManager
 from vpn_doctor.backend.networkmanager import NetworkManagerBackend
@@ -322,7 +323,7 @@ class ApplicationController:
         args = parser.parse_args(argv)
 
         if args.version:
-            print("VPN Doctor 0.0.1")
+            print(f"VPN Doctor {__version__}")
             return 0
 
         if getattr(args, "profile", None):
