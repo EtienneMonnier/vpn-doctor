@@ -157,3 +157,5 @@ class ApplicationController:
         print(f"{status.backend}: {status.state}")
         if status.message:
             print(status.message)
+        if status.suggestion:
+            print(f"Suggestion: {status.suggestion}")
