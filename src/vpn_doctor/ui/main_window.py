@@ -175,7 +175,18 @@ def run_ui() -> int:
         def build_connection_card(self) -> Gtk.Box:
             box = card("vd-connection-card")
             box.append(label(_("■ CONNECTION"), "vd-section-title"))
-            box.append(label(self.profile.name, "vd-connection-name"))
+            name_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+            name = label(self.profile.name, "vd-connection-name")
+            name.set_hexpand(True)
+            name_row.append(name)
+            if self.profile.nm_uuid is not None:
+                edit = Gtk.Button(label=_("Settings…"))
+                edit.add_css_class("flat")
+                edit.add_css_class("vd-edit-button")
+                edit.set_tooltip_text(_("Edit this connection in NetworkManager"))
+                edit.connect("clicked", lambda _button: self.window.open_connection_editor(self.profile))
+                name_row.append(edit)
+            box.append(name_row)
 
             profile = self.profile
             gateway = f"{profile.host}:{profile.port}" if profile.port else profile.host
@@ -447,6 +458,7 @@ def run_ui() -> int:
                 self.start_boot_animation()
             else:
                 self.stack.set_visible_child_name("main")
+                self.autoconnect()
             GLib.timeout_add(STATUS_REFRESH_MS, self.refresh_tabs)
             GLib.timeout_add(CONFLICT_REFRESH_MS, self.check_conflicts)
 
@@ -500,6 +512,35 @@ def run_ui() -> int:
         def finish_boot(self) -> None:
             if self.stack.get_visible_child_name() == "boot":
                 self.stack.set_visible_child_name("main")
+                self.autoconnect()
+
+        def autoconnect(self) -> None:
+            """Connect the default connection when Preferences ask for it."""
+            profile = controller.startup_connection()
+            if profile is None:
+                return
+            panel = self.open_tab(profile)
+            if panel.state == VPNConnectionState.DISCONNECTED:
+                panel.append_log(_("Connecting automatically (Preferences)"))
+                panel.on_connect_clicked(None)
+
+        # -- NetworkManager editor ------------------------------------------------
+
+        def open_connection_editor(self, profile=None) -> None:
+            """Open nm-connection-editor; reload the connections when it closes."""
+            command = controller.connection_editor_command(profile)
+            panel = self.current_panel()
+            if command is None:
+                if panel is not None:
+                    panel.append_log(_("No NetworkManager connection editor is installed"))
+                return
+            try:
+                editor = Gio.Subprocess.new(command, Gio.SubprocessFlags.NONE)
+            except GLib.Error as exc:
+                if panel is not None:
+                    panel.append_log(_("Cannot open the connection editor: {error}").format(error=exc.message))
+                return
+            editor.wait_async(None, lambda *_args: self.reload_connections())
 
         # -- preferences and about ------------------------------------------------
 
@@ -545,6 +586,44 @@ def run_ui() -> int:
                 "notify::active", lambda row, _param: controller.set_boot_animation(row.get_active())
             )
             appearance.add(boot_row)
+
+            startup = Adw.PreferencesGroup(
+                title=_("Startup"),
+                description=_(
+                    "To connect when the computer starts, without VPN Doctor, use the "
+                    "\"Connect automatically\" option of the connection in NetworkManager."
+                ),
+            )
+            page.add(startup)
+
+            profiles = controller.profiles()
+            choices = Gtk.StringList()
+            choices.append(_("First connection"))
+            for profile in profiles:
+                choices.append(profile.name)
+            default_row = Adw.ComboRow(title=_("Default connection"), model=choices)
+            default_name = controller.default_connection_name()
+            names = [p.name for p in profiles]
+            default_row.set_selected(names.index(default_name) + 1 if default_name in names else 0)
+
+            autoconnect_row = Adw.SwitchRow(
+                title=_("Connect automatically"),
+                subtitle=_("Connect the default connection when VPN Doctor starts"),
+            )
+            autoconnect_row.set_active(controller.autoconnect_enabled())
+            autoconnect_row.set_sensitive(default_row.get_selected() > 0)
+
+            def on_default(row, _param) -> None:
+                index = row.get_selected()
+                controller.set_default_connection(names[index - 1] if index > 0 else None)
+                autoconnect_row.set_sensitive(index > 0)
+
+            default_row.connect("notify::selected", on_default)
+            autoconnect_row.connect(
+                "notify::active", lambda row, _param: controller.set_autoconnect(row.get_active())
+            )
+            startup.add(default_row)
+            startup.add(autoconnect_row)
 
             secrets = Adw.PreferencesGroup(
                 title=_("Saved secrets"),
@@ -642,6 +721,7 @@ def run_ui() -> int:
                 connections.append_item(item)
             menu.append_section(_("Connections"), connections)
             tools = Gio.Menu()
+            tools.append(_("New VPN connection…"), "win.new-connection")
             tools.append(_("Reload connections"), "win.reload-connections")
             menu.append_section(None, tools)
             self.open_menu_button.set_menu_model(menu)
@@ -684,6 +764,7 @@ def run_ui() -> int:
 
             simple_actions = {
                 "preferences": self.show_preferences,
+                "new-connection": self.open_connection_editor,
                 "about": self.show_about,
                 "reload-skins": self.reload_skins,
                 "open-skins-folder": self.open_skins_folder,

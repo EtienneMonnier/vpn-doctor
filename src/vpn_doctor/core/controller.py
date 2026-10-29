@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import shutil
 import sys
 from collections.abc import Callable
 from pathlib import Path
@@ -49,7 +50,7 @@ class ApplicationController:
         registry.register(NetworkManagerBackend())
         self.backend_manager = BackendManager(registry=registry)
 
-        self.selected_profile_name: str | None = None
+        self.selected_profile_name: str | None = self.default_connection_name()
         self._profile_cache: list[VPNProfile] | None = None
 
     # Public API used by the GTK UI. The UI never talks to backends directly.
@@ -82,6 +83,36 @@ class ApplicationController:
             if profile.name == self.selected_profile_name:
                 return profile
         return profiles[0]
+
+    def default_connection_name(self) -> str | None:
+        """Connection opened at startup, chosen in Preferences."""
+        return self.settings.load_settings().get("default_connection")
+
+    def set_default_connection(self, name: str | None) -> None:
+        self.settings.save_setting("default_connection", name)
+
+    def autoconnect_enabled(self) -> bool:
+        return bool(self.settings.load_settings().get("autoconnect", False))
+
+    def set_autoconnect(self, enabled: bool) -> None:
+        self.settings.save_setting("autoconnect", enabled)
+
+    def startup_connection(self) -> VPNProfile | None:
+        """The default connection to connect at startup, if auto-connect is on."""
+        name = self.default_connection_name()
+        if not self.autoconnect_enabled() or name is None:
+            return None
+        return next((p for p in self.profiles() if p.name == name), None)
+
+    def connection_editor_command(self, profile: VPNProfile | None = None) -> list[str] | None:
+        """Command opening the NetworkManager editor, to create or edit a connection."""
+        if shutil.which("nm-connection-editor"):
+            if profile is not None and profile.nm_uuid:
+                return ["nm-connection-editor", f"--edit={profile.nm_uuid}"]
+            return ["nm-connection-editor", "--create", "--type=vpn"]
+        if shutil.which("gnome-control-center"):
+            return ["gnome-control-center", "network"]
+        return None
 
     def boot_animation_enabled(self) -> bool:
         return bool(self.settings.load_settings().get("boot_animation", True))
