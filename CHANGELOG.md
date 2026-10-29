@@ -89,3 +89,12 @@
 - `--profile NAME` for `connect`, `disconnect`, `status` and `diagnose`.
 - Redesigned GTK UI with a connection selector.
 - Custom skins (GTK CSS) with live reload, and the "Wasteland Terminal" skin.
+
+## Sprint 4.2
+
+### Added
+
+- Remember the openfortivpn password and PEM pass phrase in the desktop
+  keyring (Secret Service), and answer prompts from it automatically.
+- `vpn-doctor forget-secrets`.
+- Explanation for a wrong PEM pass phrase.
