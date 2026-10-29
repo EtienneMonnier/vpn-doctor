@@ -26,15 +26,15 @@ class SettingsService:
 
     def load_profiles(self) -> list[VPNProfile]:
         """Load user profiles or return a safe demo profile."""
+        return self.load_configured_profiles() or [self.demo_profile()]
+
+    def load_configured_profiles(self) -> list[VPNProfile]:
+        """Load the profiles of profiles.json, without the demo fallback."""
         if not self.profile_path.exists():
-            return [self._demo_profile()]
+            return []
 
         data = json.loads(self.profile_path.read_text(encoding="utf-8"))
-        raw_profiles = data.get("profiles", [])
-        if not raw_profiles:
-            return [self._demo_profile()]
-
-        return [self._profile_from_dict(raw) for raw in raw_profiles]
+        return [self._profile_from_dict(raw) for raw in data.get("profiles", [])]
 
     @staticmethod
     def _profile_from_dict(raw: dict) -> VPNProfile:
@@ -45,7 +45,7 @@ class SettingsService:
             )
         return VPNProfile(**raw)
 
-    def _demo_profile(self) -> VPNProfile:
+    def demo_profile(self) -> VPNProfile:
         return VPNProfile(
             name="Demo Fortinet VPN",
             backend="openfortivpn",

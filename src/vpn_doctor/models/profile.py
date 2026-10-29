@@ -15,11 +15,15 @@ class VPNProfile:
 
     name: str
     backend: str
-    host: str
-    port: int
+    # Optional for NetworkManager connections, where the gateway lives in NM.
+    host: str = ""
+    port: int = 0
     username: str | None = None
     trusted_cert: str | None = None
     realm: str | None = None
     # Paths to a client certificate and its private key, never their content.
     user_cert: str | None = None
     user_key: str | None = None
+    # NetworkManager connection identity and VPN type (openvpn, wireguard...).
+    nm_uuid: str | None = None
+    vpn_type: str | None = None

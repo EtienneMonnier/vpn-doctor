@@ -54,14 +54,14 @@ class OpenFortiVPNBackend(VPNBackend):
 
         return command
 
-    def disconnect(self) -> None:
+    def disconnect(self, profile: VPNProfile | None = None) -> None:
         """Disconnect the active VPN session."""
         self.process.disconnect()
 
     def answer_prompt(self, answer: str) -> None:
         self.process.answer_prompt(answer)
 
-    def status(self) -> VPNStatus:
+    def status(self, profile: VPNProfile | None = None) -> VPNStatus:
         """Return current backend status."""
         return self.process.status()
 
