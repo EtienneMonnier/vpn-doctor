@@ -66,6 +66,13 @@ sudo dnf install ./build/rpm/RPMS/noarch/vpn-doctor-*.noarch.rpm
 VPN Doctor then appears in the GNOME application menu. See the
 [packaging guide](docs/development/PACKAGING_GUIDE.md).
 
+## Run from the source tree
+
+```bash
+./launch.sh              # GUI
+./launch.sh profiles     # any CLI command
+```
+
 ## Quick development test
 
 ```bash
