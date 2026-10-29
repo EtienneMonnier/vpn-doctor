@@ -72,3 +72,4 @@ Implementation notes, validation and review notes for each sprint.
 - [ADR-0009 Event-driven backend status](adr/0009-event-driven-backend-status.md)
 - [ADR-0010 Privilege escalation through pkexec](adr/0010-pkexec-privilege-escalation.md)
 - [ADR-0011 NetworkManager overlay](adr/0011-networkmanager-overlay.md)
+- [ADR-0012 Privileged helper](adr/0012-privileged-helper.md)
