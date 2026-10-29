@@ -140,9 +140,15 @@ class ApplicationController:
             self.keyring.store(profile, kind, answer)
         self.backend_manager.answer_prompt(profile, answer)
 
-    def forget_secrets(self) -> None:
-        """Remove every secret remembered for the selected profile."""
+    def forget_secrets(self) -> bool:
+        """Remove every secret remembered for the selected profile.
+
+        Returns False when the keyring is not reachable.
+        """
+        if not self.keyring.available:
+            return False
         self.keyring.forget(self.default_profile())
+        return True
 
     def _keyring_answerer(self, profile: VPNProfile) -> Callable[[str], str | None]:
         def answer(prompt: str) -> str | None:
@@ -265,7 +271,9 @@ class ApplicationController:
             return self._disconnect()
 
         if args.command == "forget-secrets":
-            self.forget_secrets()
+            if not self.forget_secrets():
+                print("The keyring is not reachable: install PyGObject and libsecret.")
+                return 1
             print(f"Secrets forgotten for {self.default_profile().name}")
             return 0
 

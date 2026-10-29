@@ -215,23 +215,30 @@ def run_ui() -> int:
             folder_action.connect("activate", lambda *_args: self.open_skins_folder())
             self.add_action(folder_action)
 
-            self.skin_button = Gtk.MenuButton(label=_("SKIN"))
-            self.skin_button.add_css_class("vd-skin-button")
-            self.skin_button.set_tooltip_text(_("Skin"))
+            forget_action = Gio.SimpleAction.new("forget-secrets", None)
+            forget_action.connect("activate", lambda *_args: self.forget_secrets())
+            self.add_action(forget_action)
+
+            # Text, not an icon: icon themes may draw icons in full color.
+            self.skin_button = Gtk.MenuButton(label="☰")
+            self.skin_button.add_css_class("vd-menu-button")
+            self.skin_button.set_tooltip_text(_("Main menu"))
             self.populate_skin_menu()
             return self.skin_button
 
         def populate_skin_menu(self) -> None:
             menu = Gio.Menu()
+            secrets = Gio.Menu()
+            secrets.append(_("Forget saved secrets of this connection"), "win.forget-secrets")
+            menu.append_section(None, secrets)
+
             skins = Gio.Menu()
             for theme in controller.themes():
                 suffix = "" if theme.builtin else _(" (custom)")
                 skins.append(theme.name + suffix, f"win.skin::{theme.id}")
-            menu.append_section(_("Skin"), skins)
-            tools = Gio.Menu()
-            tools.append(_("Reload skins"), "win.reload-skins")
-            tools.append(_("Open skins folder"), "win.open-skins-folder")
-            menu.append_section(None, tools)
+            skins.append(_("Reload skins"), "win.reload-skins")
+            skins.append(_("Open skins folder"), "win.open-skins-folder")
+            menu.append_submenu(_("Skin"), skins)
             self.skin_button.set_menu_model(menu)
 
         # -- skins ---------------------------------------------------------------
@@ -278,6 +285,19 @@ def run_ui() -> int:
             self.populate_skin_menu()
             self.apply_theme(controller.current_theme())
             self.append_log(_("Skins reloaded"))
+
+        def forget_secrets(self) -> None:
+            profile = controller.default_profile()
+            if profile.nm_uuid is not None:
+                self.append_log(
+                    _("{name} is managed by NetworkManager: edit its secrets in GNOME Settings.").format(
+                        name=profile.name
+                    )
+                )
+            elif controller.forget_secrets():
+                self.append_log(_("Saved secrets forgotten for {name}").format(name=profile.name))
+            else:
+                self.append_log(_("The keyring is not reachable"))
 
         def open_skins_folder(self) -> None:
             folder = controller.theme_service.user_dir

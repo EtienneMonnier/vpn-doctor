@@ -1,7 +1,7 @@
 # Skins
 
 VPN Doctor can be reskinned with a plain GTK 4 CSS file. No code, no restart:
-pick a skin in the **SKIN** menu, edit your file, then choose
+pick a skin in the main menu (☰ > Skin), edit your file, then choose
 **Reload skins**.
 
 ## Where skins live
@@ -48,7 +48,7 @@ The first comment of the file may describe the skin:
 | `.vd-meta-key`, `.vd-meta-value` | connection details |
 | `.vd-profile` | connection selector |
 | `button.vd-primary`, `button.vd-danger`, `button.vd-secondary` | Connect, Disconnect, Diagnose |
-| `.vd-skin-button` | SKIN menu button |
+| `.vd-menu-button` | main menu button (☰) |
 | `.vd-log`, `.vd-log text` | log console |
 
 The status panel, the status text and the pill also carry one state class:
