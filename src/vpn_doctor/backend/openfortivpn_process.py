@@ -39,6 +39,8 @@ class OpenFortiVPNProcess:
     state_machine: ConnectionStateMachine = field(default_factory=ConnectionStateMachine)
     logs: list[str] = field(default_factory=list)
     privilege_command: tuple[str, ...] = ()
+    output_wrapper: tuple[str, ...] = ()
+    _password_sent: bool = field(default=False, init=False, repr=False)
 
     def build_command(self, profile: VPNProfile) -> list[str]:
         command = [
@@ -74,7 +76,7 @@ class OpenFortiVPNProcess:
         on_log: Callable[[str], None] | None = None,
         dry_run: bool = False,
     ) -> list[str]:
-        command = [*self.privilege_command, *self.build_command(profile)]
+        command = [*self.privilege_command, *self.output_wrapper, *self.build_command(profile)]
 
         if dry_run:
             return command
@@ -85,17 +87,43 @@ class OpenFortiVPNProcess:
         stdin_text = None
         if password is not None:
             stdin_text = f"{password}\n"
+        self._password_sent = password is not None
 
-        self.runner.start(command, on_line=lambda line: self._handle_line(line, on_log), stdin_text=stdin_text)
+        self.runner.start(
+            command,
+            on_line=lambda line: self._handle_line(line, on_log),
+            on_prompt=lambda prompt: self._handle_prompt(prompt, on_log),
+            stdin_text=stdin_text,
+        )
         return command
 
+    def answer_prompt(self, answer: str) -> None:
+        """Send the user's answer to the pending backend prompt."""
+        self.state_machine.prompt = None
+        self.runner.write_stdin(f"{answer}\n")
+
     def _handle_line(self, line: str, on_log: Callable[[str], None] | None = None) -> None:
+        if not line.strip():
+            return
+
         self.logs.append(line)
         parsed = self.parser.parse(line)
         self.state_machine.apply_log(parsed)
 
         if on_log is not None:
             on_log(line)
+
+    def _handle_prompt(self, prompt: str, on_log: Callable[[str], None] | None = None) -> None:
+        prompt = prompt.strip()
+        self.logs.append(prompt)
+        if on_log is not None:
+            on_log(prompt)
+
+        # The password was already written to stdin before the prompt showed up.
+        if self._password_sent and "password" in prompt.lower() and "one-time" not in prompt.lower():
+            return
+
+        self.state_machine.prompt = prompt
 
     def _refresh_from_process(self) -> None:
         """Detect an openfortivpn process that exited on its own."""
@@ -133,4 +161,5 @@ class OpenFortiVPNProcess:
             state=self.state_machine.state,
             message=self.state_machine.last_message,
             suggestion=self.state_machine.suggestion,
+            prompt=self.state_machine.prompt,
         )

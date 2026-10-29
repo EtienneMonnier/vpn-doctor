@@ -27,5 +27,6 @@ class VPNStatus:
     state: VPNConnectionState
     message: str | None = None
     suggestion: str | None = None
+    prompt: str | None = None
     vpn_ip: str | None = None
     connected_seconds: int | None = None

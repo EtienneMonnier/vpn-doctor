@@ -1,4 +1,5 @@
 import subprocess
+import time
 
 from vpn_doctor.backend.process_runner import ProcessRunner
 
@@ -41,3 +42,20 @@ def test_terminate_stops_real_process():
     runner.terminate(timeout=2.0)
 
     assert runner.process is None
+
+
+def test_prompt_without_newline_is_reported_and_answered():
+    lines, prompts = [], []
+    runner = ProcessRunner()
+    script = 'printf "INFO:   Connected to gateway.\\nToken: "; read token; echo "got $token"'
+
+    runner.start(["sh", "-c", script], on_line=lines.append, on_prompt=prompts.append, stdin_text="")
+    deadline = time.monotonic() + 5
+    while not prompts and time.monotonic() < deadline:
+        time.sleep(0.02)
+    runner.write_stdin("123456\n")
+    runner.process.wait(timeout=5)
+    runner._reader_thread.join(timeout=5)
+
+    assert prompts == ["Token: "]
+    assert lines == ["INFO:   Connected to gateway.", "got 123456"]

@@ -31,5 +31,8 @@ class BackendManager:
     def disconnect(self, profile: VPNProfile) -> object:
         return self.registry.get(profile.backend).disconnect()
 
+    def answer_prompt(self, profile: VPNProfile, answer: str) -> None:
+        self.registry.get(profile.backend).answer_prompt(answer)
+
     def available_backends(self) -> list[str]:
         return self.registry.names()

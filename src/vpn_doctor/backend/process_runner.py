@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import logging
+import os
+import shutil
 import subprocess
 import threading
 from collections.abc import Callable, Sequence
@@ -13,6 +15,21 @@ from vpn_doctor.backend.errors import BackendAlreadyRunningError, BackendProcess
 LOGGER = logging.getLogger(__name__)
 
 LineCallback = Callable[[str], None]
+
+# Interactive prompts are printed without a trailing newline, e.g.
+# "Two-factor authentication token: ". They must be surfaced immediately.
+PROMPT_SUFFIX = ": "
+
+
+def line_buffering_command() -> tuple[str, ...]:
+    """Return a prefix that makes a C program flush its output at each line.
+
+    Programs writing to a pipe buffer their output in blocks, so logs would
+    only arrive once several kilobytes are pending, or at exit.
+    """
+    if shutil.which("stdbuf"):
+        return ("stdbuf", "-oL", "-eL")
+    return ()
 
 
 @dataclass
@@ -31,6 +48,7 @@ class ProcessRunner:
         command: Sequence[str],
         on_line: LineCallback | None = None,
         stdin_text: str | None = None,
+        on_prompt: LineCallback | None = None,
     ) -> None:
         if self.is_running:
             raise BackendAlreadyRunningError("A backend process is already running")
@@ -54,14 +72,33 @@ class ProcessRunner:
         if on_line is not None and self.process.stdout is not None:
             self._reader_thread = threading.Thread(
                 target=self._read_output,
-                args=(self.process.stdout, on_line),
+                args=(self.process.stdout.fileno(), on_line, on_prompt or on_line),
                 daemon=True,
             )
             self._reader_thread.start()
 
-    def _read_output(self, stream, on_line: LineCallback) -> None:
-        for line in stream:
-            on_line(line.rstrip("\n"))
+    def write_stdin(self, text: str) -> None:
+        """Send text to a running process, e.g. the answer to a prompt."""
+        if not self.is_running or self.process.stdin is None:
+            raise BackendProcessError("The backend process does not accept input")
+        self.process.stdin.write(text)
+        self.process.stdin.flush()
+
+    @staticmethod
+    def _read_output(fd: int, on_line: LineCallback, on_prompt: LineCallback) -> None:
+        # Read raw chunks instead of iterating lines: a prompt has no newline
+        # and would otherwise stay invisible while the process waits for it.
+        pending = ""
+        while chunk := os.read(fd, 4096):
+            pending += chunk.decode("utf-8", errors="replace")
+            *lines, pending = pending.split("\n")
+            for line in lines:
+                on_line(line.rstrip("\r"))
+            if pending.endswith(PROMPT_SUFFIX):
+                on_prompt(pending)
+                pending = ""
+        if pending:
+            on_line(pending)
 
     @property
     def is_running(self) -> bool:

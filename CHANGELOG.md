@@ -69,3 +69,12 @@
   FreeRDP/Remmina log explanations.
 - Client certificate support in profiles (`user_cert`, `user_key`).
 - Case study: RDP licensing failure behind a working WireGuard tunnel.
+
+### Fixed
+
+- The GUI hung on "VPN account password:" when the gateway asked a further
+  question: prompts printed without a newline (two-factor token) were never
+  shown. They now open a dialog and the answer is sent to openfortivpn.
+- openfortivpn logs arrived late or never: its output is now line-buffered
+  through `stdbuf`.
+- Tests no longer read the developer's real `~/.config/vpn-doctor` profiles.
