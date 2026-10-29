@@ -18,6 +18,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from vpn_doctor.backend.base import VPNBackend
 from vpn_doctor.backend.errors import BackendProcessError
@@ -63,14 +64,34 @@ def split_terse(line: str) -> list[str]:
     return fields
 
 
+def unescape_value(value: str) -> str:
+    """Undo the escaping of `nmcli -g`, which writes ':' as '\\:'."""
+    return value.replace("\\:", ":").replace("\\\\", "\\")
+
+
 def parse_vpn_data(data: str) -> dict[str, str]:
     """Parse `vpn.data` ("key = value, key = value") into a dict."""
     result: dict[str, str] = {}
-    for part in data.split(","):
+    for part in unescape_value(data).split(","):
         key, separator, value = part.partition("=")
         if separator:
             result[key.strip()] = value.strip()
     return result
+
+
+def parse_gateway(value: str) -> tuple[str, int]:
+    """Extract host and port from a plugin gateway value.
+
+    Accepts "host", "host:port", "host port", "host:port:udp" (openvpn) and
+    URLs such as "https://host:8443/group" (openconnect).
+    """
+    value = value.split(",")[0].strip()
+    if "://" in value:
+        url = urlsplit(value)
+        return url.hostname or "", url.port or 0
+    host, _, rest = value.replace(" ", ":").partition(":")
+    port = rest.split(":")[0]
+    return host, int(port) if port.isdigit() else 0
 
 
 def is_networkmanager_core_line(line: str) -> bool:
@@ -120,10 +141,7 @@ class NetworkManagerBackend(VPNBackend):
         host, port = "", 0
         for key in GATEWAY_KEYS:
             if data.get(key):
-                # openvpn: "host:port" or "host port"; other plugins: "host".
-                target = data[key].split(",")[0].replace(" ", ":")
-                host, _, raw_port = target.partition(":")
-                port = int(raw_port) if raw_port.isdigit() else 0
+                host, port = parse_gateway(data[key])
                 break
         return VPNProfile(
             name=name,

@@ -13,8 +13,25 @@ FORBIDDEN_PROFILE_KEYS = frozenset({"password", "passwd", "secret", "token"})
 class SettingsService:
     """Load application settings and VPN profiles."""
 
-    def __init__(self, profile_path: Path | None = None) -> None:
-        self.profile_path = profile_path or Path.home() / ".config" / "vpn-doctor" / "profiles.json"
+    def __init__(self, profile_path: Path | None = None, settings_path: Path | None = None) -> None:
+        config_dir = Path.home() / ".config" / "vpn-doctor"
+        self.profile_path = profile_path or config_dir / "profiles.json"
+        self.settings_path = settings_path or config_dir / "settings.json"
+
+    def load_settings(self) -> dict:
+        """Return UI preferences such as the selected skin."""
+        if not self.settings_path.exists():
+            return {}
+        try:
+            return json.loads(self.settings_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return {}
+
+    def save_setting(self, key: str, value: object) -> None:
+        settings = self.load_settings()
+        settings[key] = value
+        self.settings_path.parent.mkdir(parents=True, exist_ok=True)
+        self.settings_path.write_text(json.dumps(settings, indent=2) + "\n", encoding="utf-8")
 
     def load_default_profile(self) -> VPNProfile:
         """Return the default profile.

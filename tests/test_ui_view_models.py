@@ -67,3 +67,11 @@ def test_view_model_waiting_for_prompt():
     assert vm.title == "Waiting for you"
     assert vm.subtitle == "Two-factor authentication token:"
     assert vm.can_disconnect is True
+
+
+def test_view_model_pills():
+    connected = VPNStatus(backend="networkmanager", state=VPNConnectionState.CONNECTED)
+    failed = VPNStatus(backend="networkmanager", state=VPNConnectionState.FAILED)
+
+    assert ConnectionStatusViewModel.from_status(connected).pill == "● ONLINE"
+    assert ConnectionStatusViewModel.from_status(failed).pill == "✕ FAILURE"

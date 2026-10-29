@@ -17,10 +17,11 @@ from vpn_doctor.backend.registry import BackendRegistry
 from vpn_doctor.diagnostics.rdp import DEFAULT_RDP_PORT, analyze_freerdp_log, probe_rdp
 from vpn_doctor.models.diagnostic import DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
-from vpn_doctor.models.status import VPNStatus
+from vpn_doctor.models.status import VPNConnectionState, VPNStatus
 from vpn_doctor.services.privilege_service import default_privilege_command
 from vpn_doctor.services.secret_service import EnvironmentSecretProvider
 from vpn_doctor.services.settings_service import SettingsService
+from vpn_doctor.services.theme_service import Theme, ThemeService
 
 
 class ApplicationController:
@@ -28,6 +29,7 @@ class ApplicationController:
 
     def __init__(self) -> None:
         self.settings = SettingsService()
+        self.theme_service = ThemeService()
         self.secret_provider = EnvironmentSecretProvider()
 
         registry = BackendRegistry()
@@ -73,6 +75,17 @@ class ApplicationController:
                 return profile
         return profiles[0]
 
+    def themes(self) -> list[Theme]:
+        return self.theme_service.themes()
+
+    def current_theme(self) -> Theme:
+        return self.theme_service.get(self.settings.load_settings().get("theme"))
+
+    def set_theme(self, theme_id: str) -> Theme:
+        theme = self.theme_service.get(theme_id)
+        self.settings.save_setting("theme", theme.id)
+        return theme
+
     def requires_password(self) -> bool:
         """False when the backend asks for secrets itself (NetworkManager)."""
         return not self.backend_manager.manages_secrets(self.default_profile())
@@ -92,6 +105,19 @@ class ApplicationController:
 
     def answer_prompt(self, answer: str) -> None:
         self.backend_manager.answer_prompt(self.default_profile(), answer)
+
+    def stop_unmanaged_connections(self) -> None:
+        """Stop tunnels VPN Doctor runs itself, e.g. when the UI closes.
+
+        NetworkManager connections are left alone: NetworkManager owns them
+        and they normally outlive the window, like in GNOME Settings.
+        """
+        # Profiles of profiles.json share one openfortivpn process.
+        unmanaged = next((p for p in self.profiles() if p.nm_uuid is None), None)
+        if unmanaged is None:
+            return
+        if self.backend_manager.status(unmanaged).state != VPNConnectionState.DISCONNECTED:
+            self.backend_manager.disconnect(unmanaged)
 
     def stop_connection(self) -> None:
         self.backend_manager.disconnect(self.default_profile())

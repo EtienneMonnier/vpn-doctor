@@ -21,6 +21,7 @@ class ConnectionStatusViewModel:
     css_class: str
     can_connect: bool
     can_disconnect: bool
+    pill: str = ""
 
     @classmethod
     def from_status(cls, status: VPNStatus) -> ConnectionStatusViewModel:
@@ -33,6 +34,7 @@ class ConnectionStatusViewModel:
                 css_class="warning",
                 can_connect=False,
                 can_disconnect=True,
+                pill=_("⌨ INPUT"),
             )
 
         if state == VPNConnectionState.CONNECTED:
@@ -42,6 +44,7 @@ class ConnectionStatusViewModel:
                 css_class="success",
                 can_connect=False,
                 can_disconnect=True,
+                pill=_("● ONLINE"),
             )
 
         if state in {VPNConnectionState.CONNECTING, VPNConnectionState.AUTHENTICATING, VPNConnectionState.NEGOTIATING}:
@@ -51,6 +54,7 @@ class ConnectionStatusViewModel:
                 css_class="warning",
                 can_connect=False,
                 can_disconnect=True,
+                pill=_("◐ LINKING"),
             )
 
         if state == VPNConnectionState.DISCONNECTING:
@@ -60,6 +64,7 @@ class ConnectionStatusViewModel:
                 css_class="warning",
                 can_connect=False,
                 can_disconnect=False,
+                pill=_("◑ CLOSING"),
             )
 
         if state == VPNConnectionState.FAILED:
@@ -69,6 +74,7 @@ class ConnectionStatusViewModel:
                 css_class="error",
                 can_connect=True,
                 can_disconnect=False,
+                pill=_("✕ FAILURE"),
             )
 
         return cls(
@@ -77,6 +83,7 @@ class ConnectionStatusViewModel:
             css_class="neutral",
             can_connect=True,
             can_disconnect=False,
+                pill=_("○ OFFLINE"),
         )
 
 
