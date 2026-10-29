@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
@@ -10,6 +11,23 @@ from vpn_doctor.backend.process_runner import ProcessRunner
 from vpn_doctor.backend.state_machine import ConnectionStateMachine
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
+
+TERMINAL_OR_CONNECTED_STATES = frozenset(
+    {
+        VPNConnectionState.CONNECTED,
+        VPNConnectionState.FAILED,
+        VPNConnectionState.DISCONNECTED,
+    }
+)
+
+ACTIVE_STATES = frozenset(
+    {
+        VPNConnectionState.CONNECTING,
+        VPNConnectionState.AUTHENTICATING,
+        VPNConnectionState.NEGOTIATING,
+        VPNConnectionState.CONNECTED,
+    }
+)
 
 
 @dataclass
@@ -67,12 +85,37 @@ class OpenFortiVPNProcess:
         if on_log is not None:
             on_log(line)
 
+    def _refresh_from_process(self) -> None:
+        """Detect an openfortivpn process that exited on its own."""
+        if self.runner.process is None or self.runner.is_running:
+            return
+
+        if self.state_machine.state in ACTIVE_STATES:
+            self.state_machine.transition(
+                VPNConnectionState.DISCONNECTED,
+                "openfortivpn process exited",
+            )
+
     def disconnect(self) -> None:
         self.state_machine.transition(VPNConnectionState.DISCONNECTING, "Stopping openfortivpn")
         self.runner.terminate()
         self.state_machine.transition(VPNConnectionState.DISCONNECTED, "Disconnected")
 
+    def wait_until_terminal_or_connected(self, timeout_seconds: float = 60.0) -> VPNStatus:
+        """Wait until connected, failed, disconnected or timeout."""
+        deadline = time.monotonic() + timeout_seconds
+
+        while time.monotonic() < deadline:
+            status = self.status()
+            if status.state in TERMINAL_OR_CONNECTED_STATES:
+                return status
+            time.sleep(0.1)
+
+        self.state_machine.transition(VPNConnectionState.FAILED, "Connection timeout")
+        return self.status()
+
     def status(self) -> VPNStatus:
+        self._refresh_from_process()
         return VPNStatus(
             backend="openfortivpn",
             state=self.state_machine.state,
