@@ -43,9 +43,10 @@ esac
 """
 
 FAKE_JOURNALCTL = """#!/bin/sh
-echo "<info>  [1.0] device (wlan0): DHCP lease renewed"
-echo "OpenVPN 2.7.8 x86_64-redhat-linux-gnu"
-echo "AUTH: Received control message: AUTH_FAILED"
+echo '{"SYSLOG_IDENTIFIER": "NetworkManager", "MESSAGE": "<info>  [1.0] device (wlan0): DHCP lease renewed"}'
+echo '{"SYSLOG_IDENTIFIER": "nm-openconnect", "MESSAGE": "Failed to connect to host other.example.com"}'
+echo '{"SYSLOG_IDENTIFIER": "nm-openvpn", "MESSAGE": "OpenVPN 2.7.8 x86_64-redhat-linux-gnu"}'
+echo '{"SYSLOG_IDENTIFIER": "nm-openvpn", "MESSAGE": "AUTH: Received control message: AUTH_FAILED"}'
 sleep 30
 """
 
@@ -100,6 +101,7 @@ def test_failure_is_explained_from_plugin_log(fake_networkmanager):
     assert "refused the login" in status.suggestion
     assert "AUTH: Received control message: AUTH_FAILED" in logs
     assert not any("wlan0" in line for line in logs)
+    assert not any("other.example.com" in line for line in logs)
 
 
 def test_connect_and_disconnect_follow_networkmanager(fake_networkmanager):
@@ -107,7 +109,7 @@ def test_connect_and_disconnect_follow_networkmanager(fake_networkmanager):
     profile = backend.list_profiles()[1]
 
     backend.connect(profile)
-    _wait_for(lambda: not backend.runner.is_running)
+    _wait_for(lambda: not backend.sessions[profile.nm_uuid].runner.is_running)
     assert backend.status(profile).state == VPNConnectionState.CONNECTED
 
     backend.disconnect(profile)
@@ -119,7 +121,7 @@ def test_status_of_another_connection_does_not_touch_current_one(fake_networkman
     office, home = backend.list_profiles()
 
     backend.connect(home)
-    _wait_for(lambda: not backend.runner.is_running)
+    _wait_for(lambda: not backend.sessions[home.nm_uuid].runner.is_running)
 
     assert backend.status(office).state == VPNConnectionState.DISCONNECTED
     assert backend.status(home).state == VPNConnectionState.CONNECTED
@@ -165,3 +167,21 @@ def test_parse_vpn_data_unescapes_nmcli_values():
 )
 def test_parse_gateway(value, expected):
     assert parse_gateway(value) == expected
+
+
+def test_two_connections_have_independent_sessions(fake_networkmanager):
+    backend = NetworkManagerBackend()
+    office, home = backend.list_profiles()
+    office_logs, home_logs = [], []
+
+    backend.connect(home, on_log=home_logs.append)
+    backend.connect(office, on_log=office_logs.append)
+    _wait_for(lambda: backend.status(office).state == VPNConnectionState.FAILED)
+    _wait_for(lambda: backend.status(home).state == VPNConnectionState.CONNECTED)
+
+    assert backend.status(office).state == VPNConnectionState.FAILED
+    assert backend.status(home).state == VPNConnectionState.CONNECTED
+    assert "AUTH: Received control message: AUTH_FAILED" in office_logs
+    assert not any("AUTH_FAILED" in line for line in home_logs)
+    backend.disconnect()
+    assert backend.status(home).state == VPNConnectionState.DISCONNECTED
