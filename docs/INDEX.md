@@ -32,6 +32,17 @@
 - [Code Review Guide](development/CODE_REVIEW_GUIDE.md)
 - [Development Environment](development/DEVELOPMENT_ENVIRONMENT.md)
 
+## Sprint reports
+
+Implementation notes, validation and review notes for each sprint.
+
+- [Sprint 2 review](sprints/SPRINT2_REVIEW_REPORT.md)
+- [Sprint 2.1](sprints/SPRINT2_1_IMPLEMENTATION_REPORT.md)
+- [Sprint 2.2](sprints/SPRINT2_2_IMPLEMENTATION_REPORT.md)
+- [Sprint 2.4](sprints/SPRINT2_4_IMPLEMENTATION_REPORT.md)
+- [Sprint 2.5](sprints/SPRINT2_5_IMPLEMENTATION_REPORT.md)
+- [Sprint 3.1](sprints/SPRINT3_1_IMPLEMENTATION_REPORT.md)
+
 ## Case studies
 
 - [Fortinet: NetworkManager vs OpenFortiVPN](case-studies/fortinet-networkmanager-vs-openfortivpn.md)

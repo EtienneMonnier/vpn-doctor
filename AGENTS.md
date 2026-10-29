@@ -70,7 +70,7 @@ Each sprint should include:
 - tests;
 - documentation updates;
 - changelog entry;
-- review notes.
+- review notes in `docs/sprints/`.
 
 ## Commit style
 
