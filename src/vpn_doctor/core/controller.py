@@ -19,7 +19,7 @@ from vpn_doctor.diagnostics.rdp import DEFAULT_RDP_PORT, analyze_freerdp_log, pr
 from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
-from vpn_doctor.services.privilege_service import default_privilege_command
+from vpn_doctor.services.privilege_service import default_privilege_command, helper_command
 from vpn_doctor.services.secret_service import (
     EnvironmentSecretProvider,
     KeyringSecretStore,
@@ -43,6 +43,7 @@ class ApplicationController:
         process = OpenFortiVPNProcess(
             privilege_command=default_privilege_command(),
             output_wrapper=line_buffering_command(),
+            helper_command=helper_command(),
         )
         registry.register(OpenFortiVPNBackend(process=process))
         registry.register(NetworkManagerBackend())

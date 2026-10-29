@@ -75,3 +75,58 @@ def test_openfortivpn_command_passes_client_certificate_paths():
         "--user-key",
         "/etc/openfortivpn/demo-key.pem",
     ]
+
+
+FAKE_HELPER = """#!/bin/sh
+read request
+echo "REQUEST $request"
+read password
+echo "INFO:   Tunnel is up and running."
+while read line; do :; done
+echo "stdin closed, stopping"
+"""
+
+
+def test_helper_mode_sends_profile_then_password_and_stops_on_stdin_close(tmp_path):
+    import json
+    import time
+
+    from vpn_doctor.models.status import VPNConnectionState
+
+    fake = tmp_path / "vpn-doctor-helper"
+    fake.write_text(FAKE_HELPER, encoding="utf-8")
+    fake.chmod(0o755)
+    profile = VPNProfile(
+        name="Demo",
+        backend="openfortivpn",
+        host="vpn.example.com",
+        port=443,
+        username="demo",
+    )
+    process = OpenFortiVPNProcess(helper_command=(str(fake), "connect"))
+    logs = []
+
+    process.connect(profile, password="secret", on_log=logs.append)
+    deadline = time.monotonic() + 5
+    while process.status().state != VPNConnectionState.CONNECTED and time.monotonic() < deadline:
+        time.sleep(0.05)
+
+    request = json.loads(logs[0].removeprefix("REQUEST "))
+    assert request == {"host": "vpn.example.com", "port": 443, "username": "demo"}
+    assert not any("secret" in line for line in logs)
+
+    started = time.monotonic()
+    process.disconnect()
+    assert time.monotonic() - started < 2
+    assert process.status().state == VPNConnectionState.DISCONNECTED
+
+
+def test_helper_mode_dry_run_shows_helper_and_openfortivpn_command():
+    profile = VPNProfile(name="Demo", backend="openfortivpn", host="vpn.example.com", port=443)
+
+    command = OpenFortiVPNProcess(helper_command=("pkexec", "/h", "connect")).connect(
+        profile, dry_run=True
+    )
+
+    assert command[:4] == ["pkexec", "/h", "connect", "→"]
+    assert command[4:6] == ["openfortivpn", "vpn.example.com:443"]

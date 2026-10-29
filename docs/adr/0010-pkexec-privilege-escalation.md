@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted. Superseded by ADR-0012 when the helper is installed.
 
 ## Context
 

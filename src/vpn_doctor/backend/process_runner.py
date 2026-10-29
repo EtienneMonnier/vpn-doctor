@@ -113,8 +113,17 @@ class ProcessRunner:
     def is_running(self) -> bool:
         return self.process is not None and self.process.poll() is None
 
-    def terminate(self, timeout: float = 5.0, privilege_command: Sequence[str] = ()) -> None:
+    def terminate(
+        self,
+        timeout: float = 5.0,
+        privilege_command: Sequence[str] = (),
+        close_stdin_first: bool = False,
+    ) -> None:
         """Stop the process.
+
+        With close_stdin_first, closing stdin is the stop request (the
+        privileged helper stops openfortivpn when its stdin closes); signals
+        are only a fallback.
 
         A process started through pkexec runs as root once pkexec has replaced
         itself, so the current user may not signal it. In that case the
@@ -122,6 +131,13 @@ class ProcessRunner:
         """
         if self.process is None:
             return
+
+        if close_stdin_first and self.is_running and self.process.stdin is not None:
+            try:
+                self.process.stdin.close()
+                self.process.wait(timeout=timeout)
+            except (OSError, subprocess.TimeoutExpired):
+                LOGGER.warning("The process did not stop when its stdin closed")
 
         if not self.is_running:
             self.process = None
