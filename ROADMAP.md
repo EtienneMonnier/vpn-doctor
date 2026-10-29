@@ -73,7 +73,11 @@ Goals:
 - services behind the tunnel (RDP done; SMB, HTTP later);
 - readable suggestions.
 
-## Sprint 4 - Profile and secret management
+## Sprint 4 - NetworkManager overlay
+
+Status: started. Sprint 4.1 delivered the NetworkManager backend (ADR-0011).
+Profiles and secrets are delegated to NetworkManager and the GNOME keyring;
+the items below now only concern direct backends such as openfortivpn.
 
 Goals:
 
@@ -84,6 +88,8 @@ Goals:
 - validation rules.
 
 ## Sprint 5 - GTK4 / Libadwaita UI
+
+Status: partly delivered (dashboard layout, connection selector, skins).
 
 Goals:
 

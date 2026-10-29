@@ -27,6 +27,7 @@
 - [Error Taxonomy](development/ERROR_TAXONOMY.md)
 - [CLI Specification](development/CLI_SPECIFICATION.md)
 - [GTK UI Specification](development/GTK_UI_SPECIFICATION.md)
+- [Skins](development/THEMES.md)
 - [Packaging Guide](development/PACKAGING_GUIDE.md)
 - [CI/CD](development/CI_CD.md)
 - [Code Review Guide](development/CODE_REVIEW_GUIDE.md)
@@ -43,6 +44,7 @@ Implementation notes, validation and review notes for each sprint.
 - [Sprint 2.4](sprints/SPRINT2_4_IMPLEMENTATION_REPORT.md)
 - [Sprint 2.5](sprints/SPRINT2_5_IMPLEMENTATION_REPORT.md)
 - [Sprint 3.1](sprints/SPRINT3_1_IMPLEMENTATION_REPORT.md)
+- [Sprint 4.1](sprints/SPRINT4_1_IMPLEMENTATION_REPORT.md)
 
 ## Case studies
 
@@ -66,3 +68,4 @@ Implementation notes, validation and review notes for each sprint.
 - [ADR-0008 Safe backend lifecycle](adr/0008-safe-openfortivpn-lifecycle.md)
 - [ADR-0009 Event-driven backend status](adr/0009-event-driven-backend-status.md)
 - [ADR-0010 Privilege escalation through pkexec](adr/0010-pkexec-privilege-escalation.md)
+- [ADR-0011 NetworkManager overlay](adr/0011-networkmanager-overlay.md)

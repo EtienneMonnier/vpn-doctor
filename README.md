@@ -90,9 +90,22 @@ Future secret storage will use the Linux Secret Service API through GNOME Keyrin
 compatible backend.
 
 
-## Profiles
+## NetworkManager connections
 
-VPN Doctor reads profiles from `~/.config/vpn-doctor/profiles.json`. Without
+VPN Doctor is a companion to NetworkManager, not a replacement. It lists the
+VPN and WireGuard connections you already created in GNOME Settings, connects
+them, shows the plugin log live and explains failures that GNOME only reports
+as "activation failed". Passwords stay with the GNOME keyring.
+
+```bash
+vpn-doctor profiles
+vpn-doctor connect --profile "Office VPN" --wait
+```
+
+## Direct openfortivpn profiles
+
+For gateways where NetworkManager-fortisslvpn fails, VPN Doctor can also run
+`openfortivpn` itself. It reads these profiles from `~/.config/vpn-doctor/profiles.json`. Without
 that file it shows a safe demo profile. Passwords are never stored there.
 
 ```json
@@ -130,6 +143,10 @@ expired passwords or missing Remote Desktop permissions. See the
 
 ## Experimental GUI
 
+The window shows the selected connection, its status and timer, live logs and
+a Diagnose button. Use the **SKIN** menu to change its look, or write your own
+skin in CSS: see [Skins](docs/development/THEMES.md).
+
 Run:
 
 ```bash
@@ -142,9 +159,8 @@ or:
 vpn-doctor-gui
 ```
 
-The window shows the profile, the connection status and timer, live logs and
-a Diagnose button. Connect asks for the VPN password, which is passed to
-`openfortivpn` through stdin and never stored.
+For direct openfortivpn profiles, Connect asks for the VPN password, which is
+passed to `openfortivpn` through stdin and never stored.
 
 `openfortivpn` needs root privileges. VPN Doctor stays unprivileged and starts
 it through `pkexec`, so polkit asks for administrator authentication (see
