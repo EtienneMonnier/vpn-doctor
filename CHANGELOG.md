@@ -112,3 +112,24 @@
 ### Fixed
 
 - A reader thread could read a closed descriptor after a process stopped.
+
+## Sprint 5.1
+
+### Added
+
+- Logo (default and wasteland variants), drawn with VectorCraft; generator in
+  `assets/logo/generate_logo.py`. Used as window and About icon.
+- Startup animation reporting real checks (NetworkManager, keyring,
+  connections), skippable and optional.
+- Preferences dialog: skin, custom skins folder, startup animation, saved
+  secrets of openfortivpn profiles.
+- About dialog.
+- `@logo` skin metadata.
+
+### Changed
+
+- The skin choice moved from the main menu to Preferences.
+
+### Fixed
+
+- Conflict checks took the Wi-Fi interface for an OpenVPN tunnel.

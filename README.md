@@ -1,5 +1,7 @@
 # VPN Doctor
 
+<img src="assets/logo/vpn-doctor.svg" alt="VPN Doctor logo" width="96" align="right">
+
 **Diagnose. Connect. Protect.**
 
 VPN Doctor is a Linux VPN troubleshooting and connection assistant. It is not intended
@@ -149,8 +151,9 @@ expired passwords or missing Remote Desktop permissions. See the
 ## Experimental GUI
 
 The window shows one tab per connection, with its status and timer, live logs
-and a Diagnose button; open more tabs with `+`. Use the main menu (☰ > Skin) to change its look, or write your own
-skin in CSS: see [Skins](docs/development/THEMES.md).
+and a Diagnose button; open more tabs with `+`. Change its look in ☰ > Preferences, or write your own skin in CSS: see
+[Skins](docs/development/THEMES.md). A short startup animation runs real
+checks (NetworkManager, keyring, connections); turn it off in Preferences.
 
 Run:
 
