@@ -7,8 +7,10 @@ import argparse
 from vpn_doctor.backend.errors import BackendProcessError
 from vpn_doctor.backend.manager import BackendManager
 from vpn_doctor.backend.openfortivpn import OpenFortiVPNBackend
+from vpn_doctor.backend.openfortivpn_process import OpenFortiVPNProcess
 from vpn_doctor.backend.registry import BackendRegistry
 from vpn_doctor.models.status import VPNStatus
+from vpn_doctor.services.privilege_service import default_privilege_command
 from vpn_doctor.services.secret_service import EnvironmentSecretProvider
 from vpn_doctor.services.settings_service import SettingsService
 
@@ -21,7 +23,8 @@ class ApplicationController:
         self.secret_provider = EnvironmentSecretProvider()
 
         registry = BackendRegistry()
-        registry.register(OpenFortiVPNBackend())
+        process = OpenFortiVPNProcess(privilege_command=default_privilege_command())
+        registry.register(OpenFortiVPNBackend(process=process))
         self.backend_manager = BackendManager(registry=registry)
 
     def run(self, argv: list[str] | None = None) -> int:

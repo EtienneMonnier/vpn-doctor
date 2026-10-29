@@ -38,11 +38,16 @@ class OpenFortiVPNProcess:
     parser: OpenFortiVPNLogParser = field(default_factory=OpenFortiVPNLogParser)
     state_machine: ConnectionStateMachine = field(default_factory=ConnectionStateMachine)
     logs: list[str] = field(default_factory=list)
+    privilege_command: tuple[str, ...] = ()
 
     def build_command(self, profile: VPNProfile) -> list[str]:
         command = [
             "openfortivpn",
             f"{profile.host}:{profile.port}",
+            # The profile is the only source of truth: never merge options from
+            # /etc/openfortivpn/config, which root would otherwise read.
+            "-c",
+            "/dev/null",
         ]
 
         if profile.username:
@@ -63,11 +68,12 @@ class OpenFortiVPNProcess:
         on_log: Callable[[str], None] | None = None,
         dry_run: bool = False,
     ) -> list[str]:
-        command = self.build_command(profile)
+        command = [*self.privilege_command, *self.build_command(profile)]
 
         if dry_run:
             return command
 
+        self.logs.clear()
         self.state_machine.transition(VPNConnectionState.CONNECTING, "Starting openfortivpn")
 
         stdin_text = None
@@ -98,7 +104,7 @@ class OpenFortiVPNProcess:
 
     def disconnect(self) -> None:
         self.state_machine.transition(VPNConnectionState.DISCONNECTING, "Stopping openfortivpn")
-        self.runner.terminate()
+        self.runner.terminate(privilege_command=self.privilege_command)
         self.state_machine.transition(VPNConnectionState.DISCONNECTED, "Disconnected")
 
     def wait_until_terminal_or_connected(self, timeout_seconds: float = 60.0) -> VPNStatus:

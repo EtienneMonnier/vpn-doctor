@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import logging
 import subprocess
 import threading
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 
 from vpn_doctor.backend.errors import BackendAlreadyRunningError, BackendProcessError
+
+LOGGER = logging.getLogger(__name__)
 
 LineCallback = Callable[[str], None]
 
@@ -64,7 +67,13 @@ class ProcessRunner:
     def is_running(self) -> bool:
         return self.process is not None and self.process.poll() is None
 
-    def terminate(self, timeout: float = 5.0) -> None:
+    def terminate(self, timeout: float = 5.0, privilege_command: Sequence[str] = ()) -> None:
+        """Stop the process.
+
+        A process started through pkexec runs as root once pkexec has replaced
+        itself, so the current user may not signal it. In that case the
+        signal is sent through the same privilege command.
+        """
         if self.process is None:
             return
 
@@ -72,7 +81,18 @@ class ProcessRunner:
             self.process = None
             return
 
-        self.process.terminate()
+        try:
+            self.process.terminate()
+        except PermissionError:
+            if not privilege_command:
+                raise
+            LOGGER.info("Stopping privileged process %s through %s", self.process.pid, privilege_command[0])
+            subprocess.run(
+                [*privilege_command, "kill", "-TERM", str(self.process.pid)],
+                check=False,
+                stdin=subprocess.DEVNULL,
+            )
+
         try:
             self.process.wait(timeout=timeout)
         except subprocess.TimeoutExpired:

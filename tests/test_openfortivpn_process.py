@@ -18,6 +18,8 @@ def test_openfortivpn_command_does_not_include_password():
     assert command == [
         "openfortivpn",
         "vpn.example.com:443",
+        "-c",
+        "/dev/null",
         "-u",
         "demo",
         "--trusted-cert",
@@ -39,4 +41,17 @@ def test_openfortivpn_connect_dry_run_returns_command():
 
     command = OpenFortiVPNProcess().connect(profile, dry_run=True)
 
-    assert command == ["openfortivpn", "vpn.example.com:443", "-u", "demo"]
+    assert command == ["openfortivpn", "vpn.example.com:443", "-c", "/dev/null", "-u", "demo"]
+
+
+def test_openfortivpn_connect_dry_run_includes_privilege_command():
+    profile = VPNProfile(
+        name="Demo",
+        backend="openfortivpn",
+        host="vpn.example.com",
+        port=443,
+    )
+
+    command = OpenFortiVPNProcess(privilege_command=("pkexec",)).connect(profile, dry_run=True)
+
+    assert command[:2] == ["pkexec", "openfortivpn"]
