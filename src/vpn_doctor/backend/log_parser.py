@@ -25,6 +25,7 @@ class ParsedLogKind(StrEnum):
     AUTHENTICATION_ERROR = "authentication_error"
     GATEWAY_ERROR = "gateway_error"
     PRIVILEGE_ERROR = "privilege_error"
+    PRIVATE_KEY_ERROR = "private_key_error"
     ERROR = "error"
 
 
@@ -66,6 +67,11 @@ FAILURE_SUGGESTIONS: dict[ParsedLogKind, str] = {
         "The gateway cannot be reached. Check the host name, the port, your Internet "
         "connection and any firewall in between."
     ),
+    ParsedLogKind.PRIVATE_KEY_ERROR: (
+        "The client private key could not be loaded: the PEM pass phrase is wrong "
+        "or the user_key file is unreadable. If the pass phrase was remembered, "
+        "forget the saved secrets and enter it again."
+    ),
     ParsedLogKind.PRIVILEGE_ERROR: (
         "openfortivpn needs administrator privileges to create the PPP interface "
         "and routes. Accept the administrator authentication prompt, or run it "
@@ -100,6 +106,9 @@ class OpenFortiVPNLogParser:
 
         if "gateway certificate validation failed" in lowered or "trusted-cert" in lowered:
             return ParsedLogLine(raw=raw, kind=ParsedLogKind.CERTIFICATE_ERROR, message=raw)
+
+        if "ssl_ctx_use_privatekey_file" in lowered:
+            return ParsedLogLine(raw=raw, kind=ParsedLogKind.PRIVATE_KEY_ERROR, message=raw)
 
         if any(marker in lowered for marker in AUTHENTICATION_ERROR_MARKERS):
             return ParsedLogLine(raw=raw, kind=ParsedLogKind.AUTHENTICATION_ERROR, message=raw)
@@ -148,6 +157,7 @@ class OpenFortiVPNLogParser:
             ParsedLogKind.AUTHENTICATION_ERROR,
             ParsedLogKind.GATEWAY_ERROR,
             ParsedLogKind.PRIVILEGE_ERROR,
+            ParsedLogKind.PRIVATE_KEY_ERROR,
             ParsedLogKind.ERROR,
         }:
             return VPNConnectionState.FAILED

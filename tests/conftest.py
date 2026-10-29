@@ -27,3 +27,29 @@ def isolated_networkmanager(tmp_path, monkeypatch):
         fake.chmod(fake.stat().st_mode | stat.S_IEXEC)
     monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
     return bin_dir
+
+
+class FakeKeyring:
+    """In-memory stand-in for the desktop keyring."""
+
+    def __init__(self):
+        self.secrets = {}
+        self.available = True
+
+    def lookup(self, profile, kind):
+        return self.secrets.get((profile.name, kind))
+
+    def store(self, profile, kind, value):
+        self.secrets[(profile.name, kind)] = value
+        return True
+
+    def forget(self, profile):
+        self.secrets = {key: v for key, v in self.secrets.items() if key[0] != profile.name}
+
+
+@pytest.fixture(autouse=True)
+def fake_keyring(monkeypatch):
+    """Never let tests read or write the developer's real keyring."""
+    keyring = FakeKeyring()
+    monkeypatch.setattr("vpn_doctor.core.controller.KeyringSecretStore", lambda: keyring)
+    return keyring

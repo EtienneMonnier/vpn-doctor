@@ -41,6 +41,7 @@ class OpenFortiVPNProcess:
     privilege_command: tuple[str, ...] = ()
     output_wrapper: tuple[str, ...] = ()
     _password_sent: bool = field(default=False, init=False, repr=False)
+    _prompt_handler: Callable[[str], str | None] | None = field(default=None, init=False, repr=False)
 
     def build_command(self, profile: VPNProfile) -> list[str]:
         command = [
@@ -75,7 +76,13 @@ class OpenFortiVPNProcess:
         password: str | None = None,
         on_log: Callable[[str], None] | None = None,
         dry_run: bool = False,
+        prompt_handler: Callable[[str], str | None] | None = None,
     ) -> list[str]:
+        """Start openfortivpn.
+
+        prompt_handler may answer interactive prompts (e.g. from the keyring);
+        it returns None to leave the prompt to the user.
+        """
         command = [*self.privilege_command, *self.output_wrapper, *self.build_command(profile)]
 
         if dry_run:
@@ -88,6 +95,7 @@ class OpenFortiVPNProcess:
         if password is not None:
             stdin_text = f"{password}\n"
         self._password_sent = password is not None
+        self._prompt_handler = prompt_handler
 
         self.runner.start(
             command,
@@ -121,6 +129,13 @@ class OpenFortiVPNProcess:
 
         # The password was already written to stdin before the prompt showed up.
         if self._password_sent and "password" in prompt.lower() and "one-time" not in prompt.lower():
+            return
+
+        answer = self._prompt_handler(prompt) if self._prompt_handler is not None else None
+        if answer is not None:
+            self.runner.write_stdin(f"{answer}\n")
+            if on_log is not None:
+                on_log("(answered from the keyring)")
             return
 
         self.state_machine.prompt = prompt

@@ -162,11 +162,12 @@ class NetworkManagerBackend(VPNBackend):
         dry_run: bool = False,
         wait: bool = False,
         timeout_seconds: float = 120.0,
+        prompt_handler: Callable[[str], str | None] | None = None,
     ) -> list[str] | VPNStatus:
         """Activate the NetworkManager connection.
 
-        The password argument is ignored: NetworkManager asks for secrets
-        through the GNOME secret agent and stores them in the keyring.
+        The password and prompt_handler arguments are ignored: NetworkManager
+        asks for secrets through the GNOME secret agent and its keyring.
         """
         command = [
             "nmcli",
