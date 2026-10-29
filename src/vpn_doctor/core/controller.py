@@ -21,6 +21,7 @@ from vpn_doctor.diagnostics.rdp import DEFAULT_RDP_PORT, analyze_freerdp_log, pr
 from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
+from vpn_doctor.services.gateway_service import ApprovedGateway, GatewayService
 from vpn_doctor.services.privilege_service import default_privilege_command, helper_command
 from vpn_doctor.services.secret_service import (
     EnvironmentSecretProvider,
@@ -40,6 +41,7 @@ class ApplicationController:
         self.theme_service = ThemeService()
         self.secret_provider = EnvironmentSecretProvider()
         self.keyring = KeyringSecretStore()
+        self.gateways = GatewayService()
 
         registry = BackendRegistry()
         process = OpenFortiVPNProcess(
@@ -211,6 +213,20 @@ class ApplicationController:
         self.keyring.forget(profile or self.default_profile())
         return True
 
+    def needs_gateway_approval(self, profile: VPNProfile | None = None) -> bool:
+        """True when the helper will refuse this gateway until it is approved."""
+        return self.gateways.needs_approval(profile or self.default_profile())
+
+    def approve_gateway(self, profile: VPNProfile | None = None) -> tuple[bool, str]:
+        """Approve the profile's gateway; asks for an administrator password."""
+        return self.gateways.approve(profile or self.default_profile())
+
+    def approved_gateways(self) -> list[ApprovedGateway]:
+        return self.gateways.approved()
+
+    def revoke_gateway(self, gateway: ApprovedGateway) -> tuple[bool, str]:
+        return self.gateways.revoke(gateway)
+
     def network_conflicts(self) -> list[DiagnosticItem]:
         """Conflicts between active VPNs, and between a VPN and the local network."""
         nm_backend = self.backend_manager.registry.get("networkmanager")
@@ -296,6 +312,18 @@ class ApplicationController:
             parents=[profile_option],
         )
 
+        subparsers.add_parser("gateways", help="List the gateways approved on this computer")
+        subparsers.add_parser(
+            "approve-gateway",
+            help="Approve the gateway of a profile (administrator password)",
+            parents=[profile_option],
+        )
+        revoke_parser = subparsers.add_parser(
+            "revoke-gateway",
+            help="Revoke an approved gateway (administrator password)",
+        )
+        revoke_parser.add_argument("gateway", metavar="HOST:PORT")
+
         subparsers.add_parser(
             "conflicts",
             help="Detect route and DNS conflicts between active VPNs and the local network",
@@ -351,6 +379,29 @@ class ApplicationController:
 
         if args.command == "disconnect":
             return self._disconnect()
+
+        if args.command == "gateways":
+            gateways = self.approved_gateways()
+            if not self.gateways.enforced:
+                print("The privileged helper is not installed: gateways need no approval.")
+            for gateway in gateways:
+                pin = gateway.trusted_cert[:16] + "…" if gateway.trusted_cert else "system CA"
+                print(f"- {gateway.label} (certificate: {pin})")
+            return 0
+
+        if args.command == "approve-gateway":
+            ok, message = self.approve_gateway()
+            print(message)
+            return 0 if ok else 1
+
+        if args.command == "revoke-gateway":
+            host, _, port = args.gateway.rpartition(":")
+            if not port.isdigit():
+                print("Expected HOST:PORT")
+                return 2
+            ok, message = self.revoke_gateway(ApprovedGateway(host.lower(), int(port)))
+            print(message)
+            return 0 if ok else 1
 
         if args.command == "conflicts":
             report = DiagnosticReport.from_items("Network conflicts", self.network_conflicts())

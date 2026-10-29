@@ -15,7 +15,8 @@
 | Python package `vpn_doctor` | the application |
 | `/usr/bin/vpn-doctor`, `/usr/bin/vpn-doctor-gui` | CLI and GUI entry points |
 | `/usr/libexec/vpn-doctor/vpn-doctor-helper` | privileged helper, mode 0755, root-owned (ADR-0012) |
-| `/usr/share/polkit-1/actions/io.github.vpndoctor.helper.policy` | the only polkit action |
+| `/usr/share/polkit-1/actions/io.github.vpndoctor.helper.policy` | polkit actions connect, approve, revoke (ADR-0013) |
+| `/etc/vpn-doctor/` | approved gateways, written by the helper |
 | `/usr/share/applications/io.github.vpndoctor.VPNDoctor.desktop` | launcher |
 | `/usr/share/metainfo/io.github.vpndoctor.VPNDoctor.metainfo.xml` | AppStream (GNOME Software) |
 | `/usr/share/icons/hicolor/scalable/apps/io.github.vpndoctor.VPNDoctor.svg` | icon |

@@ -142,6 +142,12 @@
   (ADR-0012): validated profile fields only, PEM files checked and passed as
   open descriptors, one authentication per connection, tunnel stopped when
   VPN Doctor closes the pipe.
+- Approved gateways (ADR-0013): an administrator approves an openfortivpn
+  gateway and its certificate once, then connections need no administrator
+  password; any other gateway or certificate is refused. Replaces
+  `auth_admin_keep`, after the security review of 0.1.0.
+- `vpn-doctor gateways`, `approve-gateway`, `revoke-gateway`.
+- `launch.sh` to run VPN Doctor from the source tree.
 - RPM packaging: launcher, AppStream metainfo, icon, helper and policy.
 - "New VPN connection…" and "Settings…" open the NetworkManager editor.
 - Preferences: default connection and auto-connect at startup.

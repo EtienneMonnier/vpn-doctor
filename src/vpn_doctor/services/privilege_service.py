@@ -26,8 +26,8 @@ def default_privilege_command() -> tuple[str, ...]:
     return ()
 
 
-def helper_command(helper: Path = HELPER_PATH) -> tuple[str, ...]:
-    """Return the command starting the installed privileged helper, if any.
+def helper_command(helper: Path = HELPER_PATH, action: str = "connect") -> tuple[str, ...]:
+    """Return the command running an action of the installed privileged helper.
 
     Packages install the helper and its polkit policy. Without them (e.g. a
     development checkout), VPN Doctor falls back to `pkexec openfortivpn`.
@@ -35,7 +35,7 @@ def helper_command(helper: Path = HELPER_PATH) -> tuple[str, ...]:
     if not os.access(helper, os.X_OK):
         return ()
     if os.geteuid() == 0:
-        return (str(helper), "connect")
+        return (str(helper), action)
     if shutil.which("pkexec"):
-        return ("pkexec", str(helper), "connect")
+        return ("pkexec", str(helper), action)
     return ()
