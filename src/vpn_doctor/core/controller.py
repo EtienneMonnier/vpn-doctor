@@ -163,6 +163,16 @@ class ApplicationController:
         """Conflicts between active VPNs, and between a VPN and the local network."""
         nm_backend = self.backend_manager.registry.get("networkmanager")
         snapshot = collect_snapshot(nm_backend.active_links())
+
+        # openfortivpn runs pppd: name its ppp interface after the profile.
+        unmanaged = next((p for p in self.profiles() if p.nm_uuid is None), None)
+        if unmanaged is not None and self.backend_manager.status(unmanaged).state in {
+            VPNConnectionState.CONNECTED,
+            VPNConnectionState.CONNECTING,
+        }:
+            for link in snapshot.vpn_links:
+                if link.startswith("ppp"):
+                    snapshot.vpn_links[link] = unmanaged.name
         return find_conflicts(snapshot)
 
     def _keyring_answerer(self, profile: VPNProfile) -> Callable[[str], str | None]:

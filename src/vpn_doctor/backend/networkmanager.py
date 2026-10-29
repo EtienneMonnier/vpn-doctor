@@ -95,6 +95,30 @@ def parse_gateway(value: str) -> tuple[str, int]:
     return host, int(port) if port.isdigit() else 0
 
 
+def parse_addresses(output: str) -> set[str]:
+    """Return the addresses, without prefix, of `nmcli -g IP4.ADDRESS,IP6.ADDRESS`."""
+    addresses = set()
+    for line in unescape_value(output).splitlines():
+        for value in line.split("|"):
+            address = value.strip().split("/")[0]
+            if address:
+                addresses.add(address)
+    return addresses
+
+
+def interface_for_addresses(addresses: set[str], ip_addr_json: str) -> str | None:
+    """Return the interface that carries one of the addresses (`ip -j addr`)."""
+    try:
+        interfaces = json.loads(ip_addr_json or "[]")
+    except ValueError:
+        return None
+    for interface in interfaces:
+        for info in interface.get("addr_info", []):
+            if info.get("local") in addresses:
+                return interface.get("ifname")
+    return None
+
+
 def parse_journal_entry(raw: str) -> tuple[str, str] | None:
     """Return (syslog identifier, message) of one `journalctl -o json` line."""
     try:
@@ -296,11 +320,28 @@ class NetworkManagerBackend(VPNBackend):
             if kind == "wireguard" and device:
                 links[device] = name
             elif kind == "vpn":
-                # VPN plugins run on top of a device; the tunnel has its own interface.
-                iface = self._nmcli("-g", "GENERAL.IP-IFACE", "connection", "show", "uuid", uuid)
-                if iface.strip():
-                    links[iface.strip()] = name
+                # nmcli reports the underlying device (e.g. Wi-Fi) as the IP
+                # interface of plugin VPNs; find the tunnel by its address.
+                output = self._nmcli("-g", "IP4.ADDRESS,IP6.ADDRESS", "connection", "show", "uuid", uuid)
+                iface = interface_for_addresses(parse_addresses(output), self._ip_addresses())
+                if iface:
+                    links[iface] = name
         return links
+
+    @staticmethod
+    def _ip_addresses() -> str:
+        try:
+            return subprocess.run(
+                ["ip", "-j", "addr", "show"],
+                check=True,
+                capture_output=True,
+                text=True,
+                stdin=subprocess.DEVNULL,
+                timeout=5,
+            ).stdout
+        except (OSError, subprocess.SubprocessError) as exc:
+            LOGGER.warning("Cannot list network addresses: %s", exc)
+            return "[]"
 
     def diagnose(self, profile: VPNProfile) -> DiagnosticReport:
         items = [self._check_nmcli()]

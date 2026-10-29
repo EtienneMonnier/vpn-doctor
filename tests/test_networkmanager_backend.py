@@ -1,3 +1,4 @@
+import json
 import os
 import stat
 import time
@@ -185,3 +186,20 @@ def test_two_connections_have_independent_sessions(fake_networkmanager):
     assert not any("AUTH_FAILED" in line for line in home_logs)
     backend.disconnect()
     assert backend.status(home).state == VPNConnectionState.DISCONNECTED
+
+
+def test_tunnel_interface_is_found_by_address():
+    from vpn_doctor.backend.networkmanager import interface_for_addresses, parse_addresses
+
+    ip_addr = json.dumps(
+        [
+            {"ifname": "wlp2s0", "addr_info": [{"local": "192.0.2.10"}]},
+            {"ifname": "tun0", "addr_info": [{"local": "198.51.100.3"}, {"local": "fd00::3"}]},
+        ]
+    )
+
+    addresses = parse_addresses("198.51.100.3/24\nfd00::3/64 | fe80::1/64\n")
+
+    assert addresses == {"198.51.100.3", "fd00::3", "fe80::1"}
+    assert interface_for_addresses(addresses, ip_addr) == "tun0"
+    assert interface_for_addresses({"203.0.113.9"}, ip_addr) is None
