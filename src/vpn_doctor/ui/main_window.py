@@ -48,6 +48,7 @@ def run_ui() -> int:
 
             self.timer = ConnectionTimer()
             self.busy = False
+            self.asked_prompt: str | None = None
 
             toolbar_view = Adw.ToolbarView()
             header = Adw.HeaderBar()
@@ -157,7 +158,43 @@ def run_ui() -> int:
             self.connect_button.set_sensitive(view_model.can_connect and not self.busy)
             self.disconnect_button.set_sensitive(view_model.can_disconnect and not self.busy)
             self.diagnose_button.set_sensitive(not self.busy)
+
+            if status.prompt != self.asked_prompt:
+                self.asked_prompt = status.prompt
+                if status.prompt:
+                    self.ask_prompt(status.prompt)
             return GLib.SOURCE_CONTINUE
+
+        def ask_prompt(self, prompt: str) -> None:
+            """Ask the user to answer a backend prompt, e.g. a two-factor token."""
+            entry = Gtk.PasswordEntry()
+            entry.set_show_peek_icon(True)
+            entry.set_property("activates-default", True)
+
+            dialog = Adw.AlertDialog(
+                heading=_("The VPN asks for more information"),
+                body=prompt,
+            )
+            dialog.set_extra_child(entry)
+            dialog.add_response("cancel", _("Cancel connection"))
+            dialog.add_response("send", _("Send"))
+            dialog.set_response_appearance("send", Adw.ResponseAppearance.SUGGESTED)
+            dialog.set_default_response("send")
+            dialog.set_close_response("cancel")
+            dialog.connect("response", self.on_prompt_response, entry)
+            dialog.present(self)
+
+        def on_prompt_response(self, _dialog, response: str, entry) -> None:
+            answer = entry.get_text()
+            entry.set_text("")
+            if response == "send":
+                try:
+                    controller.answer_prompt(answer)
+                except BackendError as exc:
+                    self.append_log(_("Could not send the answer: {error}").format(error=exc))
+            else:
+                self.on_disconnect_clicked(None)
+            self.refresh_status()
 
         def run_in_background(self, work, on_done) -> None:
             """Run blocking work off the main loop, then call on_done(result)."""

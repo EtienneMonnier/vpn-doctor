@@ -26,6 +26,15 @@ class ConnectionStatusViewModel:
     def from_status(cls, status: VPNStatus) -> ConnectionStatusViewModel:
         state = status.state
 
+        if status.prompt:
+            return cls(
+                title=_("Waiting for you"),
+                subtitle=status.prompt,
+                css_class="warning",
+                can_connect=False,
+                can_disconnect=True,
+            )
+
         if state == VPNConnectionState.CONNECTED:
             return cls(
                 title=_("Connected"),

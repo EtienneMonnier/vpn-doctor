@@ -29,3 +29,7 @@ class VPNBackend(ABC):
     @abstractmethod
     def diagnose(self, profile: VPNProfile) -> DiagnosticReport:
         """Run backend-specific diagnostics."""
+
+    def answer_prompt(self, answer: str) -> None:
+        """Answer an interactive backend prompt, such as a two-factor token."""
+        raise NotImplementedError(f"{self.name} does not support interactive prompts")

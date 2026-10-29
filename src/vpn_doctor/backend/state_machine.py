@@ -15,10 +15,13 @@ class ConnectionStateMachine:
     state: VPNConnectionState = VPNConnectionState.DISCONNECTED
     last_message: str | None = None
     suggestion: str | None = None
+    # Question the backend is waiting for, e.g. a two-factor token prompt.
+    prompt: str | None = None
 
     def transition(self, new_state: VPNConnectionState, message: str | None = None) -> None:
         self.state = new_state
         self.last_message = message
+        self.prompt = None
         if new_state != VPNConnectionState.FAILED:
             self.suggestion = None
 

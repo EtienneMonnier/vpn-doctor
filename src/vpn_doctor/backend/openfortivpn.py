@@ -58,6 +58,9 @@ class OpenFortiVPNBackend(VPNBackend):
         """Disconnect the active VPN session."""
         self.process.disconnect()
 
+    def answer_prompt(self, answer: str) -> None:
+        self.process.answer_prompt(answer)
+
     def status(self) -> VPNStatus:
         """Return current backend status."""
         return self.process.status()

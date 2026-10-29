@@ -11,6 +11,7 @@ from vpn_doctor.backend.errors import BackendProcessError
 from vpn_doctor.backend.manager import BackendManager
 from vpn_doctor.backend.openfortivpn import OpenFortiVPNBackend
 from vpn_doctor.backend.openfortivpn_process import OpenFortiVPNProcess
+from vpn_doctor.backend.process_runner import line_buffering_command
 from vpn_doctor.backend.registry import BackendRegistry
 from vpn_doctor.diagnostics.rdp import DEFAULT_RDP_PORT, analyze_freerdp_log, probe_rdp
 from vpn_doctor.models.diagnostic import DiagnosticReport
@@ -29,7 +30,10 @@ class ApplicationController:
         self.secret_provider = EnvironmentSecretProvider()
 
         registry = BackendRegistry()
-        process = OpenFortiVPNProcess(privilege_command=default_privilege_command())
+        process = OpenFortiVPNProcess(
+            privilege_command=default_privilege_command(),
+            output_wrapper=line_buffering_command(),
+        )
         registry.register(OpenFortiVPNBackend(process=process))
         self.backend_manager = BackendManager(registry=registry)
 
@@ -50,6 +54,9 @@ class ApplicationController:
         Raises BackendProcessError when the backend process cannot start.
         """
         self.backend_manager.connect(self.default_profile(), password=password, on_log=on_log)
+
+    def answer_prompt(self, answer: str) -> None:
+        self.backend_manager.answer_prompt(self.default_profile(), answer)
 
     def stop_connection(self) -> None:
         self.backend_manager.disconnect(self.default_profile())

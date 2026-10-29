@@ -54,3 +54,16 @@ def test_connection_timer_runs_only_while_connected():
     assert timer.update(VPNConnectionState.CONNECTED, now=81.0) == "00:01:01"
     assert timer.update(VPNConnectionState.DISCONNECTED, now=90.0) is None
     assert timer.update(VPNConnectionState.CONNECTED, now=100.0) == "00:00:00"
+
+
+def test_view_model_waiting_for_prompt():
+    status = VPNStatus(
+        backend="openfortivpn",
+        state=VPNConnectionState.CONNECTING,
+        prompt="Two-factor authentication token:",
+    )
+    vm = ConnectionStatusViewModel.from_status(status)
+
+    assert vm.title == "Waiting for you"
+    assert vm.subtitle == "Two-factor authentication token:"
+    assert vm.can_disconnect is True

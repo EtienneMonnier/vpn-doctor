@@ -47,3 +47,41 @@ def test_wrong_password_is_explained(tmp_path, monkeypatch):
     assert status.state == VPNConnectionState.FAILED
     assert "password" in status.suggestion
     assert not any("not-the-password" in line for line in logs)
+
+
+FAKE_TWO_FACTOR = """#!/bin/sh
+read password
+echo "VPN account password: "
+echo "INFO:   Connected to gateway."
+printf "Two-factor authentication token: "
+read token
+if [ "$token" = "123456" ]; then
+    echo "INFO:   Authenticated."
+    echo "INFO:   Tunnel is up and running."
+    sleep 30
+fi
+"""
+
+
+def test_two_factor_prompt_is_surfaced_and_answered(tmp_path, monkeypatch):
+    _install_fake_openfortivpn(tmp_path, monkeypatch, FAKE_TWO_FACTOR)
+    controller = ApplicationController()
+    controller.settings = SettingsService(profile_path=tmp_path / "missing.json")
+    backend = controller.backend_manager.registry.get("openfortivpn")
+    backend.process.privilege_command = ()
+
+    controller.start_connection("secret", on_log=lambda line: None)
+    deadline = time.monotonic() + 5
+    while controller.current_status().prompt is None and time.monotonic() < deadline:
+        time.sleep(0.05)
+
+    status = controller.current_status()
+    assert status.prompt == "Two-factor authentication token:"
+
+    controller.answer_prompt("123456")
+    status = _wait_for_state(controller, {VPNConnectionState.CONNECTED})
+    try:
+        assert status.state == VPNConnectionState.CONNECTED
+        assert status.prompt is None
+    finally:
+        controller.stop_connection()
