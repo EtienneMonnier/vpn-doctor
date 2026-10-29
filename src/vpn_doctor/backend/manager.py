@@ -23,16 +23,25 @@ class BackendManager:
         return self.registry.get(profile.backend).diagnose(profile)
 
     def status(self, profile: VPNProfile) -> VPNStatus:
-        return self.registry.get(profile.backend).status()
+        return self.registry.get(profile.backend).status(profile)
 
     def connect(self, profile: VPNProfile, **kwargs) -> object:
         return self.registry.get(profile.backend).connect(profile, **kwargs)
 
     def disconnect(self, profile: VPNProfile) -> object:
-        return self.registry.get(profile.backend).disconnect()
+        return self.registry.get(profile.backend).disconnect(profile)
 
     def answer_prompt(self, profile: VPNProfile, answer: str) -> None:
         self.registry.get(profile.backend).answer_prompt(answer)
+
+    def discovered_profiles(self) -> list[VPNProfile]:
+        profiles: list[VPNProfile] = []
+        for name in self.registry.names():
+            profiles.extend(self.registry.get(name).list_profiles())
+        return profiles
+
+    def manages_secrets(self, profile: VPNProfile) -> bool:
+        return self.registry.get(profile.backend).manages_secrets
 
     def available_backends(self) -> list[str]:
         return self.registry.names()

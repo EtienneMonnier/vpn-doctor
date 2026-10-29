@@ -9,6 +9,7 @@ from pathlib import Path
 
 from vpn_doctor.backend.errors import BackendProcessError
 from vpn_doctor.backend.manager import BackendManager
+from vpn_doctor.backend.networkmanager import NetworkManagerBackend
 from vpn_doctor.backend.openfortivpn import OpenFortiVPNBackend
 from vpn_doctor.backend.openfortivpn_process import OpenFortiVPNProcess
 from vpn_doctor.backend.process_runner import line_buffering_command
@@ -35,12 +36,46 @@ class ApplicationController:
             output_wrapper=line_buffering_command(),
         )
         registry.register(OpenFortiVPNBackend(process=process))
+        registry.register(NetworkManagerBackend())
         self.backend_manager = BackendManager(registry=registry)
+
+        self.selected_profile_name: str | None = None
+        self._profile_cache: list[VPNProfile] | None = None
 
     # Public API used by the GTK UI. The UI never talks to backends directly.
 
+    def profiles(self) -> list[VPNProfile]:
+        """NetworkManager connections plus profiles.json, or the demo profile."""
+        if self._profile_cache is None:
+            found = [
+                *self.backend_manager.discovered_profiles(),
+                *self.settings.load_configured_profiles(),
+            ]
+            self._profile_cache = found or [self.settings.demo_profile()]
+        return self._profile_cache
+
+    def reload_profiles(self) -> list[VPNProfile]:
+        self._profile_cache = None
+        return self.profiles()
+
+    def select_profile(self, name: str) -> VPNProfile:
+        for profile in self.profiles():
+            if profile.name == name:
+                self.selected_profile_name = name
+                return profile
+        raise ValueError(f"Unknown profile: {name}")
+
     def default_profile(self) -> VPNProfile:
-        return self.settings.load_default_profile()
+        """Return the selected profile, or the first one."""
+        profiles = self.profiles()
+        for profile in profiles:
+            if profile.name == self.selected_profile_name:
+                return profile
+        return profiles[0]
+
+    def requires_password(self) -> bool:
+        """False when the backend asks for secrets itself (NetworkManager)."""
+        return not self.backend_manager.manages_secrets(self.default_profile())
 
     def current_status(self) -> VPNStatus:
         return self.backend_manager.status(self.default_profile())
@@ -67,12 +102,23 @@ class ApplicationController:
 
         subparsers = parser.add_subparsers(dest="command")
 
-        subparsers.add_parser("diagnose", help="Run basic diagnostics")
-        subparsers.add_parser("profiles", help="List configured profiles")
-        subparsers.add_parser("status", help="Show backend status")
+        profile_option = argparse.ArgumentParser(add_help=False)
+        profile_option.add_argument(
+            "--profile",
+            metavar="NAME",
+            help="Profile or NetworkManager connection name (default: the first one)",
+        )
+
+        subparsers.add_parser("diagnose", help="Run basic diagnostics", parents=[profile_option])
+        subparsers.add_parser("profiles", help="List VPN connections and profiles")
+        subparsers.add_parser("status", help="Show connection status", parents=[profile_option])
         subparsers.add_parser("gui", help="Launch the experimental GTK UI")
 
-        connect_parser = subparsers.add_parser("connect", help="Connect using the default profile")
+        connect_parser = subparsers.add_parser(
+            "connect",
+            help="Connect a profile",
+            parents=[profile_option],
+        )
         connect_parser.add_argument(
             "--dry-run",
             action="store_true",
@@ -90,7 +136,11 @@ class ApplicationController:
             help="Maximum wait time in seconds when --wait is used",
         )
 
-        subparsers.add_parser("disconnect", help="Disconnect the active VPN session")
+        subparsers.add_parser(
+            "disconnect",
+            help="Disconnect the active VPN session",
+            parents=[profile_option],
+        )
 
         rdp_parser = subparsers.add_parser(
             "rdp",
@@ -110,6 +160,13 @@ class ApplicationController:
         if args.version:
             print("VPN Doctor 0.0.1")
             return 0
+
+        if getattr(args, "profile", None):
+            try:
+                self.select_profile(args.profile)
+            except ValueError as exc:
+                print(exc)
+                return 2
 
         if args.command == "diagnose":
             return self._diagnose()
@@ -140,7 +197,7 @@ class ApplicationController:
         return 0
 
     def _diagnose(self) -> int:
-        profile = self.settings.load_default_profile()
+        profile = self.default_profile()
         result = self.backend_manager.diagnose(profile)
         self._print_report(result)
         return 0 if result.success else 1
@@ -164,19 +221,24 @@ class ApplicationController:
         return 0 if success else 1
 
     def _profiles(self) -> int:
-        for profile in self.settings.load_profiles():
-            print(f"- {profile.name} ({profile.backend})")
+        for profile in self.profiles():
+            if profile.vpn_type:
+                print(f"- {profile.name} ({profile.vpn_type} via NetworkManager)")
+            else:
+                print(f"- {profile.name} ({profile.backend})")
         return 0
 
     def _status(self) -> int:
-        profile = self.settings.load_default_profile()
+        profile = self.default_profile()
         status = self.backend_manager.status(profile)
         self._print_status(status)
         return 0
 
     def _connect(self, dry_run: bool = False, wait: bool = False, timeout_seconds: float = 60.0) -> int:
-        profile = self.settings.load_default_profile()
-        password = None if dry_run else self.secret_provider.get_password(profile)
+        profile = self.default_profile()
+        password = None
+        if not dry_run and self.backend_manager.manages_secrets(profile) is False:
+            password = self.secret_provider.get_password(profile)
 
         def print_log(line: str) -> None:
             print(line)
@@ -206,7 +268,7 @@ class ApplicationController:
         return 0
 
     def _disconnect(self) -> int:
-        profile = self.settings.load_default_profile()
+        profile = self.default_profile()
         self.backend_manager.disconnect(profile)
         print("Disconnected")
         return 0
