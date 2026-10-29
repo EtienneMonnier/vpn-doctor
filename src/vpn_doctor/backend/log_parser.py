@@ -24,7 +24,48 @@ class ParsedLogKind(StrEnum):
     CERTIFICATE_ERROR = "certificate_error"
     AUTHENTICATION_ERROR = "authentication_error"
     GATEWAY_ERROR = "gateway_error"
+    PRIVILEGE_ERROR = "privilege_error"
     ERROR = "error"
+
+
+# Messages verified against openfortivpn 1.23.
+AUTHENTICATION_ERROR_MARKERS = (
+    "could not authenticate to gateway",
+    "could not authenticate to the gateway",
+    "permission denied",
+    "authentication failed",
+    "bad credentials",
+    "no password given",
+)
+
+GATEWAY_ERROR_MARKERS = (
+    "could not resolve gateway",
+    "could not connect to gateway",
+    "getaddrinfo:",
+    "connection refused",
+    "no route to host",
+    "network is unreachable",
+)
+
+FAILURE_SUGGESTIONS: dict[ParsedLogKind, str] = {
+    ParsedLogKind.AUTHENTICATION_ERROR: (
+        "The gateway refused the login. Check the password, the username and the realm. "
+        "If they are correct, ask the administrator whether tunnel mode is allowed for "
+        "this account."
+    ),
+    ParsedLogKind.CERTIFICATE_ERROR: (
+        "The gateway certificate is not trusted. Verify its fingerprint with your "
+        "administrator, then add it to the profile as trusted_cert."
+    ),
+    ParsedLogKind.GATEWAY_ERROR: (
+        "The gateway cannot be reached. Check the host name, the port, your Internet "
+        "connection and any firewall in between."
+    ),
+    ParsedLogKind.PRIVILEGE_ERROR: (
+        "openfortivpn needs administrator privileges to create the PPP interface "
+        "and routes. Run it through pkexec or sudo."
+    ),
+}
 
 
 @dataclass(frozen=True)
@@ -46,6 +87,20 @@ class OpenFortiVPNLogParser:
         if not raw:
             return ParsedLogLine(raw=raw, kind=ParsedLogKind.UNKNOWN, message="")
 
+        # Errors are checked first: a failure line must never be mistaken for
+        # progress because it shares a word with a success message.
+        if "not spawned with root privileges" in lowered:
+            return ParsedLogLine(raw=raw, kind=ParsedLogKind.PRIVILEGE_ERROR, message=raw)
+
+        if "gateway certificate validation failed" in lowered or "trusted-cert" in lowered:
+            return ParsedLogLine(raw=raw, kind=ParsedLogKind.CERTIFICATE_ERROR, message=raw)
+
+        if any(marker in lowered for marker in AUTHENTICATION_ERROR_MARKERS):
+            return ParsedLogLine(raw=raw, kind=ParsedLogKind.AUTHENTICATION_ERROR, message=raw)
+
+        if any(marker in lowered for marker in GATEWAY_ERROR_MARKERS):
+            return ParsedLogLine(raw=raw, kind=ParsedLogKind.GATEWAY_ERROR, message=raw)
+
         if "connected to gateway" in lowered:
             return ParsedLogLine(raw=raw, kind=ParsedLogKind.CONNECTING, message=raw)
 
@@ -60,15 +115,6 @@ class OpenFortiVPNLogParser:
 
         if "logged out" in lowered or "closed connection to gateway" in lowered:
             return ParsedLogLine(raw=raw, kind=ParsedLogKind.TUNNEL_DOWN, message=raw)
-
-        if "gateway certificate validation failed" in lowered or "trusted-cert" in lowered:
-            return ParsedLogLine(raw=raw, kind=ParsedLogKind.CERTIFICATE_ERROR, message=raw)
-
-        if "permission denied" in lowered or "authentication failed" in lowered or "bad credentials" in lowered:
-            return ParsedLogLine(raw=raw, kind=ParsedLogKind.AUTHENTICATION_ERROR, message=raw)
-
-        if "could not resolve gateway" in lowered or "could not connect to gateway" in lowered:
-            return ParsedLogLine(raw=raw, kind=ParsedLogKind.GATEWAY_ERROR, message=raw)
 
         if lowered.startswith("error:") or " error:" in lowered:
             return ParsedLogLine(raw=raw, kind=ParsedLogKind.ERROR, message=raw)
@@ -95,6 +141,7 @@ class OpenFortiVPNLogParser:
             ParsedLogKind.CERTIFICATE_ERROR,
             ParsedLogKind.AUTHENTICATION_ERROR,
             ParsedLogKind.GATEWAY_ERROR,
+            ParsedLogKind.PRIVILEGE_ERROR,
             ParsedLogKind.ERROR,
         }:
             return VPNConnectionState.FAILED

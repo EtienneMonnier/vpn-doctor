@@ -120,4 +120,5 @@ class OpenFortiVPNProcess:
             backend="openfortivpn",
             state=self.state_machine.state,
             message=self.state_machine.last_message,
+            suggestion=self.state_machine.suggestion,
         )

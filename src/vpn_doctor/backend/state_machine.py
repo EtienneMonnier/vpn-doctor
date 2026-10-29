@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from vpn_doctor.backend.log_parser import ParsedLogKind, ParsedLogLine
+from vpn_doctor.backend.log_parser import FAILURE_SUGGESTIONS, ParsedLogKind, ParsedLogLine
 from vpn_doctor.models.status import VPNConnectionState
 
 
@@ -14,10 +14,13 @@ class ConnectionStateMachine:
 
     state: VPNConnectionState = VPNConnectionState.DISCONNECTED
     last_message: str | None = None
+    suggestion: str | None = None
 
     def transition(self, new_state: VPNConnectionState, message: str | None = None) -> None:
         self.state = new_state
         self.last_message = message
+        if new_state != VPNConnectionState.FAILED:
+            self.suggestion = None
 
     def apply_log(self, parsed: ParsedLogLine) -> VPNConnectionState:
         """Update state from a parsed backend log line."""
@@ -33,14 +36,21 @@ class ConnectionStateMachine:
             self.state = VPNConnectionState.CONNECTED
 
         elif parsed.kind == ParsedLogKind.TUNNEL_DOWN:
-            self.state = VPNConnectionState.DISCONNECTED
+            # openfortivpn closes the gateway connection after a failure; that
+            # must not hide the failure itself.
+            if self.state != VPNConnectionState.FAILED:
+                self.state = VPNConnectionState.DISCONNECTED
 
         elif parsed.kind in {
             ParsedLogKind.CERTIFICATE_ERROR,
             ParsedLogKind.AUTHENTICATION_ERROR,
             ParsedLogKind.GATEWAY_ERROR,
+            ParsedLogKind.PRIVILEGE_ERROR,
             ParsedLogKind.ERROR,
         }:
+            # Keep the first explanation: later errors are usually consequences.
+            if self.suggestion is None:
+                self.suggestion = FAILURE_SUGGESTIONS.get(parsed.kind)
             self.state = VPNConnectionState.FAILED
 
         return self.state
