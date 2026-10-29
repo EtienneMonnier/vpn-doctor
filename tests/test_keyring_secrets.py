@@ -118,3 +118,10 @@ def test_forget_secrets(capsys, fake_keyring):
     assert controller.run(["forget-secrets"]) == 0
     assert fake_keyring.secrets == {}
     assert "Secrets forgotten" in capsys.readouterr().out
+
+
+def test_forget_secrets_reports_unreachable_keyring(capsys, fake_keyring):
+    fake_keyring.available = False
+
+    assert ApplicationController().run(["forget-secrets"]) == 1
+    assert "not reachable" in capsys.readouterr().out

@@ -144,7 +144,7 @@ expired passwords or missing Remote Desktop permissions. See the
 ## Experimental GUI
 
 The window shows the selected connection, its status and timer, live logs and
-a Diagnose button. Use the **SKIN** menu to change its look, or write your own
+a Diagnose button. Use the main menu (☰ > Skin) to change its look, or write your own
 skin in CSS: see [Skins](docs/development/THEMES.md).
 
 Run:
