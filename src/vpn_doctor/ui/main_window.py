@@ -21,11 +21,13 @@ import logging
 import threading
 import time
 
+from vpn_doctor import __version__
 from vpn_doctor.backend.errors import BackendError
 from vpn_doctor.core.controller import ApplicationController
 from vpn_doctor.i18n import _
 from vpn_doctor.models.status import VPNConnectionState
-from vpn_doctor.ui.view_models import ConnectionStatusViewModel, ConnectionTimer
+from vpn_doctor.services.theme_service import BUILTIN_ASSET_DIR
+from vpn_doctor.ui.view_models import ConnectionStatusViewModel, ConnectionTimer, boot_lines
 
 LOGGER = logging.getLogger(__name__)
 
@@ -34,6 +36,9 @@ CONFLICT_REFRESH_MS = 5000
 STATE_CSS_CLASSES = ("vd-success", "vd-warning", "vd-error", "vd-neutral")
 DEFAULT_TITLE = "VPN Doctor"
 DEFAULT_TAGLINE = "Diagnose. Connect. Protect."
+APP_ID = "io.github.vpndoctor.VPNDoctor"
+BOOT_LINE_MS = 220
+BOOT_HOLD_MS = 500
 TAB_MARKS = {
     VPNConnectionState.CONNECTED: "●",
     VPNConnectionState.FAILED: "✕",
@@ -375,6 +380,11 @@ def run_ui() -> int:
             self.conflicts = []
             self.checking_conflicts = False
 
+            Gtk.IconTheme.get_for_display(self.get_display()).add_search_path(
+                str(BUILTIN_ASSET_DIR / "icons")
+            )
+            self.set_icon_name(APP_ID)
+
             toolbar_view = Adw.ToolbarView()
             header = Adw.HeaderBar()
             header.pack_end(self.build_main_menu())
@@ -386,10 +396,19 @@ def run_ui() -> int:
             root.set_margin_start(20)
             root.set_margin_end(20)
 
+            heading = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=14)
+            # Gtk.Image, not Gtk.Picture: it keeps a fixed size for any SVG.
+            self.header_logo = Gtk.Image(pixel_size=56)
+            self.header_logo.add_css_class("vd-header-logo")
+            titles = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+            titles.set_valign(Gtk.Align.CENTER)
             self.title_label = label(DEFAULT_TITLE, "vd-title")
             self.tagline_label = label(_(DEFAULT_TAGLINE), "vd-tagline")
-            root.append(self.title_label)
-            root.append(self.tagline_label)
+            titles.append(self.title_label)
+            titles.append(self.tagline_label)
+            heading.append(self.header_logo)
+            heading.append(titles)
+            root.append(heading)
 
             self.banner = Adw.Banner()
             self.banner.add_css_class("vd-conflict-banner")
@@ -412,14 +431,156 @@ def run_ui() -> int:
 
             root.append(tab_bar)
             root.append(self.tab_view)
-            toolbar_view.set_content(root)
+
+            self.stack = Gtk.Stack()
+            self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+            self.stack.set_transition_duration(400)
+            self.stack.add_named(self.build_boot_page(), "boot")
+            self.stack.add_named(root, "main")
+            toolbar_view.set_content(self.stack)
             self.set_content(toolbar_view)
 
             self.apply_theme(controller.current_theme())
             self.populate_open_menu()
             self.open_initial_tabs()
+            if controller.boot_animation_enabled():
+                self.start_boot_animation()
+            else:
+                self.stack.set_visible_child_name("main")
             GLib.timeout_add(STATUS_REFRESH_MS, self.refresh_tabs)
             GLib.timeout_add(CONFLICT_REFRESH_MS, self.check_conflicts)
+
+        # -- startup animation -----------------------------------------------------
+
+        def build_boot_page(self) -> Gtk.Widget:
+            page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
+            page.add_css_class("vd-boot")
+            page.set_valign(Gtk.Align.CENTER)
+            page.set_halign(Gtk.Align.CENTER)
+
+            self.boot_logo = Gtk.Image(pixel_size=220)
+            self.boot_log = label("", "vd-boot-log")
+            self.boot_log.set_size_request(420, -1)
+            hint = label(_("Click or press a key to skip"), "vd-boot-hint", xalign=0.5)
+
+            page.append(self.boot_logo)
+            page.append(self.boot_log)
+            page.append(hint)
+
+            click = Gtk.GestureClick()
+            click.connect("pressed", lambda *_args: self.finish_boot())
+            page.add_controller(click)
+            keys = Gtk.EventControllerKey()
+            keys.connect("key-pressed", lambda *_args: self.finish_boot() or True)
+            self.add_controller(keys)
+            return page
+
+        def start_boot_animation(self) -> None:
+            report = controller.boot_report()
+            self.boot_pending = boot_lines(
+                __version__,
+                report["connections"],
+                report["networkmanager"],
+                report["keyring"],
+            )
+            self.boot_shown: list[str] = []
+            self.stack.set_visible_child_name("boot")
+            GLib.timeout_add(BOOT_LINE_MS, self.type_boot_line)
+
+        def type_boot_line(self) -> bool:
+            if self.stack.get_visible_child_name() != "boot":
+                return GLib.SOURCE_REMOVE
+            if not self.boot_pending:
+                GLib.timeout_add(BOOT_HOLD_MS, lambda: self.finish_boot() or GLib.SOURCE_REMOVE)
+                return GLib.SOURCE_REMOVE
+            self.boot_shown.append("> " + self.boot_pending.pop(0))
+            self.boot_log.set_label("\n".join(self.boot_shown))
+            return GLib.SOURCE_CONTINUE
+
+        def finish_boot(self) -> None:
+            if self.stack.get_visible_child_name() == "boot":
+                self.stack.set_visible_child_name("main")
+
+        # -- preferences and about ------------------------------------------------
+
+        def show_preferences(self) -> None:
+            dialog = Adw.PreferencesDialog()
+            page = Adw.PreferencesPage(title=_("General"), icon_name="preferences-system-symbolic")
+            dialog.add(page)
+
+            appearance = Adw.PreferencesGroup(title=_("Appearance"))
+            page.add(appearance)
+
+            themes = controller.themes()
+            names = Gtk.StringList()
+            for theme in themes:
+                names.append(theme.name + ("" if theme.builtin else _(" (custom)")))
+            skin_row = Adw.ComboRow(title=_("Skin"), model=names)
+            current = controller.current_theme().id
+            skin_row.set_selected(next((i for i, t in enumerate(themes) if t.id == current), 0))
+
+            def on_skin(row, _param) -> None:
+                theme = controller.set_theme(themes[row.get_selected()].id)
+                self.apply_theme(theme)
+
+            skin_row.connect("notify::selected", on_skin)
+            appearance.add(skin_row)
+
+            skins_folder = Adw.ActionRow(
+                title=_("Custom skins"),
+                subtitle=_("Drop CSS files in {path}").format(path=controller.theme_service.user_dir),
+            )
+            for text, callback in ((_("Open folder"), self.open_skins_folder), (_("Reload"), self.reload_skins)):
+                button = Gtk.Button(label=text, valign=Gtk.Align.CENTER)
+                button.connect("clicked", lambda _button, callback=callback: callback())
+                skins_folder.add_suffix(button)
+            appearance.add(skins_folder)
+
+            boot_row = Adw.SwitchRow(
+                title=_("Startup animation"),
+                subtitle=_("Logo and boot checks when VPN Doctor starts"),
+            )
+            boot_row.set_active(controller.boot_animation_enabled())
+            boot_row.connect(
+                "notify::active", lambda row, _param: controller.set_boot_animation(row.get_active())
+            )
+            appearance.add(boot_row)
+
+            secrets = Adw.PreferencesGroup(
+                title=_("Saved secrets"),
+                description=_(
+                    "Passwords and PEM pass phrases of openfortivpn profiles, kept in the "
+                    "desktop keyring. NetworkManager connections keep theirs in GNOME Settings."
+                ),
+            )
+            page.add(secrets)
+            for profile in controller.direct_profiles():
+                row = Adw.ActionRow(title=profile.name, subtitle=profile.host)
+                button = Gtk.Button(label=_("Forget"), valign=Gtk.Align.CENTER)
+                button.add_css_class("destructive-action")
+
+                def forget(button, profile=profile) -> None:
+                    if controller.forget_secrets(profile):
+                        button.set_label(_("Forgotten"))
+                        button.set_sensitive(False)
+
+                button.connect("clicked", forget)
+                row.add_suffix(button)
+                secrets.add(row)
+
+            dialog.present(self)
+
+        def show_about(self) -> None:
+            about = Adw.AboutDialog(
+                application_name="VPN Doctor",
+                application_icon=APP_ID,
+                version=__version__,
+                developer_name="Etienne Monnier",
+                comments=_("Linux VPN troubleshooting assistant.\nDiagnose. Connect. Protect."),
+                website="https://github.com/EtienneMonnier/vpn-doctor",
+                license_type=Gtk.License.MIT_X11,
+            )
+            about.present(self)
 
         # -- tabs ----------------------------------------------------------------
 
@@ -517,16 +678,13 @@ def run_ui() -> int:
         # -- main menu -----------------------------------------------------------
 
         def build_main_menu(self) -> Gtk.MenuButton:
-            initial = GLib.Variant.new_string(controller.current_theme().id)
-            skin = Gio.SimpleAction.new_stateful("skin", GLib.VariantType.new("s"), initial)
-            skin.connect("activate", self.on_skin_selected)
-            self.add_action(skin)
-
             open_tab = Gio.SimpleAction.new("open-tab", GLib.VariantType.new("s"))
             open_tab.connect("activate", self.on_open_tab)
             self.add_action(open_tab)
 
             simple_actions = {
+                "preferences": self.show_preferences,
+                "about": self.show_about,
                 "reload-skins": self.reload_skins,
                 "open-skins-folder": self.open_skins_folder,
                 "forget-secrets": self.forget_secrets,
@@ -546,17 +704,13 @@ def run_ui() -> int:
 
         def populate_main_menu(self) -> None:
             menu = Gio.Menu()
-            secrets = Gio.Menu()
-            secrets.append(_("Forget saved secrets of this connection"), "win.forget-secrets")
-            menu.append_section(None, secrets)
-
-            skins = Gio.Menu()
-            for theme in controller.themes():
-                suffix = "" if theme.builtin else _(" (custom)")
-                skins.append(theme.name + suffix, f"win.skin::{theme.id}")
-            skins.append(_("Reload skins"), "win.reload-skins")
-            skins.append(_("Open skins folder"), "win.open-skins-folder")
-            menu.append_submenu(_("Skin"), skins)
+            main = Gio.Menu()
+            main.append(_("Preferences"), "win.preferences")
+            main.append(_("Forget saved secrets of this connection"), "win.forget-secrets")
+            menu.append_section(None, main)
+            about = Gio.Menu()
+            about.append(_("About VPN Doctor"), "win.about")
+            menu.append_section(None, about)
             self.menu_button.set_menu_model(menu)
 
         def on_open_tab(self, _action, value) -> None:
@@ -614,6 +768,8 @@ def run_ui() -> int:
             Adw.StyleManager.get_default().set_color_scheme(schemes[theme.color_scheme])
             self.title_label.set_label(theme.title or DEFAULT_TITLE)
             self.tagline_label.set_label(theme.tagline or _(DEFAULT_TAGLINE))
+            for image in (self.header_logo, self.boot_logo):
+                image.set_from_file(str(theme.logo_path))
 
         def on_css_error(self, _provider, section, error, theme_name: str) -> None:
             location = section.get_start_location()
@@ -625,12 +781,7 @@ def run_ui() -> int:
             if panel is not None:
                 panel.append_log(message)
 
-        def on_skin_selected(self, action, value) -> None:
-            action.set_state(value)
-            self.apply_theme(controller.set_theme(value.get_string()))
-
         def reload_skins(self) -> None:
-            self.populate_main_menu()
             self.apply_theme(controller.current_theme())
 
         def open_skins_folder(self) -> None:

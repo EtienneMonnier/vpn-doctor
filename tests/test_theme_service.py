@@ -14,7 +14,7 @@ def test_wasteland_metadata():
 
     assert theme.name == "Wasteland Terminal"
     assert theme.color_scheme == "dark"
-    assert theme.title.startswith("☢")
+    assert theme.title.startswith("VPN-DOCTOR")
     assert "#45ee8a" in theme.css()
 
 
@@ -47,3 +47,19 @@ def test_skin_choice_is_persisted(tmp_path):
     assert SettingsService(settings_path=tmp_path / "settings.json").load_settings() == {
         "theme": "wasteland"
     }
+
+
+def test_skin_logo_resolution(tmp_path):
+    from vpn_doctor.services.theme_service import DEFAULT_LOGO
+
+    user_dir = tmp_path / "themes"
+    user_dir.mkdir()
+    (user_dir / "mine.css").write_text("/* @logo: mine.svg */\n", encoding="utf-8")
+    (user_dir / "mine.svg").write_text("<svg/>", encoding="utf-8")
+    (user_dir / "escape.css").write_text("/* @logo: ../../etc/passwd */\n", encoding="utf-8")
+    service = ThemeService(user_dir=user_dir)
+
+    assert service.get("mine").logo_path == user_dir / "mine.svg"
+    assert service.get("wasteland").logo_path.name == "logo-wasteland.svg"
+    assert service.get("default").logo_path == DEFAULT_LOGO
+    assert service.get("escape").logo_path == DEFAULT_LOGO

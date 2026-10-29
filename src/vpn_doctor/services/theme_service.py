@@ -7,6 +7,7 @@ A skin is a plain GTK CSS file. Optional metadata lives in its first comment:
      * @color-scheme: dark
      * @title: VPN-DOCTOR 3000
      * @tagline: Wasteland network diagnostics
+     * @logo: logo-wasteland.svg
      */
 
 Built-in skins ship in vpn_doctor/ui/themes/. Users add their own by dropping a
@@ -22,7 +23,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 BUILTIN_THEME_DIR = Path(__file__).resolve().parent.parent / "ui" / "themes"
+BUILTIN_ASSET_DIR = Path(__file__).resolve().parent.parent / "ui" / "assets"
 DEFAULT_THEME = "default"
+DEFAULT_LOGO = BUILTIN_ASSET_DIR / "logo-default.svg"
 
 _METADATA = re.compile(r"@([a-z-]+)\s*:\s*(.+?)\s*(?:\*/)?\s*$", re.MULTILINE)
 
@@ -38,9 +41,20 @@ class Theme:
     title: str | None = None
     tagline: str | None = None
     builtin: bool = True
+    logo: str | None = None
 
     def css(self) -> str:
         return self.path.read_text(encoding="utf-8")
+
+    @property
+    def logo_path(self) -> Path:
+        """The skin's logo: next to the skin file, then built-in assets."""
+        if self.logo:
+            for directory in (self.path.parent, BUILTIN_ASSET_DIR):
+                candidate = (directory / self.logo).resolve()
+                if candidate.is_file() and candidate.parent == directory.resolve():
+                    return candidate
+        return DEFAULT_LOGO
 
 
 def parse_theme(path: Path, builtin: bool) -> Theme:
@@ -59,6 +73,7 @@ def parse_theme(path: Path, builtin: bool) -> Theme:
         title=meta.get("title"),
         tagline=meta.get("tagline"),
         builtin=builtin,
+        logo=meta.get("logo"),
     )
 
 

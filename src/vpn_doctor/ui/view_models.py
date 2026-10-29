@@ -115,3 +115,20 @@ class ConnectionTimer:
             self._connected_since = now
 
         return format_elapsed(now - self._connected_since)
+
+
+def boot_lines(
+    version: str,
+    connections: int,
+    networkmanager: bool,
+    keyring: bool,
+) -> list[str]:
+    """Lines typed by the startup animation; they report real checks."""
+    return [
+        _("VPN DOCTOR {version}").format(version=version),
+        _("Loading diagnostics engine… OK"),
+        _("NetworkManager… {state}").format(state=_("ONLINE") if networkmanager else _("NOT FOUND")),
+        _("Keyring… {state}").format(state=_("UNLOCKED") if keyring else _("UNAVAILABLE")),
+        _("Scanning connections… {count} found").format(count=connections),
+        _("Ready. Diagnose. Connect. Protect."),
+    ]

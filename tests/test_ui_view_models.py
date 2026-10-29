@@ -75,3 +75,14 @@ def test_view_model_pills():
 
     assert ConnectionStatusViewModel.from_status(connected).pill == "● ONLINE"
     assert ConnectionStatusViewModel.from_status(failed).pill == "✕ FAILURE"
+
+
+def test_boot_lines_report_real_checks():
+    from vpn_doctor.ui.view_models import boot_lines
+
+    lines = boot_lines("0.0.1", connections=4, networkmanager=True, keyring=False)
+
+    assert lines[0] == "VPN DOCTOR 0.0.1"
+    assert "NetworkManager… ONLINE" in lines
+    assert "Keyring… UNAVAILABLE" in lines
+    assert "Scanning connections… 4 found" in lines
