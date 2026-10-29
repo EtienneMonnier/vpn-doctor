@@ -1,4 +1,5 @@
-from vpn_doctor.backend.openfortivpn import OpenFortiVPNBackend, OpenFortiVPNLogParser
+from vpn_doctor.backend.log_parser import OpenFortiVPNLogParser
+from vpn_doctor.backend.openfortivpn import OpenFortiVPNBackend
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNConnectionState
 

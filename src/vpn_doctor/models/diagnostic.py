@@ -34,7 +34,7 @@ class DiagnosticReport:
     items: list[DiagnosticItem]
 
     @classmethod
-    def from_items(cls, summary: str, items: list[DiagnosticItem]) -> "DiagnosticReport":
+    def from_items(cls, summary: str, items: list[DiagnosticItem]) -> DiagnosticReport:
         return cls(
             summary=summary,
             success=all(item.success for item in items),

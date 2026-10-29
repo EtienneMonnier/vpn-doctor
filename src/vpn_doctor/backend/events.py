@@ -8,7 +8,7 @@ to VPN-specific process handling.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 
 @dataclass(frozen=True)
@@ -20,7 +20,7 @@ class BackendEvent:
     created_at: datetime
 
     @classmethod
-    def create(cls, kind: str, message: str) -> "BackendEvent":
+    def create(cls, kind: str, message: str) -> BackendEvent:
         return cls(kind=kind, message=message, created_at=datetime.now(UTC))
 
 
