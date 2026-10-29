@@ -20,6 +20,8 @@ def test_build_command_does_not_include_password() -> None:
     assert command.argv == [
         "openfortivpn",
         "vpn.example.com:44443",
+        "-c",
+        "/dev/null",
         "-u",
         "demo-user",
         "--trusted-cert",
