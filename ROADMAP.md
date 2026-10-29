@@ -114,15 +114,47 @@ Goals:
 - DEB packaging notes;
 - GitHub release assets.
 
+## Backlog (next ideas)
+
+### AI agents: JSON output, then an MCP server
+
+1. `--json` on every CLI command (status, profiles, diagnose, conflicts,
+   gateways, rdp), with a stable, documented schema. Useful for scripts and
+   for any agent that can run a command.
+2. `docs/AGENTS_USAGE.md`: how an agent diagnoses a VPN with VPN Doctor
+   (commands, JSON fields, what each failure means, what never to do).
+3. `vpn-doctor mcp`: a stdio MCP server, as an optional extra
+   (`vpn-doctor[mcp]`) so the base package keeps no dependency.
+   - Read-only tools first: profiles, status, diagnose, conflicts, explain a
+     log, RDP probe.
+   - Connect and disconnect only with explicit user confirmation.
+   - Never expose secrets, nor raw logs containing user names or addresses.
+
+### Background mode and tray
+
+- Keep running in the background when the window closes while a VPN is
+  connected, with desktop notifications for state changes (connected,
+  dropped, conflict).
+- GNOME 46+: use the Background portal (shown in Quick Settings). Other
+  desktops and the AppIndicator extension: a StatusNotifierItem over D-Bus
+  (GTK 4 has no tray icon API).
+- Preference: "Reduce to the background when connected".
+
+### Translations
+
+- Fix `i18n.py`: it looks for translations in a relative `locale` folder;
+  install `.mo` files under `/usr/share/locale` and bind the text domain.
+- Extract strings with xgettext into `po/vpn-doctor.pot`; compile in the RPM.
+- First languages: French, German, Spanish, Italian, Dutch, Portuguese,
+  Polish.
+- Diagnostic explanations are user-facing strings too: translate them.
+
 ## Later
 
-- NetworkManager inspection;
-- WireGuard backend;
-- OpenVPN backend;
-- OpenConnect backend;
 - report export;
 - automatic safe fixes;
-- health score.
+- health score;
+- DEB package; NetworkManager-only Flatpak.
 
 
 ## Sprint 2.4 - GTK/libadwaita UI skeleton
