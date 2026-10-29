@@ -1,8 +1,9 @@
 /*
  * @name: Wasteland Terminal
  * @color-scheme: dark
- * @title: ☢ VPN-DOCTOR // TERMLINK
+ * @title: VPN-DOCTOR // TERMLINK
  * @tagline: WASTELAND NETWORK DIAGNOSTICS — DIAGNOSE. CONNECT. PROTECT.
+ * @logo: logo-wasteland.svg
  *
  * Green phosphor terminal inspired by post-apocalyptic wrist computers.
  * Palette: phosphor #45ee8a, dim #23864d, screen #05160d, amber #ffb642.
@@ -253,6 +254,20 @@ popover modelbutton:hover,
 popover row:hover,
 popover row:selected {
   background-color: alpha(#45ee8a, 0.2);
+}
+
+/* Startup animation */
+.vd-boot-log {
+  font-size: 11pt;
+  letter-spacing: 1px;
+  color: #45ee8a;
+}
+
+.vd-boot-hint {
+  font-size: 8.5pt;
+  letter-spacing: 2px;
+  color: #23864d;
+  text-shadow: none;
 }
 
 /* Connection tabs */

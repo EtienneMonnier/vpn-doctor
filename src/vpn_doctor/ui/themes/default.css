@@ -78,3 +78,13 @@
   font-size: 13pt;
   font-weight: 700;
 }
+
+.vd-boot-log {
+  font-family: monospace;
+  font-size: 10.5pt;
+}
+
+.vd-boot-hint {
+  font-size: 8.5pt;
+  opacity: 0.5;
+}

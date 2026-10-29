@@ -441,6 +441,9 @@ class NetworkManagerBackend(VPNBackend):
             raise BackendProcessError(str(exc)) from exc
         return result.stdout
 
+    def is_available(self) -> bool:
+        return self._check_nmcli().success
+
     def _check_nmcli(self) -> DiagnosticItem:
         try:
             running = self._nmcli("-t", "-f", "RUNNING", "general").strip()

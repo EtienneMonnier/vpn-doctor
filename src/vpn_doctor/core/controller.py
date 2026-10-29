@@ -82,6 +82,25 @@ class ApplicationController:
                 return profile
         return profiles[0]
 
+    def boot_animation_enabled(self) -> bool:
+        return bool(self.settings.load_settings().get("boot_animation", True))
+
+    def set_boot_animation(self, enabled: bool) -> None:
+        self.settings.save_setting("boot_animation", enabled)
+
+    def boot_report(self) -> dict:
+        """Facts shown by the startup animation."""
+        nm_backend = self.backend_manager.registry.get("networkmanager")
+        return {
+            "connections": len(self.profiles()),
+            "networkmanager": nm_backend.is_available(),
+            "keyring": self.keyring.available,
+        }
+
+    def direct_profiles(self) -> list[VPNProfile]:
+        """Profiles VPN Doctor runs itself, whose secrets it may remember."""
+        return [profile for profile in self.profiles() if profile.nm_uuid is None]
+
     def themes(self) -> list[Theme]:
         return self.theme_service.themes()
 
