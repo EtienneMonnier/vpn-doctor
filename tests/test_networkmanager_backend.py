@@ -4,7 +4,12 @@ import time
 
 import pytest
 
-from vpn_doctor.backend.networkmanager import NetworkManagerBackend, parse_vpn_data, split_terse
+from vpn_doctor.backend.networkmanager import (
+    NetworkManagerBackend,
+    parse_gateway,
+    parse_vpn_data,
+    split_terse,
+)
 from vpn_doctor.core.controller import ApplicationController
 from vpn_doctor.diagnostics.vpn_plugins import explain_failure
 from vpn_doctor.models.status import VPNConnectionState
@@ -140,3 +145,23 @@ def test_controller_merges_networkmanager_and_json_profiles(fake_networkmanager,
 
     controller.select_profile("Home WG")
     assert controller.requires_password() is False
+
+
+def test_parse_vpn_data_unescapes_nmcli_values():
+    data = parse_vpn_data("gateway = https\\://vpn.example.com\\:8443/staff, protocol = anyconnect")
+    assert data["gateway"] == "https://vpn.example.com:8443/staff"
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("vpn.example.com", ("vpn.example.com", 0)),
+        ("vpn.example.com:1194", ("vpn.example.com", 1194)),
+        ("vpn.example.com 1194", ("vpn.example.com", 1194)),
+        ("vpn.example.com:1194:udp", ("vpn.example.com", 1194)),
+        ("https://vpn.example.com:8443/staff", ("vpn.example.com", 8443)),
+        ("https://vpn.example.com", ("vpn.example.com", 0)),
+    ],
+)
+def test_parse_gateway(value, expected):
+    assert parse_gateway(value) == expected

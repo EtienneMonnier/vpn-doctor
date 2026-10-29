@@ -1,0 +1,300 @@
+/*
+ * @name: Wasteland Terminal
+ * @color-scheme: dark
+ * @title: ☢ VPN-DOCTOR // TERMLINK
+ * @tagline: WASTELAND NETWORK DIAGNOSTICS — DIAGNOSE. CONNECT. PROTECT.
+ *
+ * Green phosphor terminal inspired by post-apocalyptic wrist computers.
+ * Palette: phosphor #45ee8a, dim #23864d, screen #05160d, amber #ffb642.
+ */
+
+/* libadwaita palette, named colors (libadwaita < 1.6) */
+@define-color window_bg_color #05160d;
+@define-color window_fg_color #45ee8a;
+@define-color view_bg_color #030e08;
+@define-color view_fg_color #45ee8a;
+@define-color headerbar_bg_color #071910;
+@define-color headerbar_fg_color #45ee8a;
+@define-color headerbar_backdrop_color #05160d;
+@define-color card_bg_color #071910;
+@define-color card_fg_color #45ee8a;
+@define-color popover_bg_color #071910;
+@define-color popover_fg_color #45ee8a;
+@define-color dialog_bg_color #071910;
+@define-color dialog_fg_color #45ee8a;
+@define-color accent_bg_color #45ee8a;
+@define-color accent_fg_color #05160d;
+@define-color accent_color #45ee8a;
+@define-color success_color #45ee8a;
+@define-color warning_color #ffb642;
+@define-color error_color #ff6a4d;
+@define-color destructive_bg_color #3a1208;
+@define-color destructive_fg_color #ff6a4d;
+@define-color destructive_color #ff6a4d;
+
+/* libadwaita palette, CSS variables (libadwaita >= 1.6) */
+:root {
+  --window-bg-color: #05160d;
+  --window-fg-color: #45ee8a;
+  --view-bg-color: #030e08;
+  --view-fg-color: #45ee8a;
+  --headerbar-bg-color: #071910;
+  --headerbar-fg-color: #45ee8a;
+  --card-bg-color: #071910;
+  --card-fg-color: #45ee8a;
+  --popover-bg-color: #071910;
+  --popover-fg-color: #45ee8a;
+  --dialog-bg-color: #071910;
+  --dialog-fg-color: #45ee8a;
+  --accent-bg-color: #45ee8a;
+  --accent-fg-color: #05160d;
+  --accent-color: #45ee8a;
+  --success-color: #45ee8a;
+  --warning-color: #ffb642;
+  --error-color: #ff6a4d;
+}
+
+/* Screen: phosphor glow and CRT scanlines */
+window.vd-window {
+  background-color: #05160d;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.22) 3px,
+    rgba(0, 0, 0, 0) 4px
+  );
+}
+
+window.vd-window,
+window.vd-window label,
+window.vd-window button,
+window.vd-window textview,
+popover,
+dialog {
+  font-family: "Share Tech Mono", "VT323", "Adwaita Mono", "Liberation Mono", monospace;
+  font-weight: 700;
+}
+
+window.vd-window label {
+  text-shadow: 0 0 6px alpha(#45ee8a, 0.55);
+}
+
+headerbar {
+  background-color: #071910;
+  border-bottom: 1px solid #45ee8a;
+  box-shadow: 0 0 10px alpha(#45ee8a, 0.25);
+}
+
+/* Header */
+.vd-title {
+  font-size: 20pt;
+  letter-spacing: 3px;
+  color: #45ee8a;
+}
+
+.vd-tagline {
+  font-size: 8.5pt;
+  letter-spacing: 2px;
+  color: #23864d;
+  text-shadow: none;
+}
+
+/* Panels */
+.vd-card {
+  padding: 14px 16px;
+  background-color: alpha(#071910, 0.92);
+  border: 1px solid #45ee8a;
+  border-radius: 6px;
+  box-shadow: 0 0 12px alpha(#45ee8a, 0.22), inset 0 0 22px alpha(#45ee8a, 0.07);
+}
+
+.vd-card.vd-error {
+  border-color: #ffb642;
+  box-shadow: 0 0 14px alpha(#ffb642, 0.3), inset 0 0 22px alpha(#ffb642, 0.08);
+}
+
+.vd-section-title {
+  font-size: 9pt;
+  letter-spacing: 3px;
+  color: #45ee8a;
+}
+
+/* Status */
+.vd-state {
+  font-size: 22pt;
+  letter-spacing: 2px;
+  color: #45ee8a;
+  text-shadow: 0 0 10px alpha(#45ee8a, 0.8);
+}
+
+.vd-state.vd-warning,
+.vd-state.vd-error {
+  color: #ffb642;
+  text-shadow: 0 0 10px alpha(#ffb642, 0.8);
+}
+
+.vd-state.vd-neutral {
+  color: #23864d;
+  text-shadow: none;
+}
+
+.vd-pill {
+  padding: 1px 10px;
+  border-radius: 999px;
+  font-size: 8.5pt;
+  letter-spacing: 1px;
+  background-color: #45ee8a;
+  color: #05160d;
+  text-shadow: none;
+}
+
+.vd-pill.vd-neutral {
+  background-color: transparent;
+  color: #23864d;
+  box-shadow: inset 0 0 0 1px #23864d;
+}
+
+.vd-pill.vd-warning,
+.vd-pill.vd-error {
+  background-color: #ffb642;
+}
+
+.vd-timer {
+  font-size: 20pt;
+  letter-spacing: 2px;
+  color: #45ee8a;
+}
+
+.vd-subtitle {
+  color: #2fc271;
+}
+
+.vd-meta-key {
+  font-size: 8.5pt;
+  letter-spacing: 2px;
+  color: #23864d;
+  text-shadow: none;
+}
+
+.vd-meta-value {
+  color: #45ee8a;
+}
+
+/* Controls */
+window.vd-window button,
+dialog button {
+  background-color: transparent;
+  background-image: none;
+  color: #45ee8a;
+  border: 1px solid #45ee8a;
+  border-radius: 4px;
+  box-shadow: none;
+  letter-spacing: 2px;
+}
+
+window.vd-window button:hover,
+dialog button:hover {
+  background-color: alpha(#45ee8a, 0.15);
+}
+
+window.vd-window button:active,
+window.vd-window button:checked {
+  background-color: alpha(#45ee8a, 0.3);
+}
+
+window.vd-window button:disabled {
+  opacity: 0.35;
+}
+
+window.vd-window button.vd-primary,
+dialog button.suggested {
+  background-color: #45ee8a;
+  color: #05160d;
+  text-shadow: none;
+}
+
+window.vd-window button.vd-primary label {
+  color: #05160d;
+  text-shadow: none;
+}
+
+window.vd-window button.vd-primary:hover {
+  background-color: #6dffa8;
+}
+
+window.vd-window button.vd-danger {
+  border-color: #ffb642;
+  color: #ffb642;
+}
+
+window.vd-window button.vd-danger label {
+  color: #ffb642;
+  text-shadow: 0 0 6px alpha(#ffb642, 0.5);
+}
+
+headerbar button {
+  border: none;
+}
+
+/* Profile selector */
+.vd-profile button {
+  border-color: #23864d;
+}
+
+popover contents,
+popover arrow {
+  background-color: #071910;
+  border: 1px solid #45ee8a;
+  color: #45ee8a;
+}
+
+popover modelbutton:hover,
+popover row:hover,
+popover row:selected {
+  background-color: alpha(#45ee8a, 0.2);
+}
+
+/* Log console */
+.vd-log,
+.vd-log text {
+  background-color: #020b06;
+  color: #45ee8a;
+}
+
+.vd-log {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #23864d;
+  text-shadow: 0 0 4px alpha(#45ee8a, 0.5);
+}
+
+.vd-log text selection {
+  background-color: #45ee8a;
+  color: #05160d;
+}
+
+scrollbar slider {
+  background-color: #23864d;
+  border-radius: 0;
+  min-width: 6px;
+}
+
+scrollbar slider:hover {
+  background-color: #45ee8a;
+}
+
+/* Password and prompt dialogs */
+entry,
+password {
+  background-color: #030e08;
+  color: #45ee8a;
+  border: 1px solid #23864d;
+  border-radius: 4px;
+}
+
+entry:focus-within,
+password:focus-within {
+  border-color: #45ee8a;
+  box-shadow: 0 0 8px alpha(#45ee8a, 0.4);
+}

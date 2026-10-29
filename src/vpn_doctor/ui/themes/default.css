@@ -1,0 +1,75 @@
+/*
+ * @name: Default
+ * @color-scheme: default
+ *
+ * Follows the GNOME light/dark preference. See docs/development/THEMES.md
+ * for the CSS classes a skin can style.
+ */
+
+.vd-title {
+  font-size: 22pt;
+  font-weight: 800;
+}
+
+.vd-tagline {
+  opacity: 0.6;
+}
+
+.vd-card {
+  padding: 16px;
+}
+
+.vd-section-title {
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 2px;
+  opacity: 0.55;
+}
+
+.vd-state {
+  font-size: 20pt;
+  font-weight: 800;
+}
+
+.vd-state.vd-success { color: @success_color; }
+.vd-state.vd-warning { color: @warning_color; }
+.vd-state.vd-error { color: @error_color; }
+
+.vd-pill {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 8.5pt;
+  font-weight: 800;
+  letter-spacing: 1px;
+  background-color: alpha(currentColor, 0.12);
+}
+
+.vd-pill.vd-success { color: @success_color; }
+.vd-pill.vd-warning { color: @warning_color; }
+.vd-pill.vd-error { color: @error_color; }
+
+.vd-timer {
+  font-family: monospace;
+  font-size: 18pt;
+  font-weight: 700;
+}
+
+.vd-meta-key {
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0.55;
+}
+
+.vd-meta-value {
+  font-family: monospace;
+}
+
+.vd-log text {
+  font-size: 9.5pt;
+}
+
+.vd-log {
+  padding: 8px;
+  border-radius: 8px;
+}

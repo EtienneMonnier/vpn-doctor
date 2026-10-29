@@ -26,6 +26,9 @@ dev = [
 vpn-doctor = "vpn_doctor.app:main"
 vpn-doctor-gui = "vpn_doctor.ui.app:main"
 
+[tool.setuptools.package-data]
+vpn_doctor = ["ui/themes/*.css"]
+
 [tool.ruff]
 line-length = 100
 
