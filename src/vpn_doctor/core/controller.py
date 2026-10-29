@@ -14,8 +14,9 @@ from vpn_doctor.backend.openfortivpn import OpenFortiVPNBackend
 from vpn_doctor.backend.openfortivpn_process import OpenFortiVPNProcess
 from vpn_doctor.backend.process_runner import line_buffering_command
 from vpn_doctor.backend.registry import BackendRegistry
+from vpn_doctor.diagnostics.conflicts import collect_snapshot, find_conflicts
 from vpn_doctor.diagnostics.rdp import DEFAULT_RDP_PORT, analyze_freerdp_log, probe_rdp
-from vpn_doctor.models.diagnostic import DiagnosticReport
+from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
 from vpn_doctor.services.privilege_service import default_privilege_command
@@ -92,19 +93,21 @@ class ApplicationController:
         self.settings.save_setting("theme", theme.id)
         return theme
 
-    def requires_password(self) -> bool:
+    # Every method below acts on `profile`, or on the selected profile.
+
+    def requires_password(self, profile: VPNProfile | None = None) -> bool:
         """False when the backend asks for secrets itself (NetworkManager)."""
-        return not self.backend_manager.manages_secrets(self.default_profile())
+        return not self.backend_manager.manages_secrets(profile or self.default_profile())
 
-    def current_status(self) -> VPNStatus:
-        return self.backend_manager.status(self.default_profile())
+    def current_status(self, profile: VPNProfile | None = None) -> VPNStatus:
+        return self.backend_manager.status(profile or self.default_profile())
 
-    def diagnose_default_profile(self) -> DiagnosticReport:
-        return self.backend_manager.diagnose(self.default_profile())
+    def diagnose_default_profile(self, profile: VPNProfile | None = None) -> DiagnosticReport:
+        return self.backend_manager.diagnose(profile or self.default_profile())
 
-    def stored_password(self) -> str | None:
-        """Return the password remembered in the keyring for the selected profile."""
-        return self.keyring.lookup(self.default_profile(), SecretKind.PASSWORD)
+    def stored_password(self, profile: VPNProfile | None = None) -> str | None:
+        """Return the password remembered in the keyring."""
+        return self.keyring.lookup(profile or self.default_profile(), SecretKind.PASSWORD)
 
     def can_remember(self, prompt: str | None = None) -> bool:
         """True when the keyring works and the prompt asks for a reusable secret."""
@@ -117,12 +120,13 @@ class ApplicationController:
         password: str | None,
         on_log: Callable[[str], None],
         remember: bool = False,
+        profile: VPNProfile | None = None,
     ) -> None:
-        """Start the default profile without waiting for the tunnel.
+        """Start a connection without waiting for the tunnel.
 
         Raises BackendProcessError when the backend process cannot start.
         """
-        profile = self.default_profile()
+        profile = profile or self.default_profile()
         if password is not None and remember:
             self.keyring.store(profile, SecretKind.PASSWORD, password)
         self.backend_manager.connect(
@@ -132,23 +136,34 @@ class ApplicationController:
             prompt_handler=self._keyring_answerer(profile),
         )
 
-    def answer_prompt(self, answer: str, remember: bool = False) -> None:
-        profile = self.default_profile()
-        prompt = self.current_status().prompt
+    def answer_prompt(
+        self,
+        answer: str,
+        remember: bool = False,
+        profile: VPNProfile | None = None,
+    ) -> None:
+        profile = profile or self.default_profile()
+        prompt = self.current_status(profile).prompt
         kind = classify_prompt(prompt) if prompt else None
         if remember and kind is not None:
             self.keyring.store(profile, kind, answer)
         self.backend_manager.answer_prompt(profile, answer)
 
-    def forget_secrets(self) -> bool:
-        """Remove every secret remembered for the selected profile.
+    def forget_secrets(self, profile: VPNProfile | None = None) -> bool:
+        """Remove every secret remembered for a profile.
 
         Returns False when the keyring is not reachable.
         """
         if not self.keyring.available:
             return False
-        self.keyring.forget(self.default_profile())
+        self.keyring.forget(profile or self.default_profile())
         return True
+
+    def network_conflicts(self) -> list[DiagnosticItem]:
+        """Conflicts between active VPNs, and between a VPN and the local network."""
+        nm_backend = self.backend_manager.registry.get("networkmanager")
+        snapshot = collect_snapshot(nm_backend.active_links())
+        return find_conflicts(snapshot)
 
     def _keyring_answerer(self, profile: VPNProfile) -> Callable[[str], str | None]:
         def answer(prompt: str) -> str | None:
@@ -170,8 +185,8 @@ class ApplicationController:
         if self.backend_manager.status(unmanaged).state != VPNConnectionState.DISCONNECTED:
             self.backend_manager.disconnect(unmanaged)
 
-    def stop_connection(self) -> None:
-        self.backend_manager.disconnect(self.default_profile())
+    def stop_connection(self, profile: VPNProfile | None = None) -> None:
+        self.backend_manager.disconnect(profile or self.default_profile())
 
     def run(self, argv: list[str] | None = None) -> int:
         parser = argparse.ArgumentParser(prog="vpn-doctor")
@@ -217,6 +232,11 @@ class ApplicationController:
             "disconnect",
             help="Disconnect the active VPN session",
             parents=[profile_option],
+        )
+
+        subparsers.add_parser(
+            "conflicts",
+            help="Detect route and DNS conflicts between active VPNs and the local network",
         )
 
         subparsers.add_parser(
@@ -269,6 +289,14 @@ class ApplicationController:
 
         if args.command == "disconnect":
             return self._disconnect()
+
+        if args.command == "conflicts":
+            report = DiagnosticReport.from_items("Network conflicts", self.network_conflicts())
+            if not report.items:
+                print("No conflict between active VPNs and the local network.")
+                return 0
+            self._print_report(report)
+            return 1
 
         if args.command == "forget-secrets":
             if not self.forget_secrets():
