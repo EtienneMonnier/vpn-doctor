@@ -89,7 +89,8 @@ Goals:
 
 ## Sprint 5 - GTK4 / Libadwaita UI
 
-Status: partly delivered (dashboard layout, connection selector, skins).
+Status: mostly delivered (dashboard layout, tabs, skins, preferences, logo,
+startup animation). Remaining: diagnostic report view.
 
 Goals:
 

@@ -1,8 +1,7 @@
 # Skins
 
 VPN Doctor can be reskinned with a plain GTK 4 CSS file. No code, no restart:
-pick a skin in the main menu (☰ > Skin), edit your file, then choose
-**Reload skins**.
+pick a skin in ☰ > Preferences, edit your file, then press **Reload**.
 
 ## Where skins live
 
@@ -23,6 +22,7 @@ The first comment of the file may describe the skin:
  * @color-scheme: dark
  * @title: VPN DOCTOR ✦ NEON
  * @tagline: Diagnose. Connect. Protect.
+ * @logo: neon-logo.svg
  */
 ```
 
@@ -32,12 +32,15 @@ The first comment of the file may describe the skin:
 | `@color-scheme` | `default`, `light`, `dark` | forces the libadwaita color scheme |
 | `@title` | text | replaces the window heading |
 | `@tagline` | text | replaces the line under the heading |
+| `@logo` | file name | logo of the heading and startup animation, next to the skin file (or a built-in asset); paths leaving that folder are ignored |
 
 ## CSS classes
 
 | Selector | Widget |
 | --- | --- |
 | `window.vd-window` | main window |
+| `.vd-header-logo` | logo next to the heading |
+| `.vd-boot`, `.vd-boot-log`, `.vd-boot-hint` | startup animation |
 | `.vd-title`, `.vd-tagline` | heading and tagline |
 | `.vd-card` | the three panels (also `.vd-status-card`, `.vd-connection-card`, `.vd-log-card`) |
 | `.vd-section-title` | panel titles (`■ STATUS`, ...) |
