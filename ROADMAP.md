@@ -60,6 +60,8 @@ secrets. The implementation must be testable and easy to reason about.
 
 ## Sprint 3 - Diagnostics engine
 
+Status: started. Sprint 3.1 delivered the Remote Desktop diagnostic.
+
 Goals:
 
 - global diagnostic result model;
@@ -68,6 +70,7 @@ Goals:
 - gateway checks;
 - certificate checks;
 - PPP interface checks;
+- services behind the tunnel (RDP done; SMB, HTTP later);
 - readable suggestions.
 
 ## Sprint 4 - Profile and secret management

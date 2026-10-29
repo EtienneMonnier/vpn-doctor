@@ -60,3 +60,12 @@
 ### Removed
 
 - Accidental nested `vpn-doctor/` copy of the repository.
+
+## Sprint 3.1
+
+### Added
+
+- `vpn-doctor rdp` to diagnose a Remote Desktop server behind the VPN, with
+  FreeRDP/Remmina log explanations.
+- Client certificate support in profiles (`user_cert`, `user_key`).
+- Case study: RDP licensing failure behind a working WireGuard tunnel.

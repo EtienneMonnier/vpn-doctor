@@ -28,7 +28,7 @@ VPN Doctor is in early development.
 | Sprint 2 backend design | Done |
 | Real OpenFortiVPN process lifecycle | Experimental |
 | GTK4 / Libadwaita UI | Experimental |
-| Diagnostics engine | Planned |
+| Diagnostics engine | Started (RDP) |
 | Packaging | Planned |
 
 ## First backend
@@ -104,11 +104,29 @@ that file it shows a safe demo profile. Passwords are never stored there.
       "host": "vpn.example.com",
       "port": 443,
       "username": "demo-user",
-      "trusted_cert": "abcdef..."
+      "trusted_cert": "abcdef...",
+      "user_cert": "/etc/openfortivpn/demo-cert.pem",
+      "user_key": "/etc/openfortivpn/demo-key.pem"
     }
   ]
 }
 ```
+
+`user_cert` and `user_key` are optional paths to a client certificate and its
+key. Keep these files readable by root only.
+
+## Remote Desktop behind the VPN
+
+When the tunnel is up but a Windows server refuses the session:
+
+```bash
+journalctl --user -b -o cat | vpn-doctor rdp 192.0.2.41 --log -
+```
+
+VPN Doctor tests the port, the RDP negotiation and TLS without sending any
+credentials, then explains FreeRDP/Remmina errors such as expired licensing,
+expired passwords or missing Remote Desktop permissions. See the
+[case study](docs/case-studies/rdp-licensing-behind-wireguard.md).
 
 ## Experimental GUI
 
