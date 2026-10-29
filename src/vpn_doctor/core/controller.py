@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import argparse
+from collections.abc import Callable
 
 from vpn_doctor.backend.errors import BackendProcessError
 from vpn_doctor.backend.manager import BackendManager
 from vpn_doctor.backend.openfortivpn import OpenFortiVPNBackend
 from vpn_doctor.backend.openfortivpn_process import OpenFortiVPNProcess
 from vpn_doctor.backend.registry import BackendRegistry
+from vpn_doctor.models.diagnostic import DiagnosticReport
+from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNStatus
 from vpn_doctor.services.privilege_service import default_privilege_command
 from vpn_doctor.services.secret_service import EnvironmentSecretProvider
@@ -26,6 +29,27 @@ class ApplicationController:
         process = OpenFortiVPNProcess(privilege_command=default_privilege_command())
         registry.register(OpenFortiVPNBackend(process=process))
         self.backend_manager = BackendManager(registry=registry)
+
+    # Public API used by the GTK UI. The UI never talks to backends directly.
+
+    def default_profile(self) -> VPNProfile:
+        return self.settings.load_default_profile()
+
+    def current_status(self) -> VPNStatus:
+        return self.backend_manager.status(self.default_profile())
+
+    def diagnose_default_profile(self) -> DiagnosticReport:
+        return self.backend_manager.diagnose(self.default_profile())
+
+    def start_connection(self, password: str | None, on_log: Callable[[str], None]) -> None:
+        """Start the default profile without waiting for the tunnel.
+
+        Raises BackendProcessError when the backend process cannot start.
+        """
+        self.backend_manager.connect(self.default_profile(), password=password, on_log=on_log)
+
+    def stop_connection(self) -> None:
+        self.backend_manager.disconnect(self.default_profile())
 
     def run(self, argv: list[str] | None = None) -> int:
         parser = argparse.ArgumentParser(prog="vpn-doctor")

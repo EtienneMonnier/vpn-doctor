@@ -61,3 +61,9 @@ def test_log_parser_certificate_success_is_not_an_error():
     parser = OpenFortiVPNLogParser()
     parsed = parser.parse("DEBUG:  Gateway certificate validation succeeded.")
     assert parsed.kind == ParsedLogKind.UNKNOWN
+
+
+def test_log_parser_pkexec_authorization_cancelled():
+    parser = OpenFortiVPNLogParser()
+    parsed = parser.parse("Error executing command as another user: Request dismissed")
+    assert parsed.kind == ParsedLogKind.PRIVILEGE_ERROR

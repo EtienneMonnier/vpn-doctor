@@ -28,7 +28,12 @@ class ParsedLogKind(StrEnum):
     ERROR = "error"
 
 
-# Messages verified against openfortivpn 1.23.
+# Messages verified against openfortivpn 1.23 and polkit's pkexec.
+PRIVILEGE_ERROR_MARKERS = (
+    "not spawned with root privileges",
+    "error executing command as another user",
+)
+
 AUTHENTICATION_ERROR_MARKERS = (
     "could not authenticate to gateway",
     "could not authenticate to the gateway",
@@ -63,7 +68,8 @@ FAILURE_SUGGESTIONS: dict[ParsedLogKind, str] = {
     ),
     ParsedLogKind.PRIVILEGE_ERROR: (
         "openfortivpn needs administrator privileges to create the PPP interface "
-        "and routes. Run it through pkexec or sudo."
+        "and routes. Accept the administrator authentication prompt, or run it "
+        "through pkexec or sudo."
     ),
 }
 
@@ -89,7 +95,7 @@ class OpenFortiVPNLogParser:
 
         # Errors are checked first: a failure line must never be mistaken for
         # progress because it shares a word with a success message.
-        if "not spawned with root privileges" in lowered:
+        if any(marker in lowered for marker in PRIVILEGE_ERROR_MARKERS):
             return ParsedLogLine(raw=raw, kind=ParsedLogKind.PRIVILEGE_ERROR, message=raw)
 
         if "gateway certificate validation failed" in lowered or "trusted-cert" in lowered:

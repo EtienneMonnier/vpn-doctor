@@ -6,8 +6,9 @@ presentation state independent from backend implementation details.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
+from vpn_doctor.i18n import _
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
 
 
@@ -27,8 +28,8 @@ class ConnectionStatusViewModel:
 
         if state == VPNConnectionState.CONNECTED:
             return cls(
-                title="Connected",
-                subtitle=status.message or "VPN tunnel is active",
+                title=_("Connected"),
+                subtitle=status.message or _("VPN tunnel is active"),
                 css_class="success",
                 can_connect=False,
                 can_disconnect=True,
@@ -36,8 +37,8 @@ class ConnectionStatusViewModel:
 
         if state in {VPNConnectionState.CONNECTING, VPNConnectionState.AUTHENTICATING, VPNConnectionState.NEGOTIATING}:
             return cls(
-                title="Connecting",
-                subtitle=status.message or "VPN connection is being established",
+                title=_("Connecting"),
+                subtitle=status.message or _("VPN connection is being established"),
                 css_class="warning",
                 can_connect=False,
                 can_disconnect=True,
@@ -45,8 +46,8 @@ class ConnectionStatusViewModel:
 
         if state == VPNConnectionState.DISCONNECTING:
             return cls(
-                title="Disconnecting",
-                subtitle=status.message or "VPN connection is being stopped",
+                title=_("Disconnecting"),
+                subtitle=status.message or _("VPN connection is being stopped"),
                 css_class="warning",
                 can_connect=False,
                 can_disconnect=False,
@@ -54,17 +55,47 @@ class ConnectionStatusViewModel:
 
         if state == VPNConnectionState.FAILED:
             return cls(
-                title="Failed",
-                subtitle=status.message or "VPN connection failed",
+                title=_("Failed"),
+                subtitle=status.suggestion or status.message or _("VPN connection failed"),
                 css_class="error",
                 can_connect=True,
                 can_disconnect=False,
             )
 
         return cls(
-            title="Disconnected",
-            subtitle=status.message or "VPN is not connected",
+            title=_("Disconnected"),
+            subtitle=status.message or _("VPN is not connected"),
             css_class="neutral",
             can_connect=True,
             can_disconnect=False,
         )
+
+
+def format_elapsed(seconds: float) -> str:
+    """Format a duration as HH:MM:SS."""
+    total = max(0, int(seconds))
+    hours, remainder = divmod(total, 3600)
+    minutes, secs = divmod(remainder, 60)
+    return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+
+
+@dataclass
+class ConnectionTimer:
+    """Track how long the tunnel has been connected.
+
+    The caller passes the current monotonic time so the class stays
+    deterministic and easy to test.
+    """
+
+    _connected_since: float | None = field(default=None, init=False)
+
+    def update(self, state: VPNConnectionState, now: float) -> str | None:
+        """Return the elapsed connected time, or None when not connected."""
+        if state != VPNConnectionState.CONNECTED:
+            self._connected_since = None
+            return None
+
+        if self._connected_since is None:
+            self._connected_since = now
+
+        return format_elapsed(now - self._connected_since)
