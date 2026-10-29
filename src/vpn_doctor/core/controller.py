@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from collections.abc import Callable
+from pathlib import Path
 
 from vpn_doctor.backend.errors import BackendProcessError
 from vpn_doctor.backend.manager import BackendManager
 from vpn_doctor.backend.openfortivpn import OpenFortiVPNBackend
 from vpn_doctor.backend.openfortivpn_process import OpenFortiVPNProcess
 from vpn_doctor.backend.registry import BackendRegistry
+from vpn_doctor.diagnostics.rdp import DEFAULT_RDP_PORT, analyze_freerdp_log, probe_rdp
 from vpn_doctor.models.diagnostic import DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNStatus
@@ -82,6 +85,19 @@ class ApplicationController:
 
         subparsers.add_parser("disconnect", help="Disconnect the active VPN session")
 
+        rdp_parser = subparsers.add_parser(
+            "rdp",
+            help="Diagnose a Remote Desktop server reached through the VPN",
+        )
+        rdp_parser.add_argument("host", help="RDP server name or address")
+        rdp_parser.add_argument("--port", type=int, default=DEFAULT_RDP_PORT)
+        rdp_parser.add_argument(
+            "--log",
+            metavar="FILE",
+            help="FreeRDP/Remmina log to explain, '-' for stdin "
+            "(e.g. journalctl --user -b -o cat | vpn-doctor rdp HOST --log -)",
+        )
+
         args = parser.parse_args(argv)
 
         if args.version:
@@ -107,6 +123,9 @@ class ApplicationController:
         if args.command == "disconnect":
             return self._disconnect()
 
+        if args.command == "rdp":
+            return self._rdp(args.host, args.port, args.log)
+
         if args.command == "gui":
             return self._gui()
 
@@ -116,15 +135,26 @@ class ApplicationController:
     def _diagnose(self) -> int:
         profile = self.settings.load_default_profile()
         result = self.backend_manager.diagnose(profile)
-
-        print(result.summary)
-        for item in result.items:
-            icon = "OK" if item.success else "FAIL"
-            print(f"[{icon}] {item.name}: {item.message}")
-            if item.suggestion:
-                print(f"      Suggestion: {item.suggestion}")
-
+        self._print_report(result)
         return 0 if result.success else 1
+
+    def _rdp(self, host: str, port: int, log_path: str | None) -> int:
+        report = probe_rdp(host, port)
+        self._print_report(report)
+        success = report.success
+
+        if log_path is not None:
+            if log_path == "-":
+                items = analyze_freerdp_log(sys.stdin)
+            else:
+                with Path(log_path).open(encoding="utf-8", errors="replace") as log_file:
+                    items = analyze_freerdp_log(log_file)
+            log_report = DiagnosticReport.from_items("RDP client log analysis", items)
+            print()
+            self._print_report(log_report)
+            success = success and log_report.success
+
+        return 0 if success else 1
 
     def _profiles(self) -> int:
         for profile in self.settings.load_profiles():
@@ -178,6 +208,15 @@ class ApplicationController:
         from vpn_doctor.ui.main_window import run_ui
 
         return run_ui()
+
+    @staticmethod
+    def _print_report(report: DiagnosticReport) -> None:
+        print(report.summary)
+        for item in report.items:
+            icon = "OK" if item.success else "FAIL"
+            print(f"[{icon}] {item.name}: {item.message}")
+            if item.suggestion:
+                print(f"      Suggestion: {item.suggestion}")
 
     @staticmethod
     def _print_status(status: VPNStatus) -> None:
