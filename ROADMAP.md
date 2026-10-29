@@ -104,6 +104,9 @@ Goals:
 
 ## Sprint 6 - Packaging
 
+Status: RPM done (0.1.0); DEB planned; Flatpak postponed (see the packaging
+guide).
+
 Goals:
 
 - Flatpak manifest;

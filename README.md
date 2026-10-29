@@ -31,7 +31,7 @@ VPN Doctor is in early development.
 | Real OpenFortiVPN process lifecycle | Experimental |
 | GTK4 / Libadwaita UI | Experimental |
 | Diagnostics engine | Started (RDP) |
-| Packaging | Planned |
+| Packaging | RPM done, DEB planned |
 
 ## First backend
 
@@ -55,6 +55,16 @@ It should say things like:
 - "The tunnel is up, but no replies return through PPP."
 - "DNS was pushed by the VPN, but the search domain is missing."
 - "NetworkManager failed, but OpenFortiVPN works with the same gateway."
+
+## Install (Fedora)
+
+```bash
+packaging/rpm/build.sh
+sudo dnf install ./build/rpm/RPMS/noarch/vpn-doctor-*.noarch.rpm
+```
+
+VPN Doctor then appears in the GNOME application menu. See the
+[packaging guide](docs/development/PACKAGING_GUIDE.md).
 
 ## Quick development test
 

@@ -133,3 +133,15 @@
 ### Fixed
 
 - Conflict checks took the Wi-Fi interface for an OpenVPN tunnel.
+
+## 0.1.0 - Sprint 6
+
+### Added
+
+- Dedicated privileged helper for openfortivpn with its own polkit action
+  (ADR-0012): validated profile fields only, PEM files checked and passed as
+  open descriptors, one authentication per connection, tunnel stopped when
+  VPN Doctor closes the pipe.
+- RPM packaging: launcher, AppStream metainfo, icon, helper and policy.
+- "New VPN connection…" and "Settings…" open the NetworkManager editor.
+- Preferences: default connection and auto-connect at startup.
