@@ -52,3 +52,4 @@
 - [ADR-0007 No real secrets in repository](adr/0007-no-real-secrets-in-repository.md)
 - [ADR-0008 Safe backend lifecycle](adr/0008-safe-openfortivpn-lifecycle.md)
 - [ADR-0009 Event-driven backend status](adr/0009-event-driven-backend-status.md)
+- [ADR-0010 Privilege escalation through pkexec](adr/0010-pkexec-privilege-escalation.md)

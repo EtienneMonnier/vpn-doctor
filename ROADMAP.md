@@ -122,3 +122,19 @@ Goals:
 - Add Connect and Disconnect buttons.
 - Add log area.
 - Keep backend execution safe until UI wiring is implemented.
+
+
+## Sprint 2.5 - UI integration
+
+Status: implemented.
+
+Delivered:
+- Connect/Disconnect wired to the backend through the controller.
+- Password dialog, live logs, connection timer, Diagnose button.
+- pkexec privilege escalation (ADR-0010).
+- Restored the unmerged Sprint 2.3 code.
+
+Next:
+- profile selector;
+- single polkit authorization through a dedicated helper;
+- validation against a real gateway.
