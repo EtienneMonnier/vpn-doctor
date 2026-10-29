@@ -22,7 +22,7 @@ class ConnectionStatusViewModel:
     can_disconnect: bool
 
     @classmethod
-    def from_status(cls, status: VPNStatus) -> "ConnectionStatusViewModel":
+    def from_status(cls, status: VPNStatus) -> ConnectionStatusViewModel:
         state = status.state
 
         if state == VPNConnectionState.CONNECTED:

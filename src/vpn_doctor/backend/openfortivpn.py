@@ -10,7 +10,6 @@ from dataclasses import dataclass, field
 
 from vpn_doctor.backend.base import VPNBackend
 from vpn_doctor.backend.command import BackendCommand
-from vpn_doctor.backend.log_parser import OpenFortiVPNLogParser
 from vpn_doctor.backend.openfortivpn_process import OpenFortiVPNProcess
 from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
