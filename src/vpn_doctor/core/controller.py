@@ -19,7 +19,12 @@ from vpn_doctor.models.diagnostic import DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
 from vpn_doctor.services.privilege_service import default_privilege_command
-from vpn_doctor.services.secret_service import EnvironmentSecretProvider
+from vpn_doctor.services.secret_service import (
+    EnvironmentSecretProvider,
+    KeyringSecretStore,
+    SecretKind,
+    classify_prompt,
+)
 from vpn_doctor.services.settings_service import SettingsService
 from vpn_doctor.services.theme_service import Theme, ThemeService
 
@@ -31,6 +36,7 @@ class ApplicationController:
         self.settings = SettingsService()
         self.theme_service = ThemeService()
         self.secret_provider = EnvironmentSecretProvider()
+        self.keyring = KeyringSecretStore()
 
         registry = BackendRegistry()
         process = OpenFortiVPNProcess(
@@ -96,15 +102,54 @@ class ApplicationController:
     def diagnose_default_profile(self) -> DiagnosticReport:
         return self.backend_manager.diagnose(self.default_profile())
 
-    def start_connection(self, password: str | None, on_log: Callable[[str], None]) -> None:
+    def stored_password(self) -> str | None:
+        """Return the password remembered in the keyring for the selected profile."""
+        return self.keyring.lookup(self.default_profile(), SecretKind.PASSWORD)
+
+    def can_remember(self, prompt: str | None = None) -> bool:
+        """True when the keyring works and the prompt asks for a reusable secret."""
+        if prompt is not None and classify_prompt(prompt) is None:
+            return False
+        return self.keyring.available
+
+    def start_connection(
+        self,
+        password: str | None,
+        on_log: Callable[[str], None],
+        remember: bool = False,
+    ) -> None:
         """Start the default profile without waiting for the tunnel.
 
         Raises BackendProcessError when the backend process cannot start.
         """
-        self.backend_manager.connect(self.default_profile(), password=password, on_log=on_log)
+        profile = self.default_profile()
+        if password is not None and remember:
+            self.keyring.store(profile, SecretKind.PASSWORD, password)
+        self.backend_manager.connect(
+            profile,
+            password=password,
+            on_log=on_log,
+            prompt_handler=self._keyring_answerer(profile),
+        )
 
-    def answer_prompt(self, answer: str) -> None:
-        self.backend_manager.answer_prompt(self.default_profile(), answer)
+    def answer_prompt(self, answer: str, remember: bool = False) -> None:
+        profile = self.default_profile()
+        prompt = self.current_status().prompt
+        kind = classify_prompt(prompt) if prompt else None
+        if remember and kind is not None:
+            self.keyring.store(profile, kind, answer)
+        self.backend_manager.answer_prompt(profile, answer)
+
+    def forget_secrets(self) -> None:
+        """Remove every secret remembered for the selected profile."""
+        self.keyring.forget(self.default_profile())
+
+    def _keyring_answerer(self, profile: VPNProfile) -> Callable[[str], str | None]:
+        def answer(prompt: str) -> str | None:
+            kind = classify_prompt(prompt)
+            return self.keyring.lookup(profile, kind) if kind is not None else None
+
+        return answer
 
     def stop_unmanaged_connections(self) -> None:
         """Stop tunnels VPN Doctor runs itself, e.g. when the UI closes.
@@ -168,6 +213,12 @@ class ApplicationController:
             parents=[profile_option],
         )
 
+        subparsers.add_parser(
+            "forget-secrets",
+            help="Remove the secrets remembered in the keyring for a profile",
+            parents=[profile_option],
+        )
+
         rdp_parser = subparsers.add_parser(
             "rdp",
             help="Diagnose a Remote Desktop server reached through the VPN",
@@ -212,6 +263,11 @@ class ApplicationController:
 
         if args.command == "disconnect":
             return self._disconnect()
+
+        if args.command == "forget-secrets":
+            self.forget_secrets()
+            print(f"Secrets forgotten for {self.default_profile().name}")
+            return 0
 
         if args.command == "rdp":
             return self._rdp(args.host, args.port, args.log)
@@ -264,7 +320,7 @@ class ApplicationController:
         profile = self.default_profile()
         password = None
         if not dry_run and self.backend_manager.manages_secrets(profile) is False:
-            password = self.secret_provider.get_password(profile)
+            password = self.secret_provider.get_password(profile) or self.stored_password()
 
         def print_log(line: str) -> None:
             print(line)
@@ -277,6 +333,7 @@ class ApplicationController:
                 dry_run=dry_run,
                 wait=wait,
                 timeout_seconds=timeout_seconds,
+                prompt_handler=None if dry_run else self._keyring_answerer(profile),
             )
         except BackendProcessError as exc:
             print(f"Backend process error: {exc}")

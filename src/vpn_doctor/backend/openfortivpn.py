@@ -35,6 +35,7 @@ class OpenFortiVPNBackend(VPNBackend):
         dry_run: bool = False,
         wait: bool = False,
         timeout_seconds: float = 60.0,
+        prompt_handler: Callable[[str], str | None] | None = None,
     ) -> list[str] | VPNStatus:
         """Start openfortivpn or return the command when dry_run is enabled."""
         command = self.process.connect(
@@ -42,6 +43,7 @@ class OpenFortiVPNBackend(VPNBackend):
             password=password,
             on_log=on_log,
             dry_run=dry_run,
+            prompt_handler=prompt_handler,
         )
 
         if dry_run:

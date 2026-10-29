@@ -376,13 +376,27 @@ def run_ui() -> int:
 
         # -- dialogs -----------------------------------------------------------------
 
-        def secret_dialog(self, heading: str, body: str, accept: str, on_answer) -> None:
+        def secret_dialog(
+            self,
+            heading: str,
+            body: str,
+            accept: str,
+            on_answer,
+            can_remember: bool = False,
+        ) -> None:
+            """Ask for a secret; on_answer(value, remember) gets None on cancel."""
             entry = Gtk.PasswordEntry()
             entry.set_show_peek_icon(True)
             entry.set_property("activates-default", True)
 
+            content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+            content.append(entry)
+            remember = Gtk.CheckButton(label=_("Remember in the keyring"))
+            if can_remember:
+                content.append(remember)
+
             dialog = Adw.AlertDialog(heading=heading, body=body)
-            dialog.set_extra_child(entry)
+            dialog.set_extra_child(content)
             dialog.add_response("cancel", _("Cancel"))
             dialog.add_response("accept", accept)
             dialog.set_response_appearance("accept", Adw.ResponseAppearance.SUGGESTED)
@@ -392,7 +406,10 @@ def run_ui() -> int:
             def on_response(_dialog, response: str) -> None:
                 answer = entry.get_text()
                 entry.set_text("")
-                on_answer(answer if response == "accept" else None)
+                if response == "accept":
+                    on_answer(answer, remember.get_active())
+                else:
+                    on_answer(None, False)
 
             dialog.connect("response", on_response)
             dialog.present(self)
@@ -400,17 +417,23 @@ def run_ui() -> int:
         def ask_prompt(self, prompt: str) -> None:
             """Ask the user to answer a backend prompt, e.g. a two-factor token."""
 
-            def on_answer(answer: str | None) -> None:
+            def on_answer(answer: str | None, remember: bool) -> None:
                 if answer is None:
                     self.on_disconnect_clicked(None)
                     return
                 try:
-                    controller.answer_prompt(answer)
+                    controller.answer_prompt(answer, remember=remember)
                 except BackendError as exc:
                     self.append_log(_("Could not send the answer: {error}").format(error=exc))
                 self.refresh_status()
 
-            self.secret_dialog(_("The VPN asks for more information"), prompt, _("Send"), on_answer)
+            self.secret_dialog(
+                _("The VPN asks for more information"),
+                prompt,
+                _("Send"),
+                on_answer,
+                can_remember=controller.can_remember(prompt),
+            )
 
         # -- actions -----------------------------------------------------------------
 
@@ -420,22 +443,33 @@ def run_ui() -> int:
                 self.start_connection(None)
                 return
 
-            def on_answer(password: str | None) -> None:
+            stored = controller.stored_password()
+            if stored is not None:
+                self.append_log(_("Using the password remembered in the keyring"))
+                self.start_connection(stored)
+                return
+
+            def on_answer(password: str | None, remember: bool) -> None:
                 if password is not None:
-                    self.start_connection(password)
+                    self.start_connection(password, remember=remember)
 
             self.secret_dialog(
                 _("VPN password"),
-                _("The password is sent to openfortivpn and never stored."),
+                _("The password is sent to openfortivpn through stdin, never written to a file."),
                 _("Connect"),
                 on_answer,
+                can_remember=controller.can_remember(),
             )
 
-        def start_connection(self, password: str | None) -> None:
+        def start_connection(self, password: str | None, remember: bool = False) -> None:
             profile = controller.default_profile()
             self.append_log(_("Connecting {name}…").format(name=profile.name))
             try:
-                controller.start_connection(password, on_log=self.append_log_from_thread)
+                controller.start_connection(
+                    password,
+                    on_log=self.append_log_from_thread,
+                    remember=remember,
+                )
             except BackendError as exc:
                 self.append_log(_("Could not start the VPN backend: {error}").format(error=exc))
             self.refresh_status()
