@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.vpndoctor.VPNDoctor</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>VPN Doctor</name>
+  <summary>Diagnose, connect and protect your VPN connections</summary>
+  <developer id="io.github.etiennemonnier">
+    <name>Etienne Monnier</name>
+  </developer>
+  <description>
+    <p>
+      VPN Doctor is a companion to NetworkManager. It connects the VPNs you
+      already use and explains what goes wrong, where the desktop only says
+      that the activation failed.
+    </p>
+    <ul>
+      <li>Explains failures from the NetworkManager reason and the VPN plugin log</li>
+      <li>Several VPNs at once, each in its own tab with live logs</li>
+      <li>Detects conflicts between VPNs and with the local network</li>
+      <li>Diagnoses Remote Desktop servers reached through the VPN</li>
+      <li>Runs openfortivpn directly when the NetworkManager plugin fails</li>
+      <li>Keeps secrets in the desktop keyring, never in files</li>
+      <li>Custom skins in CSS</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">io.github.vpndoctor.VPNDoctor.desktop</launchable>
+  <url type="homepage">https://github.com/EtienneMonnier/vpn-doctor</url>
+  <url type="bugtracker">https://github.com/EtienneMonnier/vpn-doctor/issues</url>
+  <provides>
+    <binary>vpn-doctor</binary>
+    <binary>vpn-doctor-gui</binary>
+  </provides>
+  <categories>
+    <category>Network</category>
+  </categories>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-10-29">
+      <description>
+        <p>First packaged release: NetworkManager overlay, tabs, conflict detection,
+        keyring secrets, privileged helper for openfortivpn and custom skins.</p>
+      </description>
+    </release>
+  </releases>
+</component>
