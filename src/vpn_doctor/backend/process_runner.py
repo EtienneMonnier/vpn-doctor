@@ -72,7 +72,9 @@ class ProcessRunner:
         if on_line is not None and self.process.stdout is not None:
             self._reader_thread = threading.Thread(
                 target=self._read_output,
-                args=(self.process.stdout.fileno(), on_line, on_prompt or on_line),
+                # Pass the stream itself: holding it keeps the descriptor open
+                # even after terminate() drops the Popen object.
+                args=(self.process.stdout, on_line, on_prompt or on_line),
                 daemon=True,
             )
             self._reader_thread.start()
@@ -85,11 +87,11 @@ class ProcessRunner:
         self.process.stdin.flush()
 
     @staticmethod
-    def _read_output(fd: int, on_line: LineCallback, on_prompt: LineCallback) -> None:
+    def _read_output(stream, on_line: LineCallback, on_prompt: LineCallback) -> None:
         # Read raw chunks instead of iterating lines: a prompt has no newline
         # and would otherwise stay invisible while the process waits for it.
         pending = ""
-        while chunk := os.read(fd, 4096):
+        while chunk := ProcessRunner._read_chunk(stream):
             pending += chunk.decode("utf-8", errors="replace")
             *lines, pending = pending.split("\n")
             for line in lines:
@@ -99,6 +101,13 @@ class ProcessRunner:
                 pending = ""
         if pending:
             on_line(pending)
+
+    @staticmethod
+    def _read_chunk(stream) -> bytes:
+        try:
+            return os.read(stream.fileno(), 4096)
+        except (OSError, ValueError):  # stream closed while the process stops
+            return b""
 
     @property
     def is_running(self) -> bool:

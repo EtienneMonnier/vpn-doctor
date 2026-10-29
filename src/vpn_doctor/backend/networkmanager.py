@@ -11,6 +11,7 @@ See docs/adr/0011-networkmanager-overlay.md.
 
 from __future__ import annotations
 
+import json
 import logging
 import shutil
 import subprocess
@@ -94,24 +95,57 @@ def parse_gateway(value: str) -> tuple[str, int]:
     return host, int(port) if port.isdigit() else 0
 
 
-def is_networkmanager_core_line(line: str) -> bool:
-    """NetworkManager's own lines start with a level tag such as "<info>"."""
-    return line.lstrip().startswith("<")
+def parse_journal_entry(raw: str) -> tuple[str, str] | None:
+    """Return (syslog identifier, message) of one `journalctl -o json` line."""
+    try:
+        entry = json.loads(raw)
+    except ValueError:
+        return None
+    message = entry.get("MESSAGE")
+    if not isinstance(message, str) or not message.strip():
+        return None
+    return entry.get("SYSLOG_IDENTIFIER") or "", message
+
+
+def belongs_to(entry: tuple[str, str], profile: VPNProfile) -> bool:
+    """Tell whether a NetworkManager journal entry concerns this connection.
+
+    NetworkManager logs every device: keep its lines that name the connection.
+    VPN plugins log under their own identifier, e.g. "nm-openvpn".
+    """
+    identifier, message = entry
+    if identifier == "NetworkManager":
+        return bool(profile.nm_uuid and profile.nm_uuid in message) or profile.name in message
+    if profile.vpn_type and profile.vpn_type in identifier:
+        return True
+    # Helpers such as pppd cannot be attributed: show them to every session.
+    return not identifier.startswith("nm-")
 
 
 @dataclass
-class NetworkManagerBackend(VPNBackend):
-    """Drive NetworkManager VPN and WireGuard connections."""
+class Session:
+    """One connection started by VPN Doctor: its nmcli call, journal and state."""
 
-    name: str = "networkmanager"
-    manages_secrets: bool = True
-    activation_timeout: int = 120
+    profile: VPNProfile
     runner: ProcessRunner = field(default_factory=ProcessRunner)
     journal: ProcessRunner = field(default_factory=ProcessRunner)
     state_machine: ConnectionStateMachine = field(default_factory=ConnectionStateMachine)
     activation_lines: list[str] = field(default_factory=list)
     plugin_lines: list[str] = field(default_factory=list)
-    _profile: VPNProfile | None = field(default=None, init=False, repr=False)
+
+    def stop_processes(self) -> None:
+        self.runner.terminate()
+        self.journal.terminate()
+
+
+@dataclass
+class NetworkManagerBackend(VPNBackend):
+    """Drive NetworkManager VPN and WireGuard connections, several at once."""
+
+    name: str = "networkmanager"
+    manages_secrets: bool = True
+    activation_timeout: int = 120
+    sessions: dict[str, Session] = field(default_factory=dict)
 
     # -- discovery ---------------------------------------------------------
 
@@ -181,50 +215,62 @@ class NetworkManagerBackend(VPNBackend):
         if dry_run:
             return command
 
-        self._profile = profile
-        self.activation_lines.clear()
-        self.plugin_lines.clear()
-        self.state_machine.transition(VPNConnectionState.CONNECTING, "Asking NetworkManager")
-        self.state_machine.suggestion = None
+        previous = self.sessions.get(profile.nm_uuid or "")
+        if previous is not None:
+            previous.stop_processes()
+        session = Session(profile=profile)
+        self.sessions[profile.nm_uuid or ""] = session
+        session.state_machine.transition(VPNConnectionState.CONNECTING, "Asking NetworkManager")
 
-        self._follow_journal(profile, on_log)
-        self.runner.start(
+        self._follow_journal(session, on_log)
+        session.runner.start(
             command,
-            on_line=lambda line: self._handle_activation_line(line, on_log),
+            on_line=lambda line: self._handle_activation_line(session, line, on_log),
             stdin_text="",
         )
 
         if wait:
-            return self._wait(profile, timeout_seconds)
+            return self._wait(session, timeout_seconds)
         return command
 
     def disconnect(self, profile: VPNProfile | None = None) -> None:
-        profile = profile or self._profile
-        self.state_machine.transition(VPNConnectionState.DISCONNECTING, "Asking NetworkManager")
-        self.runner.terminate()
-        if profile is not None and profile.nm_uuid:
-            subprocess.run(
-                ["nmcli", "connection", "down", "uuid", profile.nm_uuid],
-                check=False,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        self.journal.terminate()
-        self.state_machine.transition(VPNConnectionState.DISCONNECTED, "Disconnected")
+        """Disconnect one connection, or every connection VPN Doctor started."""
+        targets = [profile] if profile is not None else [s.profile for s in self.sessions.values()]
+        for target in targets:
+            session = self.sessions.get(target.nm_uuid or "")
+            if session is not None:
+                session.state_machine.transition(
+                    VPNConnectionState.DISCONNECTING, "Asking NetworkManager"
+                )
+                session.runner.terminate()
+            if target.nm_uuid:
+                subprocess.run(
+                    ["nmcli", "connection", "down", "uuid", target.nm_uuid],
+                    check=False,
+                    stdin=subprocess.DEVNULL,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+            if session is not None:
+                session.journal.terminate()
+                session.state_machine.transition(VPNConnectionState.DISCONNECTED, "Disconnected")
 
     def status(self, profile: VPNProfile | None = None) -> VPNStatus:
-        profile = profile or self._profile
-        machine = self.state_machine
+        if profile is None:
+            if not self.sessions:
+                return VPNStatus(backend=self.name, state=VPNConnectionState.DISCONNECTED)
+            profile = list(self.sessions.values())[-1].profile
 
-        # A connection VPN Doctor did not start: NetworkManager is the only source.
-        if profile is not None and (self._profile is None or profile.nm_uuid != self._profile.nm_uuid):
+        session = self.sessions.get(profile.nm_uuid or "")
+        if session is None:
+            # A connection VPN Doctor did not start: NetworkManager is the only source.
             state = self._active_state(profile.nm_uuid or "") or VPNConnectionState.DISCONNECTED
             return VPNStatus(backend=self.name, state=state)
 
+        machine = session.state_machine
         # While nmcli is still activating, its output is the freshest source.
-        if not self.runner.is_running and profile is not None and profile.nm_uuid:
-            nm_state = self._active_state(profile.nm_uuid)
+        if not session.runner.is_running:
+            nm_state = self._active_state(profile.nm_uuid or "")
             if nm_state is not None:
                 if machine.state != nm_state:
                     machine.transition(nm_state, None)
@@ -238,6 +284,24 @@ class NetworkManagerBackend(VPNBackend):
             suggestion=machine.suggestion,
         )
 
+    def active_links(self) -> dict[str, str]:
+        """Return {network interface: connection name} for active VPN connections."""
+        try:
+            output = self._nmcli("-t", "-f", "NAME,UUID,TYPE,DEVICE", "connection", "show", "--active")
+        except BackendProcessError:
+            return {}
+        links = {}
+        for line in output.splitlines():
+            name, uuid, kind, device = (split_terse(line) + ["", "", "", ""])[:4]
+            if kind == "wireguard" and device:
+                links[device] = name
+            elif kind == "vpn":
+                # VPN plugins run on top of a device; the tunnel has its own interface.
+                iface = self._nmcli("-g", "GENERAL.IP-IFACE", "connection", "show", "uuid", uuid)
+                if iface.strip():
+                    links[iface.strip()] = name
+        return links
+
     def diagnose(self, profile: VPNProfile) -> DiagnosticReport:
         items = [self._check_nmcli()]
         if profile.vpn_type and profile.vpn_type != "wireguard":
@@ -246,64 +310,67 @@ class NetworkManagerBackend(VPNBackend):
 
     # -- activation output and journal -------------------------------------------
 
-    def _handle_activation_line(self, line: str, on_log: Callable[[str], None] | None) -> None:
+    def _handle_activation_line(
+        self,
+        session: Session,
+        line: str,
+        on_log: Callable[[str], None] | None,
+    ) -> None:
         if not line.strip():
             return
-        self.activation_lines.append(line)
+        session.activation_lines.append(line)
         if on_log is not None:
             on_log(line)
 
         if "successfully activated" in line:
-            self.state_machine.transition(VPNConnectionState.CONNECTED, line)
+            session.state_machine.transition(VPNConnectionState.CONNECTED, line)
         elif line.startswith("Error:"):
-            self._fail(line)
+            self._fail(session, line)
 
-    def _fail(self, message: str) -> None:
+    @staticmethod
+    def _fail(session: Session, message: str) -> None:
         # Give the journal follower a moment to receive the plugin's last words.
         time.sleep(0.5)
-        explanations = explain_failure(self.activation_lines, self.plugin_lines)
-        self.state_machine.transition(VPNConnectionState.FAILED, message)
+        explanations = explain_failure(session.activation_lines, session.plugin_lines)
+        session.state_machine.transition(VPNConnectionState.FAILED, message)
         if explanations:
             first = explanations[0]
-            self.state_machine.suggestion = f"{first.message} {first.suggestion or ''}".strip()
-        self.journal.terminate()
+            session.state_machine.suggestion = f"{first.message} {first.suggestion or ''}".strip()
+        session.journal.terminate()
 
-    def _follow_journal(self, profile: VPNProfile, on_log: Callable[[str], None] | None) -> None:
+    def _follow_journal(self, session: Session, on_log: Callable[[str], None] | None) -> None:
         if not shutil.which("journalctl"):
             return
 
-        def handle(line: str) -> None:
-            if not line.strip():
+        def handle(raw: str) -> None:
+            entry = parse_journal_entry(raw)
+            if entry is None or not belongs_to(entry, session.profile):
                 return
-            core = is_networkmanager_core_line(line)
-            # NetworkManager logs every device; keep only lines about this
-            # connection, plus the VPN plugin's own output.
-            if core and profile.nm_uuid not in line and profile.name not in line:
-                return
-            if not core:
-                self.plugin_lines.append(line)
+            identifier, message = entry
+            if identifier != "NetworkManager":
+                session.plugin_lines.append(message)
             if on_log is not None:
-                on_log(line)
+                on_log(message)
 
         try:
-            self.journal.start(
-                ["journalctl", "--follow", "--lines=0", "--output=cat", "--unit=NetworkManager"],
+            session.journal.start(
+                ["journalctl", "--follow", "--lines=0", "--output=json", "--unit=NetworkManager"],
                 on_line=handle,
             )
         except BackendProcessError as exc:
             LOGGER.warning("Cannot follow the NetworkManager journal: %s", exc)
 
-    def _wait(self, profile: VPNProfile, timeout_seconds: float) -> VPNStatus:
+    def _wait(self, session: Session, timeout_seconds: float) -> VPNStatus:
         deadline = time.monotonic() + timeout_seconds
         while time.monotonic() < deadline:
-            status = self.status(profile)
+            status = self.status(session.profile)
             if status.state in {VPNConnectionState.CONNECTED, VPNConnectionState.FAILED}:
                 return status
-            if not self.runner.is_running and status.state == VPNConnectionState.DISCONNECTED:
+            if not session.runner.is_running and status.state == VPNConnectionState.DISCONNECTED:
                 return status
             time.sleep(0.2)
-        self.state_machine.transition(VPNConnectionState.FAILED, "Connection timeout")
-        return self.status(profile)
+        session.state_machine.transition(VPNConnectionState.FAILED, "Connection timeout")
+        return self.status(session.profile)
 
     # -- helpers -----------------------------------------------------------------
 
