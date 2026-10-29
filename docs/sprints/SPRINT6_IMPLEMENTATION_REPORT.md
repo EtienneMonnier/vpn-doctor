@@ -32,3 +32,18 @@ close). The installed RPM still has to be validated by hand.
 - The helper is Python (standard library, `python3 -I`); Rust was considered,
   see ADR-0012.
 - DEB packaging and a NetworkManager-only Flatpak remain to do.
+
+## Security review
+
+A review of `dev` against `main` (the whole project) found no vulnerability
+above the reporting bar: no argument injection into openfortivpn, no
+arbitrary file read as root, no secret in logs, no shell in subprocesses.
+
+One design observation was fixed: with `auth_admin_keep`, another process of
+the user could, for a few minutes after a connection, start the helper
+towards a gateway of its own and take a man-in-the-middle position through
+its routes and DNS. Approved gateways (ADR-0013) close it: the helper only
+connects to gateways and certificates an administrator approved.
+
+Still to confirm on a built RPM: Fedora's shebang mangling keeps
+`#!/usr/bin/python3 -I` on the helper.

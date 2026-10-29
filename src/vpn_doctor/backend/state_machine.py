@@ -50,6 +50,7 @@ class ConnectionStateMachine:
             ParsedLogKind.GATEWAY_ERROR,
             ParsedLogKind.PRIVILEGE_ERROR,
             ParsedLogKind.PRIVATE_KEY_ERROR,
+            ParsedLogKind.GATEWAY_NOT_APPROVED,
             ParsedLogKind.ERROR,
         }:
             # Keep the first explanation: later errors are usually consequences.

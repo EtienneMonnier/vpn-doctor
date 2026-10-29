@@ -136,3 +136,88 @@ def test_stops_openfortivpn_when_stdin_closes(tmp_path):
     assert time.monotonic() - started < 5
 
 
+
+
+@pytest.fixture
+def approved_file(tmp_path, monkeypatch):
+    path = tmp_path / "vpn-doctor" / "gateways.json"
+    monkeypatch.setattr(helper, "APPROVED_GATEWAYS", str(path))
+    monkeypatch.setattr(helper, "TRUSTED_OWNER", UID)
+    return path
+
+
+def test_unapproved_gateway_is_refused(approved_file):
+    with pytest.raises(InvalidRequest, match="gateway not approved"):
+        helper.check_approved({"host": "vpn.example.com", "port": 443})
+
+
+def test_approved_gateway_with_pinned_certificate(approved_file):
+    helper.approve({"host": "VPN.example.com", "port": 443, "trusted_cert": FINGERPRINT}, UID)
+
+    helper.check_approved({"host": "vpn.example.com", "port": 443, "trusted_cert": FINGERPRINT})
+    assert oct(approved_file.stat().st_mode & 0o777) == "0o644"
+    with pytest.raises(InvalidRequest, match="differs from the approved one"):
+        helper.check_approved({"host": "vpn.example.com", "port": 443, "trusted_cert": "cd" * 32})
+    with pytest.raises(InvalidRequest, match="differs from the approved one"):
+        helper.check_approved({"host": "vpn.example.com", "port": 443})
+    with pytest.raises(InvalidRequest, match="gateway not approved"):
+        helper.check_approved({"host": "vpn.example.com", "port": 8443, "trusted_cert": FINGERPRINT})
+
+
+def test_reapproving_replaces_the_pinned_certificate(approved_file):
+    helper.approve({"host": "vpn.example.com", "port": 443, "trusted_cert": FINGERPRINT}, UID)
+    helper.approve({"host": "vpn.example.com", "port": 443, "trusted_cert": "cd" * 32}, UID)
+
+    assert len(helper.load_approved()) == 1
+    helper.check_approved({"host": "vpn.example.com", "port": 443, "trusted_cert": "cd" * 32})
+
+
+def test_revoke(approved_file):
+    helper.approve({"host": "vpn.example.com", "port": 443}, UID)
+    helper.revoke({"host": "vpn.example.com", "port": 443})
+
+    with pytest.raises(InvalidRequest, match="gateway not approved"):
+        helper.check_approved({"host": "vpn.example.com", "port": 443})
+
+
+def test_approve_refuses_unknown_fields(approved_file):
+    with pytest.raises(InvalidRequest, match="unknown fields"):
+        helper.approve({"host": "vpn.example.com", "port": 443, "username": "x"}, UID)
+
+
+def test_approved_file_writable_by_others_is_refused(approved_file):
+    helper.approve({"host": "vpn.example.com", "port": 443}, UID)
+    approved_file.chmod(0o666)
+
+    with pytest.raises(InvalidRequest, match="not writable by others"):
+        helper.check_approved({"host": "vpn.example.com", "port": 443})
+
+
+def test_approved_file_not_owned_by_root_is_refused(approved_file, monkeypatch):
+    helper.approve({"host": "vpn.example.com", "port": 443}, UID)
+    monkeypatch.setattr(helper, "TRUSTED_OWNER", 0)
+
+    with pytest.raises(InvalidRequest, match="owned by root"):
+        helper.check_approved({"host": "vpn.example.com", "port": 443})
+
+
+def test_approved_file_symlink_is_refused(approved_file, tmp_path):
+    real = tmp_path / "attacker.json"
+    real.write_text('{"gateways": [{"host": "evil.example.com", "port": 443}]}')
+    approved_file.parent.mkdir()
+    approved_file.symlink_to(real)
+
+    with pytest.raises(OSError):
+        helper.load_approved()
+
+
+def test_connect_command_refuses_unapproved_gateway(approved_file, monkeypatch, capsys):
+    read_end, write_end = os.pipe()
+    os.write(write_end, b'{"host": "evil.example.com", "port": 443}\n')
+    os.close(write_end)
+    monkeypatch.setattr(helper.os, "read", lambda fd, n, _read=os.read: _read(read_end, n))
+    monkeypatch.setenv("PKEXEC_UID", str(UID))
+
+    assert helper.main(["vpn-doctor-helper", "connect"]) == 2
+    assert "gateway not approved: evil.example.com:443" in capsys.readouterr().err
+    os.close(read_end)

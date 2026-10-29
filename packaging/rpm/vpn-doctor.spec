@@ -49,6 +49,8 @@ install -Dpm 0755 src/vpn_doctor/privileged_helper.py \
     %{buildroot}%{_libexecdir}/vpn-doctor/vpn-doctor-helper
 install -Dpm 0644 data/io.github.vpndoctor.helper.policy \
     %{buildroot}%{_datadir}/polkit-1/actions/io.github.vpndoctor.helper.policy
+# Gateways approved by an administrator (ADR-0013), written by the helper.
+install -dm 0755 %{buildroot}%{_sysconfdir}/vpn-doctor
 
 install -Dpm 0644 data/io.github.vpndoctor.VPNDoctor.desktop \
     %{buildroot}%{_datadir}/applications/io.github.vpndoctor.VPNDoctor.desktop
@@ -70,6 +72,8 @@ appstreamcli validate --no-net %{buildroot}%{_metainfodir}/io.github.vpndoctor.V
 %dir %{_libexecdir}/vpn-doctor
 %{_libexecdir}/vpn-doctor/vpn-doctor-helper
 %{_datadir}/polkit-1/actions/io.github.vpndoctor.helper.policy
+%dir %{_sysconfdir}/vpn-doctor
+%ghost %config(noreplace) %{_sysconfdir}/vpn-doctor/gateways.json
 %{_datadir}/applications/io.github.vpndoctor.VPNDoctor.desktop
 %{_metainfodir}/io.github.vpndoctor.VPNDoctor.metainfo.xml
 %{_datadir}/icons/hicolor/scalable/apps/io.github.vpndoctor.VPNDoctor.svg

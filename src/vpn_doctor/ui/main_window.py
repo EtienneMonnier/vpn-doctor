@@ -316,6 +316,10 @@ def run_ui() -> int:
             )
 
         def on_connect_clicked(self, _button) -> None:
+            if controller.needs_gateway_approval(self.profile):
+                self.ask_gateway_approval()
+                return
+
             if not controller.requires_password(self.profile):
                 # NetworkManager asks for secrets through the GNOME secret agent.
                 self.start_connection(None)
@@ -339,6 +343,39 @@ def run_ui() -> int:
                 on_answer,
                 can_remember=controller.can_remember(),
             )
+
+        def ask_gateway_approval(self) -> None:
+            """Approve the gateway once (administrator password), then connect."""
+            profile = self.profile
+            pin = profile.trusted_cert[:16] + "…" if profile.trusted_cert else _("system CA")
+            dialog = Adw.AlertDialog(
+                heading=_("Approve this VPN gateway?"),
+                body=_(
+                    "{gateway}\nCertificate: {pin}\n\nAn administrator approves a gateway once. "
+                    "Then users of this computer connect to it without an administrator "
+                    "password, and VPN Doctor refuses any other gateway or certificate."
+                ).format(gateway=f"{profile.host}:{profile.port}", pin=pin),
+            )
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("approve", _("Approve"))
+            dialog.set_response_appearance("approve", Adw.ResponseAppearance.SUGGESTED)
+            dialog.set_close_response("cancel")
+
+            def on_response(_dialog, response: str) -> None:
+                if response != "approve":
+                    return
+                self.append_log(_("Approving {gateway}…").format(gateway=f"{profile.host}:{profile.port}"))
+
+                def done(result) -> None:
+                    ok, message = (False, str(result)) if isinstance(result, Exception) else result
+                    self.append_log(message)
+                    if ok:
+                        self.on_connect_clicked(None)
+
+                self.run_busy(lambda: controller.approve_gateway(profile), done)
+
+            dialog.connect("response", on_response)
+            dialog.present(self.window)
 
         def start_connection(self, password: str | None, remember: bool = False) -> None:
             self.append_log(_("Connecting {name}…").format(name=self.profile.name))
@@ -624,6 +661,38 @@ def run_ui() -> int:
             )
             startup.add(default_row)
             startup.add(autoconnect_row)
+
+            if controller.gateways.enforced:
+                gateways = Adw.PreferencesGroup(
+                    title=_("Approved gateways"),
+                    description=_(
+                        "openfortivpn gateways users of this computer may connect to without "
+                        "an administrator password. Revoking one asks for that password."
+                    ),
+                )
+                page.add(gateways)
+                approved = controller.approved_gateways()
+                if not approved:
+                    gateways.add(Adw.ActionRow(title=_("No approved gateway yet")))
+                for gateway in approved:
+                    pin = gateway.trusted_cert[:16] + "…" if gateway.trusted_cert else _("system CA")
+                    row = Adw.ActionRow(title=gateway.label, subtitle=_("Certificate: {pin}").format(pin=pin))
+                    button = Gtk.Button(label=_("Revoke"), valign=Gtk.Align.CENTER)
+                    button.add_css_class("destructive-action")
+
+                    def revoke(button, gateway=gateway) -> None:
+                        button.set_sensitive(False)
+
+                        def done(result) -> None:
+                            ok = not isinstance(result, Exception) and result[0]
+                            button.set_label(_("Revoked") if ok else _("Revoke"))
+                            button.set_sensitive(not ok)
+
+                        run_in_background(lambda: controller.revoke_gateway(gateway), done)
+
+                    button.connect("clicked", revoke)
+                    row.add_suffix(button)
+                    gateways.add(row)
 
             secrets = Adw.PreferencesGroup(
                 title=_("Saved secrets"),

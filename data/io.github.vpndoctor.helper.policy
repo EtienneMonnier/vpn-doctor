@@ -8,19 +8,46 @@
   <icon_name>io.github.vpndoctor.VPNDoctor</icon_name>
 
   <!--
-    The only privileged action of VPN Doctor: start openfortivpn through
-    /usr/libexec/vpn-doctor/vpn-doctor-helper, which validates the profile
-    and builds the command itself (ADR-0012). Disconnecting needs no
-    privilege: VPN Doctor closes the helper's stdin.
+    The privileged actions of VPN Doctor, all through
+    /usr/libexec/vpn-doctor/vpn-doctor-helper (ADR-0012, ADR-0013).
+    pkexec selects the action from the helper's first argument.
   -->
-  <action id="io.github.vpndoctor.helper">
-    <description>Start a VPN tunnel with openfortivpn</description>
-    <message>VPN Doctor needs administrator rights to create the VPN network interface</message>
+
+  <!-- Connecting reaches only gateways an administrator approved, with their
+       pinned certificate, like system connections in NetworkManager. -->
+  <action id="io.github.vpndoctor.connect">
+    <description>Connect to an approved VPN gateway</description>
+    <message>VPN Doctor wants to connect to an approved VPN gateway</message>
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>
-      <allow_active>auth_admin_keep</allow_active>
+      <allow_active>yes</allow_active>
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/vpn-doctor/vpn-doctor-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">connect</annotate>
+  </action>
+
+  <action id="io.github.vpndoctor.approve">
+    <description>Approve a VPN gateway</description>
+    <message>Approving a VPN gateway lets users of this computer connect to it. Authentication is required.</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/vpn-doctor/vpn-doctor-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">approve</annotate>
+  </action>
+
+  <action id="io.github.vpndoctor.revoke">
+    <description>Revoke an approved VPN gateway</description>
+    <message>Authentication is required to revoke an approved VPN gateway</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/vpn-doctor/vpn-doctor-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">revoke</annotate>
   </action>
 </policyconfig>

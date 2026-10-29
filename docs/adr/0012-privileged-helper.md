@@ -18,8 +18,9 @@ ADR-0010 started `openfortivpn` through `pkexec`. Two problems remained:
 
 - A small helper, `/usr/libexec/vpn-doctor/vpn-doctor-helper`
   (`src/vpn_doctor/privileged_helper.py`), is the only code running as root.
-- A dedicated polkit action, `io.github.vpndoctor.helper`, allows only that
-  program, with `auth_admin_keep` for active local sessions.
+- Dedicated polkit actions allow only that program. ADR-0013 splits them
+  into `connect`, `approve` and `revoke` and replaces the first
+  `auth_admin_keep` rule.
 - VPN Doctor sends the profile as one JSON line on stdin. The helper accepts
   a fixed list of fields, validates each one and builds the `openfortivpn`
   command itself, always with `-c /dev/null`. It never runs a command line

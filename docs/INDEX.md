@@ -74,3 +74,4 @@ Implementation notes, validation and review notes for each sprint.
 - [ADR-0010 Privilege escalation through pkexec](adr/0010-pkexec-privilege-escalation.md)
 - [ADR-0011 NetworkManager overlay](adr/0011-networkmanager-overlay.md)
 - [ADR-0012 Privileged helper](adr/0012-privileged-helper.md)
+- [ADR-0013 Approved gateways](adr/0013-approved-gateways.md)

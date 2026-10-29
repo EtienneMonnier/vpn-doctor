@@ -26,6 +26,7 @@ class ParsedLogKind(StrEnum):
     GATEWAY_ERROR = "gateway_error"
     PRIVILEGE_ERROR = "privilege_error"
     PRIVATE_KEY_ERROR = "private_key_error"
+    GATEWAY_NOT_APPROVED = "gateway_not_approved"
     ERROR = "error"
 
 
@@ -67,6 +68,11 @@ FAILURE_SUGGESTIONS: dict[ParsedLogKind, str] = {
         "The gateway cannot be reached. Check the host name, the port, your Internet "
         "connection and any firewall in between."
     ),
+    ParsedLogKind.GATEWAY_NOT_APPROVED: (
+        "This gateway, or its certificate, is not approved on this computer. Approve it "
+        "once with an administrator password (Connect asks for it, or run "
+        "vpn-doctor approve-gateway)."
+    ),
     ParsedLogKind.PRIVATE_KEY_ERROR: (
         "The client private key could not be loaded: the PEM pass phrase is wrong "
         "or the user_key file is unreadable. If the pass phrase was remembered, "
@@ -106,6 +112,9 @@ class OpenFortiVPNLogParser:
 
         if "gateway certificate validation failed" in lowered or "trusted-cert" in lowered:
             return ParsedLogLine(raw=raw, kind=ParsedLogKind.CERTIFICATE_ERROR, message=raw)
+
+        if "gateway not approved" in lowered:
+            return ParsedLogLine(raw=raw, kind=ParsedLogKind.GATEWAY_NOT_APPROVED, message=raw)
 
         if "ssl_ctx_use_privatekey_file" in lowered:
             return ParsedLogLine(raw=raw, kind=ParsedLogKind.PRIVATE_KEY_ERROR, message=raw)
@@ -158,6 +167,7 @@ class OpenFortiVPNLogParser:
             ParsedLogKind.GATEWAY_ERROR,
             ParsedLogKind.PRIVILEGE_ERROR,
             ParsedLogKind.PRIVATE_KEY_ERROR,
+            ParsedLogKind.GATEWAY_NOT_APPROVED,
             ParsedLogKind.ERROR,
         }:
             return VPNConnectionState.FAILED
