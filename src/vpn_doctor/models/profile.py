@@ -20,3 +20,6 @@ class VPNProfile:
     username: str | None = None
     trusted_cert: str | None = None
     realm: str | None = None
+    # Paths to a client certificate and its private key, never their content.
+    user_cert: str | None = None
+    user_key: str | None = None

@@ -55,3 +55,23 @@ def test_openfortivpn_connect_dry_run_includes_privilege_command():
     command = OpenFortiVPNProcess(privilege_command=("pkexec",)).connect(profile, dry_run=True)
 
     assert command[:2] == ["pkexec", "openfortivpn"]
+
+
+def test_openfortivpn_command_passes_client_certificate_paths():
+    profile = VPNProfile(
+        name="Demo",
+        backend="openfortivpn",
+        host="vpn.example.com",
+        port=443,
+        user_cert="/etc/openfortivpn/demo-cert.pem",
+        user_key="/etc/openfortivpn/demo-key.pem",
+    )
+
+    command = OpenFortiVPNProcess().build_command(profile)
+
+    assert command[-4:] == [
+        "--user-cert",
+        "/etc/openfortivpn/demo-cert.pem",
+        "--user-key",
+        "/etc/openfortivpn/demo-key.pem",
+    ]

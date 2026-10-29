@@ -35,6 +35,7 @@
 ## Case studies
 
 - [Fortinet: NetworkManager vs OpenFortiVPN](case-studies/fortinet-networkmanager-vs-openfortivpn.md)
+- [RDP licensing failure behind a working VPN](case-studies/rdp-licensing-behind-wireguard.md)
 
 ## User documentation
 

@@ -59,6 +59,12 @@ class OpenFortiVPNProcess:
         if profile.realm:
             command.extend(["--realm", profile.realm])
 
+        if profile.user_cert:
+            command.extend(["--user-cert", profile.user_cert])
+
+        if profile.user_key:
+            command.extend(["--user-key", profile.user_key])
+
         return command
 
     def connect(
