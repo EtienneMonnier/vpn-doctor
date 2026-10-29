@@ -78,3 +78,14 @@
 - openfortivpn logs arrived late or never: its output is now line-buffered
   through `stdbuf`.
 - Tests no longer read the developer's real `~/.config/vpn-doctor` profiles.
+
+## Sprint 4.1
+
+### Added
+
+- NetworkManager overlay: discover, connect and disconnect VPN and WireGuard
+  connections, with failures explained from the NetworkManager reason and
+  the VPN plugin log (ADR-0011).
+- `--profile NAME` for `connect`, `disconnect`, `status` and `diagnose`.
+- Redesigned GTK UI with a connection selector.
+- Custom skins (GTK CSS) with live reload, and the "Wasteland Terminal" skin.
