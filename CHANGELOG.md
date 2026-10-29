@@ -98,3 +98,17 @@
   keyring (Secret Service), and answer prompts from it automatically.
 - `vpn-doctor forget-secrets`.
 - Explanation for a wrong PEM pass phrase.
+
+## Sprint 4.3
+
+### Added
+
+- Several NetworkManager connections at once, one tab per connection with
+  its own status, timer, logs and failure explanations.
+- Conflict detection between active VPNs and the local network (routes and
+  DNS), shown in a banner and with `vpn-doctor conflicts`.
+- Main menu (☰) with "Forget saved secrets" and the skin choice.
+
+### Fixed
+
+- A reader thread could read a closed descriptor after a process stopped.

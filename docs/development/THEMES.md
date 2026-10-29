@@ -46,7 +46,10 @@ The first comment of the file may describe the skin:
 | `.vd-timer` | connection timer |
 | `.vd-subtitle` | status explanation or suggestion |
 | `.vd-meta-key`, `.vd-meta-value` | connection details |
-| `.vd-profile` | connection selector |
+| `.vd-connection-name` | connection name in its tab |
+| `tabbar`, `tabbar tab`, `tabbar tab:selected` | connection tabs |
+| `.vd-open-button` | `+` button opening a connection tab |
+| `.vd-conflict-banner` | banner shown when VPNs conflict |
 | `button.vd-primary`, `button.vd-danger`, `button.vd-secondary` | Connect, Disconnect, Diagnose |
 | `.vd-menu-button` | main menu button (☰) |
 | `.vd-log`, `.vd-log text` | log console |

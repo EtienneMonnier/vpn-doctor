@@ -100,7 +100,12 @@ as "activation failed". Passwords stay with the GNOME keyring.
 ```bash
 vpn-doctor profiles
 vpn-doctor connect --profile "Office VPN" --wait
+vpn-doctor conflicts
 ```
+
+Several VPNs can run at once, each in its own tab. VPN Doctor warns when they
+conflict: two full tunnels, overlapping networks, a VPN hiding your local
+network, or several VPNs claiming every DNS name.
 
 ## Direct openfortivpn profiles
 
@@ -143,8 +148,8 @@ expired passwords or missing Remote Desktop permissions. See the
 
 ## Experimental GUI
 
-The window shows the selected connection, its status and timer, live logs and
-a Diagnose button. Use the main menu (☰ > Skin) to change its look, or write your own
+The window shows one tab per connection, with its status and timer, live logs
+and a Diagnose button; open more tabs with `+`. Use the main menu (☰ > Skin) to change its look, or write your own
 skin in CSS: see [Skins](docs/development/THEMES.md).
 
 Run:
