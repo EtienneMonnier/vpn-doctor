@@ -1,5 +1,5 @@
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
-from vpn_doctor.ui.view_models import ConnectionStatusViewModel
+from vpn_doctor.ui.view_models import ConnectionStatusViewModel, ConnectionTimer, format_elapsed
 
 
 def test_view_model_disconnected():
@@ -27,3 +27,30 @@ def test_view_model_failed():
     assert vm.title == "Failed"
     assert vm.subtitle == "Boom"
     assert vm.css_class == "error"
+
+
+def test_view_model_failed_prefers_suggestion():
+    status = VPNStatus(
+        backend="openfortivpn",
+        state=VPNConnectionState.FAILED,
+        message="ERROR:  Could not authenticate to gateway.",
+        suggestion="Check the password.",
+    )
+    vm = ConnectionStatusViewModel.from_status(status)
+
+    assert vm.subtitle == "Check the password."
+
+
+def test_format_elapsed():
+    assert format_elapsed(0) == "00:00:00"
+    assert format_elapsed(3725.9) == "01:02:05"
+
+
+def test_connection_timer_runs_only_while_connected():
+    timer = ConnectionTimer()
+
+    assert timer.update(VPNConnectionState.CONNECTING, now=10.0) is None
+    assert timer.update(VPNConnectionState.CONNECTED, now=20.0) == "00:00:00"
+    assert timer.update(VPNConnectionState.CONNECTED, now=81.0) == "00:01:01"
+    assert timer.update(VPNConnectionState.DISCONNECTED, now=90.0) is None
+    assert timer.update(VPNConnectionState.CONNECTED, now=100.0) == "00:00:00"
