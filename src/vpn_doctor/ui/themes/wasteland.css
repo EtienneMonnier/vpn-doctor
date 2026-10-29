@@ -255,6 +255,48 @@ popover row:selected {
   background-color: alpha(#45ee8a, 0.2);
 }
 
+/* Connection tabs */
+tabbar .box {
+  background-color: transparent;
+  border-bottom: 1px solid #23864d;
+  box-shadow: none;
+}
+
+tabbar tab {
+  color: #23864d;
+  border: 1px solid #23864d;
+  border-radius: 4px 4px 0 0;
+  background-color: transparent;
+}
+
+tabbar tab:selected {
+  color: #05160d;
+  background-color: #45ee8a;
+  border-color: #45ee8a;
+}
+
+tabbar tab:selected label {
+  color: #05160d;
+  text-shadow: none;
+}
+
+.vd-connection-name {
+  font-size: 13pt;
+  letter-spacing: 2px;
+}
+
+/* Conflict banner */
+banner > revealer > widget {
+  background-color: #3a2a08;
+  color: #ffb642;
+  border: 1px solid #ffb642;
+}
+
+banner label {
+  color: #ffb642;
+  text-shadow: 0 0 6px alpha(#ffb642, 0.5);
+}
+
 /* Log console */
 .vd-log,
 .vd-log text {

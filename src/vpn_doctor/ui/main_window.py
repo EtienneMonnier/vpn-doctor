@@ -3,9 +3,13 @@
 The module imports GTK lazily inside `run_ui()` so CLI tests and non-GNOME
 environments can import vpn_doctor without requiring PyGObject at import time.
 
+Layout: one tab per connection (several VPNs can run at once), a banner for
+conflicts between them, and a main menu (☰).
+
 Threading rule: backend callbacks (log lines) arrive on reader threads and
-blocking work (diagnostics, disconnect) runs on worker threads. Every widget
-update goes back to the GTK main loop through `GLib.idle_add`.
+blocking work (diagnostics, disconnect, conflict checks) runs on worker
+threads. Every widget update goes back to the GTK main loop through
+`GLib.idle_add`.
 
 Skins: widgets carry `vd-*` CSS classes documented in
 docs/development/THEMES.md. A skin is a CSS file applied at user priority.
@@ -20,14 +24,40 @@ import time
 from vpn_doctor.backend.errors import BackendError
 from vpn_doctor.core.controller import ApplicationController
 from vpn_doctor.i18n import _
+from vpn_doctor.models.status import VPNConnectionState
 from vpn_doctor.ui.view_models import ConnectionStatusViewModel, ConnectionTimer
 
 LOGGER = logging.getLogger(__name__)
 
 STATUS_REFRESH_MS = 500
+CONFLICT_REFRESH_MS = 5000
 STATE_CSS_CLASSES = ("vd-success", "vd-warning", "vd-error", "vd-neutral")
 DEFAULT_TITLE = "VPN Doctor"
 DEFAULT_TAGLINE = "Diagnose. Connect. Protect."
+TAB_MARKS = {
+    VPNConnectionState.CONNECTED: "●",
+    VPNConnectionState.FAILED: "✕",
+}
+
+
+def run_in_background(work, on_done) -> None:
+    """Run blocking work off the main loop, then call on_done(result) on it."""
+    from gi.repository import GLib  # type: ignore
+
+    def worker() -> None:
+        try:
+            result = work()
+        except Exception as exc:  # reported to the user in the log view
+            LOGGER.exception("Background UI task failed")
+            result = exc
+
+        def finish() -> bool:
+            on_done(result)
+            return GLib.SOURCE_REMOVE
+
+        GLib.idle_add(finish)
+
+    threading.Thread(target=worker, daemon=True).start()
 
 
 def run_ui() -> int:
@@ -59,48 +89,55 @@ def run_ui() -> int:
             box.add_css_class(css_class)
         return box
 
-    class VPNDoctorWindow(Adw.ApplicationWindow):
-        def __init__(self, app: Adw.Application) -> None:
-            super().__init__(application=app)
-            self.set_title("VPN Doctor")
-            self.set_default_size(920, 640)
-            self.add_css_class("vd-window")
+    def secret_dialog(parent, heading, body, accept, on_answer, can_remember=False) -> None:
+        """Ask for a secret; on_answer(value, remember) gets None on cancel."""
+        entry = Gtk.PasswordEntry()
+        entry.set_show_peek_icon(True)
+        entry.set_property("activates-default", True)
 
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        content.append(entry)
+        remember = Gtk.CheckButton(label=_("Remember in the keyring"))
+        if can_remember:
+            content.append(remember)
+
+        dialog = Adw.AlertDialog(heading=heading, body=body)
+        dialog.set_extra_child(content)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("accept", accept)
+        dialog.set_response_appearance("accept", Adw.ResponseAppearance.SUGGESTED)
+        dialog.set_default_response("accept")
+        dialog.set_close_response("cancel")
+
+        def on_response(_dialog, response: str) -> None:
+            answer = entry.get_text()
+            entry.set_text("")
+            if response == "accept":
+                on_answer(answer, remember.get_active())
+            else:
+                on_answer(None, False)
+
+        dialog.connect("response", on_response)
+        dialog.present(parent)
+
+    class ConnectionPanel(Gtk.Box):
+        """Status, details, actions and log of one connection."""
+
+        def __init__(self, window, profile) -> None:
+            super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+            self.window = window
+            self.profile = profile
             self.timer = ConnectionTimer()
             self.busy = False
             self.asked_prompt: str | None = None
-            self.css_provider: Gtk.CssProvider | None = None
-
-            toolbar_view = Adw.ToolbarView()
-            header = Adw.HeaderBar()
-            header.pack_end(self.build_skin_menu())
-            toolbar_view.add_top_bar(header)
-
-            root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
-            root.set_margin_top(20)
-            root.set_margin_bottom(20)
-            root.set_margin_start(20)
-            root.set_margin_end(20)
-
-            self.title_label = label(DEFAULT_TITLE, "vd-title")
-            self.tagline_label = label(_(DEFAULT_TAGLINE), "vd-tagline")
-            root.append(self.title_label)
-            root.append(self.tagline_label)
+            self.state = VPNConnectionState.DISCONNECTED
 
             panels = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16, homogeneous=True)
-            panels.set_vexpand(False)
             panels.append(self.build_status_card())
             panels.append(self.build_connection_card())
-            root.append(panels)
-            root.append(self.build_log_card())
-
-            toolbar_view.set_content(root)
-            self.set_content(toolbar_view)
-
-            self.apply_theme(controller.current_theme())
-            self.refresh_profiles()
-            self.refresh_status()
-            GLib.timeout_add(STATUS_REFRESH_MS, self.refresh_status)
+            self.append(panels)
+            self.append(self.build_log_card())
+            self.refresh()
 
         # -- layout -------------------------------------------------------------
 
@@ -132,32 +169,24 @@ def run_ui() -> int:
 
         def build_connection_card(self) -> Gtk.Box:
             box = card("vd-connection-card")
+            box.append(label(_("■ CONNECTION"), "vd-section-title"))
+            box.append(label(self.profile.name, "vd-connection-name"))
 
-            top = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-            section = label(_("■ CONNECTION"), "vd-section-title")
-            section.set_hexpand(True)
-            # Text, not icons: icon themes may draw them in full color.
-            reload_button = Gtk.Button(label="↻")
-            reload_button.set_tooltip_text(_("Reload connections"))
-            reload_button.add_css_class("flat")
-            reload_button.connect("clicked", lambda _button: self.refresh_profiles(reload=True))
-            top.append(section)
-            top.append(reload_button)
-
-            self.profile_model = Gtk.StringList()
-            self.profile_dropdown = Gtk.DropDown(model=self.profile_model)
-            self.profile_dropdown.add_css_class("vd-profile")
-            self.profile_dropdown.connect("notify::selected", self.on_profile_selected)
-
+            profile = self.profile
+            gateway = f"{profile.host}:{profile.port}" if profile.port else profile.host
+            details = (
+                (_("TYPE"), profile.vpn_type or profile.backend),
+                (_("GATEWAY"), gateway or "—"),
+                (_("MANAGED BY"), "NetworkManager" if profile.nm_uuid else "VPN Doctor"),
+            )
             meta = Gtk.Grid(column_spacing=16, row_spacing=4)
-            self.meta_values = {}
-            for row, key in enumerate((_("TYPE"), _("GATEWAY"), _("MANAGED BY"))):
+            for row, (key, value) in enumerate(details):
                 meta.attach(label(key, "vd-meta-key"), 0, row, 1, 1)
-                value = label("—", "vd-meta-value")
-                value.set_ellipsize(Pango.EllipsizeMode.END)
-                value.set_hexpand(True)
-                meta.attach(value, 1, row, 1, 1)
-                self.meta_values[key] = value
+                value_label = label(value, "vd-meta-value")
+                value_label.set_ellipsize(Pango.EllipsizeMode.END)
+                value_label.set_hexpand(True)
+                meta.attach(value_label, 1, row, 1, 1)
+            box.append(meta)
 
             buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8, homogeneous=True)
             self.connect_button = Gtk.Button(label=_("Connect"))
@@ -175,10 +204,6 @@ def run_ui() -> int:
 
             for button in (self.connect_button, self.disconnect_button, self.diagnose_button):
                 buttons.append(button)
-
-            box.append(top)
-            box.append(self.profile_dropdown)
-            box.append(meta)
             box.append(buttons)
             return box
 
@@ -201,32 +226,325 @@ def run_ui() -> int:
             box.append(self.scroller)
             return box
 
-        def build_skin_menu(self) -> Gtk.MenuButton:
+        # -- status ----------------------------------------------------------------
+
+        def append_log(self, message: str) -> bool:
+            end_iter = self.log_buffer.get_end_iter()
+            self.log_buffer.insert(end_iter, message + "\n")
+            adjustment = self.scroller.get_vadjustment()
+            adjustment.set_value(adjustment.get_upper())
+            return GLib.SOURCE_REMOVE
+
+        def append_log_from_thread(self, message: str) -> None:
+            GLib.idle_add(self.append_log, message)
+
+        def refresh(self) -> None:
+            status = controller.current_status(self.profile)
+            self.state = status.state
+            view_model = ConnectionStatusViewModel.from_status(status)
+            state_class = f"vd-{view_model.css_class}"
+
+            self.status_label.set_label(view_model.title)
+            self.subtitle_label.set_label(view_model.subtitle)
+            self.pill_label.set_label(view_model.pill)
+            for widget in (self.status_label, self.pill_label, self.status_card):
+                for css_class in STATE_CSS_CLASSES:
+                    widget.remove_css_class(css_class)
+                widget.add_css_class(state_class)
+
+            elapsed = self.timer.update(status.state, time.monotonic())
+            self.timer_label.set_label(elapsed or "--:--:--")
+
+            self.connect_button.set_sensitive(view_model.can_connect and not self.busy)
+            self.disconnect_button.set_sensitive(view_model.can_disconnect and not self.busy)
+            self.diagnose_button.set_sensitive(not self.busy)
+
+            if status.prompt != self.asked_prompt:
+                self.asked_prompt = status.prompt
+                if status.prompt:
+                    self.ask_prompt(status.prompt)
+
+        def run_busy(self, work, on_done) -> None:
+            self.busy = True
+            self.refresh()
+
+            def done(result) -> None:
+                self.busy = False
+                on_done(result)
+                self.refresh()
+
+            run_in_background(work, done)
+
+        # -- actions -----------------------------------------------------------------
+
+        def ask_prompt(self, prompt: str) -> None:
+            """Ask the user to answer a backend prompt, e.g. a two-factor token."""
+
+            def on_answer(answer: str | None, remember: bool) -> None:
+                if answer is None:
+                    self.on_disconnect_clicked(None)
+                    return
+                try:
+                    controller.answer_prompt(answer, remember=remember, profile=self.profile)
+                except BackendError as exc:
+                    self.append_log(_("Could not send the answer: {error}").format(error=exc))
+                self.refresh()
+
+            secret_dialog(
+                self.window,
+                _("{name} asks for more information").format(name=self.profile.name),
+                prompt,
+                _("Send"),
+                on_answer,
+                can_remember=controller.can_remember(prompt),
+            )
+
+        def on_connect_clicked(self, _button) -> None:
+            if not controller.requires_password(self.profile):
+                # NetworkManager asks for secrets through the GNOME secret agent.
+                self.start_connection(None)
+                return
+
+            stored = controller.stored_password(self.profile)
+            if stored is not None:
+                self.append_log(_("Using the password remembered in the keyring"))
+                self.start_connection(stored)
+                return
+
+            def on_answer(password: str | None, remember: bool) -> None:
+                if password is not None:
+                    self.start_connection(password, remember=remember)
+
+            secret_dialog(
+                self.window,
+                _("VPN password for {name}").format(name=self.profile.name),
+                _("The password is sent to openfortivpn through stdin, never written to a file."),
+                _("Connect"),
+                on_answer,
+                can_remember=controller.can_remember(),
+            )
+
+        def start_connection(self, password: str | None, remember: bool = False) -> None:
+            self.append_log(_("Connecting {name}…").format(name=self.profile.name))
+            try:
+                controller.start_connection(
+                    password,
+                    on_log=self.append_log_from_thread,
+                    remember=remember,
+                    profile=self.profile,
+                )
+            except BackendError as exc:
+                self.append_log(_("Could not start the VPN backend: {error}").format(error=exc))
+            self.refresh()
+
+        def on_disconnect_clicked(self, _button) -> None:
+            self.append_log(_("Stopping connection…"))
+
+            def done(result) -> None:
+                if isinstance(result, Exception):
+                    self.append_log(_("Disconnect failed: {error}").format(error=result))
+                else:
+                    self.append_log(_("Disconnected"))
+
+            self.run_busy(lambda: controller.stop_connection(self.profile), done)
+
+        def on_diagnose_clicked(self, _button) -> None:
+            self.append_log(_("Running diagnostics…"))
+
+            def done(result) -> None:
+                if isinstance(result, Exception):
+                    self.append_log(_("Diagnostics failed: {error}").format(error=result))
+                    return
+                self.append_log(result.summary)
+                for item in result.items:
+                    icon = "OK" if item.success else "FAIL"
+                    self.append_log(f"[{icon}] {item.name}: {item.message}")
+                    if item.suggestion:
+                        self.append_log("      " + _("Suggestion: {text}").format(text=item.suggestion))
+
+            self.run_busy(lambda: controller.diagnose_default_profile(self.profile), done)
+
+    class VPNDoctorWindow(Adw.ApplicationWindow):
+        def __init__(self, app: Adw.Application) -> None:
+            super().__init__(application=app)
+            self.set_title("VPN Doctor")
+            self.set_default_size(960, 680)
+            self.add_css_class("vd-window")
+
+            self.css_provider: Gtk.CssProvider | None = None
+            self.conflicts = []
+            self.checking_conflicts = False
+
+            toolbar_view = Adw.ToolbarView()
+            header = Adw.HeaderBar()
+            header.pack_end(self.build_main_menu())
+            toolbar_view.add_top_bar(header)
+
+            root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+            root.set_margin_top(20)
+            root.set_margin_bottom(20)
+            root.set_margin_start(20)
+            root.set_margin_end(20)
+
+            self.title_label = label(DEFAULT_TITLE, "vd-title")
+            self.tagline_label = label(_(DEFAULT_TAGLINE), "vd-tagline")
+            root.append(self.title_label)
+            root.append(self.tagline_label)
+
+            self.banner = Adw.Banner()
+            self.banner.add_css_class("vd-conflict-banner")
+            self.banner.set_button_label(_("Show"))
+            self.banner.connect("button-clicked", lambda _banner: self.show_conflicts())
+            root.append(self.banner)
+
+            self.tab_view = Adw.TabView()
+            self.tab_view.set_vexpand(True)
+            self.tab_view.connect("notify::selected-page", self.on_tab_selected)
+            self.tab_view.connect("close-page", self.on_close_page)
+
+            tab_bar = Adw.TabBar(view=self.tab_view)
+            tab_bar.set_autohide(False)
+            tab_bar.add_css_class("vd-tabs")
+            self.open_menu_button = Gtk.MenuButton(label="+")
+            self.open_menu_button.set_tooltip_text(_("Open a connection"))
+            self.open_menu_button.add_css_class("vd-open-button")
+            tab_bar.set_end_action_widget(self.open_menu_button)
+
+            root.append(tab_bar)
+            root.append(self.tab_view)
+            toolbar_view.set_content(root)
+            self.set_content(toolbar_view)
+
+            self.apply_theme(controller.current_theme())
+            self.populate_open_menu()
+            self.open_initial_tabs()
+            GLib.timeout_add(STATUS_REFRESH_MS, self.refresh_tabs)
+            GLib.timeout_add(CONFLICT_REFRESH_MS, self.check_conflicts)
+
+        # -- tabs ----------------------------------------------------------------
+
+        def panels(self) -> list[ConnectionPanel]:
+            pages = self.tab_view.get_pages()
+            return [pages.get_item(i).get_child() for i in range(pages.get_n_items())]
+
+        def open_tab(self, profile, select: bool = True) -> ConnectionPanel:
+            for panel in self.panels():
+                if panel.profile.name == profile.name:
+                    if select:
+                        self.tab_view.set_selected_page(self.tab_view.get_page(panel))
+                    return panel
+            panel = ConnectionPanel(self, profile)
+            page = self.tab_view.append(panel)
+            page.set_title(profile.name)
+            if select:
+                self.tab_view.set_selected_page(page)
+            return panel
+
+        def open_initial_tabs(self) -> None:
+            """Open the selected connection, plus every connection already active."""
+            self.open_tab(controller.default_profile())
+            for profile in controller.profiles():
+                if controller.current_status(profile).state == VPNConnectionState.CONNECTED:
+                    self.open_tab(profile, select=False)
+            self.check_conflicts()
+
+        def on_tab_selected(self, *_args) -> None:
+            page = self.tab_view.get_selected_page()
+            if page is not None:
+                controller.select_profile(page.get_child().profile.name)
+
+        def on_close_page(self, tab_view, page) -> bool:
+            # Keep one tab. Closing a tab never disconnects: reopen it with "+".
+            tab_view.close_page_finish(page, tab_view.get_n_pages() > 1)
+            return True  # handled here
+
+        def refresh_tabs(self) -> bool:
+            for panel in self.panels():
+                panel.refresh()
+                page = self.tab_view.get_page(panel)
+                mark = TAB_MARKS.get(panel.state, "○")
+                page.set_title(f"{mark} {panel.profile.name}")
+                page.set_loading(
+                    panel.state in {VPNConnectionState.CONNECTING, VPNConnectionState.AUTHENTICATING}
+                )
+            return GLib.SOURCE_CONTINUE
+
+        def populate_open_menu(self) -> None:
+            menu = Gio.Menu()
+            connections = Gio.Menu()
+            for profile in controller.profiles():
+                kind = profile.vpn_type or profile.backend
+                item = Gio.MenuItem.new(f"{profile.name} ({kind})", None)
+                item.set_action_and_target_value(
+                    "win.open-tab", GLib.Variant.new_string(profile.name)
+                )
+                connections.append_item(item)
+            menu.append_section(_("Connections"), connections)
+            tools = Gio.Menu()
+            tools.append(_("Reload connections"), "win.reload-connections")
+            menu.append_section(None, tools)
+            self.open_menu_button.set_menu_model(menu)
+
+        # -- conflicts -----------------------------------------------------------
+
+        def check_conflicts(self) -> bool:
+            if not self.checking_conflicts:
+                self.checking_conflicts = True
+
+                def done(result) -> None:
+                    self.checking_conflicts = False
+                    self.conflicts = [] if isinstance(result, Exception) else result
+                    count = len(self.conflicts)
+                    if count:
+                        self.banner.set_title(
+                            _("⚠ {count} network conflict(s): {first}").format(
+                                count=count, first=self.conflicts[0].name
+                            )
+                        )
+                    self.banner.set_revealed(count > 0)
+
+                run_in_background(controller.network_conflicts, done)
+            return GLib.SOURCE_CONTINUE
+
+        def show_conflicts(self) -> None:
+            body = "\n\n".join(
+                f"{item.name}\n{item.message}\n→ {item.suggestion}" for item in self.conflicts
+            )
+            dialog = Adw.AlertDialog(heading=_("Network conflicts"), body=body)
+            dialog.add_response("close", _("Close"))
+            dialog.present(self)
+
+        # -- main menu -----------------------------------------------------------
+
+        def build_main_menu(self) -> Gtk.MenuButton:
             initial = GLib.Variant.new_string(controller.current_theme().id)
-            action = Gio.SimpleAction.new_stateful("skin", GLib.VariantType.new("s"), initial)
-            action.connect("activate", self.on_skin_selected)
-            self.add_action(action)
+            skin = Gio.SimpleAction.new_stateful("skin", GLib.VariantType.new("s"), initial)
+            skin.connect("activate", self.on_skin_selected)
+            self.add_action(skin)
 
-            reload_action = Gio.SimpleAction.new("reload-skins", None)
-            reload_action.connect("activate", lambda *_args: self.reload_skins())
-            self.add_action(reload_action)
+            open_tab = Gio.SimpleAction.new("open-tab", GLib.VariantType.new("s"))
+            open_tab.connect("activate", self.on_open_tab)
+            self.add_action(open_tab)
 
-            folder_action = Gio.SimpleAction.new("open-skins-folder", None)
-            folder_action.connect("activate", lambda *_args: self.open_skins_folder())
-            self.add_action(folder_action)
-
-            forget_action = Gio.SimpleAction.new("forget-secrets", None)
-            forget_action.connect("activate", lambda *_args: self.forget_secrets())
-            self.add_action(forget_action)
+            simple_actions = {
+                "reload-skins": self.reload_skins,
+                "open-skins-folder": self.open_skins_folder,
+                "forget-secrets": self.forget_secrets,
+                "reload-connections": self.reload_connections,
+            }
+            for name, callback in simple_actions.items():
+                action = Gio.SimpleAction.new(name, None)
+                action.connect("activate", lambda *_args, callback=callback: callback())
+                self.add_action(action)
 
             # Text, not an icon: icon themes may draw icons in full color.
-            self.skin_button = Gtk.MenuButton(label="☰")
-            self.skin_button.add_css_class("vd-menu-button")
-            self.skin_button.set_tooltip_text(_("Main menu"))
-            self.populate_skin_menu()
-            return self.skin_button
+            self.menu_button = Gtk.MenuButton(label="☰")
+            self.menu_button.add_css_class("vd-menu-button")
+            self.menu_button.set_tooltip_text(_("Main menu"))
+            self.populate_main_menu()
+            return self.menu_button
 
-        def populate_skin_menu(self) -> None:
+        def populate_main_menu(self) -> None:
             menu = Gio.Menu()
             secrets = Gio.Menu()
             secrets.append(_("Forget saved secrets of this connection"), "win.forget-secrets")
@@ -239,7 +557,35 @@ def run_ui() -> int:
             skins.append(_("Reload skins"), "win.reload-skins")
             skins.append(_("Open skins folder"), "win.open-skins-folder")
             menu.append_submenu(_("Skin"), skins)
-            self.skin_button.set_menu_model(menu)
+            self.menu_button.set_menu_model(menu)
+
+        def on_open_tab(self, _action, value) -> None:
+            controller.select_profile(value.get_string())
+            self.open_tab(controller.default_profile())
+
+        def reload_connections(self) -> None:
+            controller.reload_profiles()
+            self.populate_open_menu()
+
+        def current_panel(self) -> ConnectionPanel | None:
+            page = self.tab_view.get_selected_page()
+            return page.get_child() if page is not None else None
+
+        def forget_secrets(self) -> None:
+            panel = self.current_panel()
+            if panel is None:
+                return
+            profile = panel.profile
+            if profile.nm_uuid is not None:
+                panel.append_log(
+                    _("{name} is managed by NetworkManager: edit its secrets in GNOME Settings.").format(
+                        name=profile.name
+                    )
+                )
+            elif controller.forget_secrets(profile):
+                panel.append_log(_("Saved secrets forgotten for {name}").format(name=profile.name))
+            else:
+                panel.append_log(_("The keyring is not reachable"))
 
         # -- skins ---------------------------------------------------------------
 
@@ -271,255 +617,26 @@ def run_ui() -> int:
 
         def on_css_error(self, _provider, section, error, theme_name: str) -> None:
             location = section.get_start_location()
-            self.append_log(
-                _("Skin {name}, line {line}: {error}").format(
-                    name=theme_name, line=location.lines + 1, error=error.message
-                )
+            message = _("Skin {name}, line {line}: {error}").format(
+                name=theme_name, line=location.lines + 1, error=error.message
             )
+            LOGGER.warning(message)
+            panel = self.current_panel() if hasattr(self, "tab_view") else None
+            if panel is not None:
+                panel.append_log(message)
 
         def on_skin_selected(self, action, value) -> None:
             action.set_state(value)
             self.apply_theme(controller.set_theme(value.get_string()))
 
         def reload_skins(self) -> None:
-            self.populate_skin_menu()
+            self.populate_main_menu()
             self.apply_theme(controller.current_theme())
-            self.append_log(_("Skins reloaded"))
-
-        def forget_secrets(self) -> None:
-            profile = controller.default_profile()
-            if profile.nm_uuid is not None:
-                self.append_log(
-                    _("{name} is managed by NetworkManager: edit its secrets in GNOME Settings.").format(
-                        name=profile.name
-                    )
-                )
-            elif controller.forget_secrets():
-                self.append_log(_("Saved secrets forgotten for {name}").format(name=profile.name))
-            else:
-                self.append_log(_("The keyring is not reachable"))
 
         def open_skins_folder(self) -> None:
             folder = controller.theme_service.user_dir
             folder.mkdir(parents=True, exist_ok=True)
             Gio.AppInfo.launch_default_for_uri(folder.as_uri(), None)
-
-        # -- profiles ------------------------------------------------------------
-
-        def refresh_profiles(self, reload: bool = False) -> None:
-            profiles = controller.reload_profiles() if reload else controller.profiles()
-            current = controller.default_profile().name
-            self.updating_profiles = True
-            self.profile_model.splice(0, self.profile_model.get_n_items(), [p.name for p in profiles])
-            names = [p.name for p in profiles]
-            self.profile_dropdown.set_selected(names.index(current) if current in names else 0)
-            self.updating_profiles = False
-            self.show_profile_details()
-
-        def on_profile_selected(self, dropdown, _param) -> None:
-            if getattr(self, "updating_profiles", False):
-                return
-            item = dropdown.get_selected_item()
-            if item is not None:
-                controller.select_profile(item.get_string())
-                self.timer = ConnectionTimer()
-                self.show_profile_details()
-                self.refresh_status()
-
-        def show_profile_details(self) -> None:
-            profile = controller.default_profile()
-            gateway = f"{profile.host}:{profile.port}" if profile.port else profile.host
-            managed_by = "NetworkManager" if profile.nm_uuid else "VPN Doctor"
-            values = (profile.vpn_type or profile.backend, gateway or "—", managed_by)
-            for value_label, value in zip(self.meta_values.values(), values, strict=True):
-                value_label.set_label(value)
-
-        # -- status ----------------------------------------------------------------
-
-        def append_log(self, message: str) -> bool:
-            end_iter = self.log_buffer.get_end_iter()
-            self.log_buffer.insert(end_iter, message + "\n")
-            adjustment = self.scroller.get_vadjustment()
-            adjustment.set_value(adjustment.get_upper())
-            return GLib.SOURCE_REMOVE
-
-        def append_log_from_thread(self, message: str) -> None:
-            GLib.idle_add(self.append_log, message)
-
-        def refresh_status(self) -> bool:
-            status = controller.current_status()
-            view_model = ConnectionStatusViewModel.from_status(status)
-            state_class = f"vd-{view_model.css_class}"
-
-            self.status_label.set_label(view_model.title)
-            self.subtitle_label.set_label(view_model.subtitle)
-            self.pill_label.set_label(view_model.pill)
-            for widget in (self.status_label, self.pill_label, self.status_card):
-                for css_class in STATE_CSS_CLASSES:
-                    widget.remove_css_class(css_class)
-                widget.add_css_class(state_class)
-
-            elapsed = self.timer.update(status.state, time.monotonic())
-            self.timer_label.set_label(elapsed or "--:--:--")
-
-            self.connect_button.set_sensitive(view_model.can_connect and not self.busy)
-            self.disconnect_button.set_sensitive(view_model.can_disconnect and not self.busy)
-            self.diagnose_button.set_sensitive(not self.busy)
-            self.profile_dropdown.set_sensitive(view_model.can_connect and not self.busy)
-
-            if status.prompt != self.asked_prompt:
-                self.asked_prompt = status.prompt
-                if status.prompt:
-                    self.ask_prompt(status.prompt)
-            return GLib.SOURCE_CONTINUE
-
-        def run_in_background(self, work, on_done) -> None:
-            """Run blocking work off the main loop, then call on_done(result)."""
-            self.busy = True
-            self.refresh_status()
-
-            def worker() -> None:
-                try:
-                    result = work()
-                except Exception as exc:  # reported to the user in the log view
-                    LOGGER.exception("Background UI task failed")
-                    result = exc
-                GLib.idle_add(finish, result)
-
-            def finish(result) -> bool:
-                self.busy = False
-                on_done(result)
-                self.refresh_status()
-                return GLib.SOURCE_REMOVE
-
-            threading.Thread(target=worker, daemon=True).start()
-
-        # -- dialogs -----------------------------------------------------------------
-
-        def secret_dialog(
-            self,
-            heading: str,
-            body: str,
-            accept: str,
-            on_answer,
-            can_remember: bool = False,
-        ) -> None:
-            """Ask for a secret; on_answer(value, remember) gets None on cancel."""
-            entry = Gtk.PasswordEntry()
-            entry.set_show_peek_icon(True)
-            entry.set_property("activates-default", True)
-
-            content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-            content.append(entry)
-            remember = Gtk.CheckButton(label=_("Remember in the keyring"))
-            if can_remember:
-                content.append(remember)
-
-            dialog = Adw.AlertDialog(heading=heading, body=body)
-            dialog.set_extra_child(content)
-            dialog.add_response("cancel", _("Cancel"))
-            dialog.add_response("accept", accept)
-            dialog.set_response_appearance("accept", Adw.ResponseAppearance.SUGGESTED)
-            dialog.set_default_response("accept")
-            dialog.set_close_response("cancel")
-
-            def on_response(_dialog, response: str) -> None:
-                answer = entry.get_text()
-                entry.set_text("")
-                if response == "accept":
-                    on_answer(answer, remember.get_active())
-                else:
-                    on_answer(None, False)
-
-            dialog.connect("response", on_response)
-            dialog.present(self)
-
-        def ask_prompt(self, prompt: str) -> None:
-            """Ask the user to answer a backend prompt, e.g. a two-factor token."""
-
-            def on_answer(answer: str | None, remember: bool) -> None:
-                if answer is None:
-                    self.on_disconnect_clicked(None)
-                    return
-                try:
-                    controller.answer_prompt(answer, remember=remember)
-                except BackendError as exc:
-                    self.append_log(_("Could not send the answer: {error}").format(error=exc))
-                self.refresh_status()
-
-            self.secret_dialog(
-                _("The VPN asks for more information"),
-                prompt,
-                _("Send"),
-                on_answer,
-                can_remember=controller.can_remember(prompt),
-            )
-
-        # -- actions -----------------------------------------------------------------
-
-        def on_connect_clicked(self, _button) -> None:
-            if not controller.requires_password():
-                # NetworkManager asks for secrets through the GNOME secret agent.
-                self.start_connection(None)
-                return
-
-            stored = controller.stored_password()
-            if stored is not None:
-                self.append_log(_("Using the password remembered in the keyring"))
-                self.start_connection(stored)
-                return
-
-            def on_answer(password: str | None, remember: bool) -> None:
-                if password is not None:
-                    self.start_connection(password, remember=remember)
-
-            self.secret_dialog(
-                _("VPN password"),
-                _("The password is sent to openfortivpn through stdin, never written to a file."),
-                _("Connect"),
-                on_answer,
-                can_remember=controller.can_remember(),
-            )
-
-        def start_connection(self, password: str | None, remember: bool = False) -> None:
-            profile = controller.default_profile()
-            self.append_log(_("Connecting {name}…").format(name=profile.name))
-            try:
-                controller.start_connection(
-                    password,
-                    on_log=self.append_log_from_thread,
-                    remember=remember,
-                )
-            except BackendError as exc:
-                self.append_log(_("Could not start the VPN backend: {error}").format(error=exc))
-            self.refresh_status()
-
-        def on_disconnect_clicked(self, _button) -> None:
-            self.append_log(_("Stopping connection…"))
-
-            def done(result) -> None:
-                if isinstance(result, Exception):
-                    self.append_log(_("Disconnect failed: {error}").format(error=result))
-                else:
-                    self.append_log(_("Disconnected"))
-
-            self.run_in_background(controller.stop_connection, done)
-
-        def on_diagnose_clicked(self, _button) -> None:
-            self.append_log(_("Running diagnostics…"))
-
-            def done(result) -> None:
-                if isinstance(result, Exception):
-                    self.append_log(_("Diagnostics failed: {error}").format(error=result))
-                    return
-                self.append_log(result.summary)
-                for item in result.items:
-                    icon = "OK" if item.success else "FAIL"
-                    self.append_log(f"[{icon}] {item.name}: {item.message}")
-                    if item.suggestion:
-                        self.append_log("      " + _("Suggestion: {text}").format(text=item.suggestion))
-
-            self.run_in_background(controller.diagnose_default_profile, done)
 
     class VPNDoctorGtkApplication(Adw.Application):
         def __init__(self) -> None:

@@ -73,3 +73,8 @@
   padding: 8px;
   border-radius: 8px;
 }
+
+.vd-connection-name {
+  font-size: 13pt;
+  font-weight: 700;
+}
