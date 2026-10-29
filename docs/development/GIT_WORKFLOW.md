@@ -1,6 +1,17 @@
 # Git Workflow
 
-## Branches
+## Before the first public release
+
+The project is developed directly on `dev`, without feature branches or pull
+requests. Every commit on `dev` must still pass `ruff check src tests` and
+`pytest`.
+
+`main` only receives the first public release. The full flow below applies
+from then on.
+
+## After the first public release
+
+### Branches
 
 ```text
 main      stable releases
@@ -10,7 +21,7 @@ bugfix/*  bug fixes
 hotfix/*  urgent stable fixes
 ```
 
-## Flow
+### Flow
 
 ```text
 feature/* -> Pull Request -> dev -> Pull Request -> main -> tag
