@@ -24,6 +24,7 @@ import struct
 from collections.abc import Iterable
 from dataclasses import dataclass
 
+from vpn_doctor.diagnostics.log_rules import LogRule, match_rules
 from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport, DiagnosticSeverity
 
 DEFAULT_RDP_PORT = 3389
@@ -184,19 +185,10 @@ def _check_tls(sock: socket.socket, timeout: float) -> DiagnosticItem:
         )
 
 
-@dataclass(frozen=True)
-class _LogRule:
-    markers: tuple[str, ...]
-    name: str
-    message: str
-    suggestion: str | None
-    severity: DiagnosticSeverity = DiagnosticSeverity.ERROR
-
-
 # Markers verified against FreeRDP 3 (used by Remmina). Ordered from the most
 # specific explanation to the most generic one.
 FREERDP_LOG_RULES = (
-    _LogRule(
+    LogRule(
         ("license connection sequence aborted", "ERRINFO_LICENSE_NO_LICENSE"),
         "Remote Desktop licensing",
         "Your credentials were accepted, then the server closed the connection during "
@@ -208,7 +200,7 @@ FREERDP_LOG_RULES = (
         "administrator should check RD Licensing and the TerminalServices-Licensing "
         "event log.",
     ),
-    _LogRule(
+    LogRule(
         ("ERRCONNECT_PASSWORD_EXPIRED", "ERRCONNECT_PASSWORD_CERTAINLY_EXPIRED",
          "ERRCONNECT_PASSWORD_MUST_CHANGE"),
         "Expired password",
@@ -216,7 +208,7 @@ FREERDP_LOG_RULES = (
         "NLA cannot change a password during login. Change it from another Windows "
         "session or ask the administrator to reset it.",
     ),
-    _LogRule(
+    LogRule(
         ("ERRCONNECT_ACCOUNT_LOCKED_OUT", "ERRCONNECT_ACCOUNT_DISABLED",
          "ERRCONNECT_ACCOUNT_EXPIRED", "ERRCONNECT_ACCOUNT_RESTRICTION"),
         "Windows account",
@@ -224,40 +216,40 @@ FREERDP_LOG_RULES = (
         "Ask the server administrator to check the account in Active Directory or in "
         "the local users of the server.",
     ),
-    _LogRule(
+    LogRule(
         ("ERRCONNECT_LOGON_FAILURE", "ERRCONNECT_AUTHENTICATION_FAILED"),
         "Credentials",
         "The server rejected the username or the password.",
         "Check the password, the username and the domain. A domain account is often "
         "written DOMAIN\\user.",
     ),
-    _LogRule(
+    LogRule(
         ("ERRCONNECT_LOGON_TYPE_NOT_GRANTED", "ERRINFO_SERVER_INSUFFICIENT_PRIVILEGES",
          "ERRCONNECT_INSUFFICIENT_PRIVILEGES", "ERRINFO_SERVER_DENIED_CONNECTION"),
         "Remote Desktop permission",
         "The account is valid but not allowed to open a Remote Desktop session.",
         "Ask the administrator to add the account to the Remote Desktop Users group.",
     ),
-    _LogRule(
+    LogRule(
         ("ERRCONNECT_TLS_CONNECT_FAILED",),
         "TLS",
         "The client could not establish TLS with the server.",
         "Lower the client TLS security level (Remmina: Advanced > TLS Security Level = 0) "
         "for old servers.",
     ),
-    _LogRule(
+    LogRule(
         ("ERRCONNECT_DNS_NAME_NOT_FOUND",),
         "Server name",
         "The client could not resolve the server name.",
         "Check the name, or the DNS servers pushed by the VPN.",
     ),
-    _LogRule(
+    LogRule(
         ("ERRCONNECT_CONNECT_FAILED", "ERRINFO_CONNECT_FAILED"),
         "Network",
         "The client could not reach the server.",
         "Run `vpn-doctor rdp HOST` to test the route, the port and the negotiation.",
     ),
-    _LogRule(
+    LogRule(
         ("Configuration file does not specify default realm",),
         "Kerberos warnings",
         "FreeRDP tried Kerberos first, found no realm and fell back to NTLM. These "
@@ -274,26 +266,10 @@ def analyze_freerdp_log(lines: Iterable[str]) -> list[DiagnosticItem]:
     Raw lines are never copied into the result: they contain host names,
     usernames and domains.
     """
-    matched: list[_LogRule] = []
-    for line in lines:
-        for rule in FREERDP_LOG_RULES:
-            if rule not in matched and any(marker in line for marker in rule.markers):
-                matched.append(rule)
-
+    matched = match_rules(lines, FREERDP_LOG_RULES)
     if not matched:
         return [DiagnosticItem("Client log", True, "No known FreeRDP error was found.")]
-
-    matched.sort(key=FREERDP_LOG_RULES.index)
-    return [
-        DiagnosticItem(
-            name=rule.name,
-            success=rule.severity == DiagnosticSeverity.INFO,
-            message=rule.message,
-            suggestion=rule.suggestion,
-            severity=rule.severity,
-        )
-        for rule in matched
-    ]
+    return [rule.to_item() for rule in matched]
 
 
 def _error(name: str, message: str, suggestion: str) -> DiagnosticItem:
