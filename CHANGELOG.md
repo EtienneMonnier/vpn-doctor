@@ -37,3 +37,26 @@
 - Added `vpn-doctor gui` and `vpn-doctor-gui`.
 - Added UI view models and tests.
 - Updated README and roadmap with GUI progress.
+
+
+## Sprint 2.5
+
+### Fixed
+
+- Restored Sprint 2.3 profile loading and `connect --wait`, which were never
+  merged and made `vpn-doctor profiles` crash.
+- Recognized real openfortivpn 1.23 failure messages (wrong password, root
+  privileges, unreachable gateway) and kept the `failed` state after them.
+- Fixed log lines joined by a literal `\n` in the GUI.
+
+### Added
+
+- Readable failure suggestions in the CLI and the GUI.
+- `pkexec` privilege escalation and `-c /dev/null` configuration isolation
+  (ADR-0010).
+- Profiles from `~/.config/vpn-doctor/profiles.json`, rejecting secrets.
+- GUI connect/disconnect, password dialog, live logs, timer and Diagnose button.
+
+### Removed
+
+- Accidental nested `vpn-doctor/` copy of the repository.

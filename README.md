@@ -25,9 +25,9 @@ VPN Doctor is in early development.
 | Project foundation | Done |
 | Core Python structure | Done |
 | OpenFortiVPN backend skeleton | Done |
-| Sprint 2 backend design | Ready |
-| Real OpenFortiVPN process lifecycle | Planned |
-| GTK4 / Libadwaita UI | Planned |
+| Sprint 2 backend design | Done |
+| Real OpenFortiVPN process lifecycle | Experimental |
+| GTK4 / Libadwaita UI | Experimental |
 | Diagnostics engine | Planned |
 | Packaging | Planned |
 
@@ -90,9 +90,27 @@ Future secret storage will use the Linux Secret Service API through GNOME Keyrin
 compatible backend.
 
 
-## Experimental GUI
+## Profiles
 
-Sprint 2.4 introduces the first GTK4/libadwaita UI skeleton.
+VPN Doctor reads profiles from `~/.config/vpn-doctor/profiles.json`. Without
+that file it shows a safe demo profile. Passwords are never stored there.
+
+```json
+{
+  "profiles": [
+    {
+      "name": "Office",
+      "backend": "openfortivpn",
+      "host": "vpn.example.com",
+      "port": 443,
+      "username": "demo-user",
+      "trusted_cert": "abcdef..."
+    }
+  ]
+}
+```
+
+## Experimental GUI
 
 Run:
 
@@ -106,5 +124,10 @@ or:
 vpn-doctor-gui
 ```
 
-The UI currently displays connection status and a log area. Real GUI-driven
-connect/disconnect will be added in the next sprint.
+The window shows the profile, the connection status and timer, live logs and
+a Diagnose button. Connect asks for the VPN password, which is passed to
+`openfortivpn` through stdin and never stored.
+
+`openfortivpn` needs root privileges. VPN Doctor stays unprivileged and starts
+it through `pkexec`, so polkit asks for administrator authentication (see
+[ADR-0010](docs/adr/0010-pkexec-privilege-escalation.md)).
