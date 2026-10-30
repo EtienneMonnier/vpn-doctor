@@ -27,3 +27,14 @@ class VPNProfile:
     # NetworkManager connection identity and VPN type (openvpn, wireguard...).
     nm_uuid: str | None = None
     vpn_type: str | None = None
+
+    def to_dict(self) -> dict:
+        """Public description: no user name, no certificate path, no secret."""
+        return {
+            "name": self.name,
+            "backend": self.backend,
+            "managed_by": "networkmanager" if self.nm_uuid else "vpn-doctor",
+            "vpn_type": self.vpn_type,
+            "host": self.host or None,
+            "port": self.port or None,
+        }

@@ -165,6 +165,20 @@ credentials, then explains FreeRDP/Remmina errors such as expired licensing,
 expired passwords or missing Remote Desktop permissions. See the
 [case study](docs/case-studies/rdp-licensing-behind-wireguard.md).
 
+## Scripts and AI agents
+
+Every command except `gui` accepts `--json` and then prints one JSON object,
+with the same exit codes:
+
+```bash
+vpn-doctor status --profile "Office VPN" --json
+vpn-doctor diagnose --json
+```
+
+The schema is documented in the
+[CLI specification](docs/development/CLI_SPECIFICATION.md). It never contains
+secrets, user names or certificate paths.
+
 ## Experimental GUI
 
 The window shows one tab per connection, with its status and timer, live logs

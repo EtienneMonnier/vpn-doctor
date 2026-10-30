@@ -24,6 +24,15 @@ class DiagnosticItem:
     suggestion: str | None = None
     severity: DiagnosticSeverity = DiagnosticSeverity.INFO
 
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "success": self.success,
+            "severity": str(self.severity),
+            "message": self.message,
+            "suggestion": self.suggestion,
+        }
+
 
 @dataclass(frozen=True)
 class DiagnosticReport:
@@ -40,3 +49,10 @@ class DiagnosticReport:
             success=all(item.success for item in items),
             items=items,
         )
+
+    def to_dict(self) -> dict:
+        return {
+            "summary": self.summary,
+            "success": self.success,
+            "items": [item.to_dict() for item in self.items],
+        }
