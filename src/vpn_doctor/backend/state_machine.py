@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from vpn_doctor.backend.log_parser import FAILURE_SUGGESTIONS, ParsedLogKind, ParsedLogLine
+from vpn_doctor.i18n import _
 from vpn_doctor.models.status import VPNConnectionState
 
 
@@ -55,7 +56,8 @@ class ConnectionStateMachine:
         }:
             # Keep the first explanation: later errors are usually consequences.
             if self.suggestion is None:
-                self.suggestion = FAILURE_SUGGESTIONS.get(parsed.kind)
+                suggestion = FAILURE_SUGGESTIONS.get(parsed.kind)
+                self.suggestion = _(suggestion) if suggestion else None
             self.state = VPNConnectionState.FAILED
 
         return self.state

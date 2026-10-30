@@ -39,6 +39,10 @@ Every command except `gui` accepts `--json`, before or after the command
 prints exactly one JSON object on stdout, in UTF-8, and keeps the exit codes
 above. Argument syntax errors still come from argparse, as text on stderr.
 
+Field names and codes (`state`, `severity`, …) are never translated;
+messages and suggestions follow the user's language. Run
+`LANGUAGE=en vpn-doctor ... --json` for English text.
+
 The schema is stable within a minor version: fields may be added, never
 renamed or removed. Optional values are `null`, never missing.
 

@@ -179,6 +179,13 @@ The schema is documented in the
 [CLI specification](docs/development/CLI_SPECIFICATION.md). It never contains
 secrets, user names or certificate paths.
 
+## Languages
+
+VPN Doctor speaks English, French, German, Spanish, Italian, Dutch, Portuguese
+and Polish, following your desktop language. Translations live in `po/`; see
+the [internationalization guide](docs/development/I18N_GUIDE.md) to improve
+one or add a language.
+
 ## Experimental GUI
 
 The window shows one tab per connection, with its status and timer, live logs

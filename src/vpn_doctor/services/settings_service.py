@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from vpn_doctor.i18n import _
 from vpn_doctor.models.profile import VPNProfile
 
 FORBIDDEN_PROFILE_KEYS = frozenset({"password", "passwd", "secret", "token"})
@@ -57,8 +58,10 @@ class SettingsService:
     def _profile_from_dict(raw: dict) -> VPNProfile:
         if any(key in raw for key in FORBIDDEN_PROFILE_KEYS):
             raise ValueError(
-                f"Profile {raw.get('name', '?')!r} contains a secret. "
-                "Passwords must not be stored in profile files."
+                _(
+                    'Profile "{name}" contains a secret. '
+                    "Passwords must not be stored in profile files."
+                ).format(name=raw.get("name", "?"))
             )
         return VPNProfile(**raw)
 

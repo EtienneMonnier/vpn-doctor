@@ -26,6 +26,7 @@ from vpn_doctor.backend.errors import BackendProcessError
 from vpn_doctor.backend.process_runner import ProcessRunner
 from vpn_doctor.backend.state_machine import ConnectionStateMachine
 from vpn_doctor.diagnostics.vpn_plugins import explain_failure
+from vpn_doctor.i18n import _
 from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
@@ -90,7 +91,7 @@ def parse_gateway(value: str) -> tuple[str, int]:
     if "://" in value:
         url = urlsplit(value)
         return url.hostname or "", url.port or 0
-    host, _, rest = value.replace(" ", ":").partition(":")
+    host, _sep, rest = value.replace(" ", ":").partition(":")
     port = rest.split(":")[0]
     return host, int(port) if port.isdigit() else 0
 
@@ -244,7 +245,7 @@ class NetworkManagerBackend(VPNBackend):
             previous.stop_processes()
         session = Session(profile=profile)
         self.sessions[profile.nm_uuid or ""] = session
-        session.state_machine.transition(VPNConnectionState.CONNECTING, "Asking NetworkManager")
+        session.state_machine.transition(VPNConnectionState.CONNECTING, _("Asking NetworkManager"))
 
         self._follow_journal(session, on_log)
         session.runner.start(
@@ -264,7 +265,7 @@ class NetworkManagerBackend(VPNBackend):
             session = self.sessions.get(target.nm_uuid or "")
             if session is not None:
                 session.state_machine.transition(
-                    VPNConnectionState.DISCONNECTING, "Asking NetworkManager"
+                    VPNConnectionState.DISCONNECTING, _("Asking NetworkManager")
                 )
                 session.runner.terminate()
             if target.nm_uuid:
@@ -277,7 +278,7 @@ class NetworkManagerBackend(VPNBackend):
                 )
             if session is not None:
                 session.journal.terminate()
-                session.state_machine.transition(VPNConnectionState.DISCONNECTED, "Disconnected")
+                session.state_machine.transition(VPNConnectionState.DISCONNECTED, _("Disconnected"))
 
     def status(self, profile: VPNProfile | None = None) -> VPNStatus:
         if profile is None:
@@ -347,7 +348,7 @@ class NetworkManagerBackend(VPNBackend):
         items = [self._check_nmcli()]
         if profile.vpn_type and profile.vpn_type != "wireguard":
             items.append(self._check_plugin(profile.vpn_type))
-        return DiagnosticReport.from_items("NetworkManager diagnostics", items)
+        return DiagnosticReport.from_items(_("NetworkManager diagnostics"), items)
 
     # -- activation output and journal -------------------------------------------
 
@@ -410,7 +411,7 @@ class NetworkManagerBackend(VPNBackend):
             if not session.runner.is_running and status.state == VPNConnectionState.DISCONNECTED:
                 return status
             time.sleep(0.2)
-        session.state_machine.transition(VPNConnectionState.FAILED, "Connection timeout")
+        session.state_machine.transition(VPNConnectionState.FAILED, _("Connection timeout"))
         return self.status(session.profile)
 
     # -- helpers -----------------------------------------------------------------
@@ -450,12 +451,14 @@ class NetworkManagerBackend(VPNBackend):
         except BackendProcessError:
             running = ""
         if running == "running":
-            return DiagnosticItem("NetworkManager", True, "NetworkManager is running")
+            return DiagnosticItem("NetworkManager", True, _("NetworkManager is running"))
         return DiagnosticItem(
             "NetworkManager",
             False,
-            "NetworkManager is not reachable through nmcli",
-            "Check that NetworkManager is installed and running: systemctl status NetworkManager",
+            _("NetworkManager is not reachable through nmcli"),
+            _("Check that NetworkManager is installed and running: {command}").format(
+                command="systemctl status NetworkManager"
+            ),
         )
 
     @staticmethod
@@ -466,10 +469,16 @@ class NetworkManagerBackend(VPNBackend):
                 continue
             for name_file in directory.glob("*.name"):
                 if service in name_file.read_text(encoding="utf-8", errors="replace"):
-                    return DiagnosticItem("VPN plugin", True, f"The {vpn_type} plugin is installed")
+                    return DiagnosticItem(
+                        _("VPN plugin"),
+                        True,
+                        _("The {vpn_type} plugin is installed").format(vpn_type=vpn_type),
+                    )
         return DiagnosticItem(
-            "VPN plugin",
+            _("VPN plugin"),
             False,
-            f"The NetworkManager {vpn_type} plugin is missing",
-            f"Install it, for example: sudo dnf install NetworkManager-{vpn_type}",
+            _("The NetworkManager {vpn_type} plugin is missing").format(vpn_type=vpn_type),
+            _("Install it, for example: {command}").format(
+                command=f"sudo dnf install NetworkManager-{vpn_type}"
+            ),
         )

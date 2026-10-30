@@ -20,6 +20,7 @@
 | `/usr/share/applications/io.github.vpndoctor.VPNDoctor.desktop` | launcher |
 | `/usr/share/metainfo/io.github.vpndoctor.VPNDoctor.metainfo.xml` | AppStream (GNOME Software) |
 | `/usr/share/icons/hicolor/scalable/apps/io.github.vpndoctor.VPNDoctor.svg` | icon |
+| `/usr/share/locale/<lang>/LC_MESSAGES/vpn-doctor.mo` | translations, compiled from `po/` |
 
 The helper and the policy must be installed together: the policy's
 `org.freedesktop.policykit.exec.path` points at the helper's exact path.
@@ -30,7 +31,7 @@ Build dependencies, once:
 
 ```bash
 sudo dnf install rpm-build pyproject-rpm-macros python3-devel python3-setuptools \
-    desktop-file-utils appstream
+    desktop-file-utils appstream gettext
 ```
 
 Build from the current commit (sources come from `git archive HEAD`, so

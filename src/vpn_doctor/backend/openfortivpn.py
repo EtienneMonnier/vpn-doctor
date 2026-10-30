@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from vpn_doctor.backend.base import VPNBackend
 from vpn_doctor.backend.command import BackendCommand
 from vpn_doctor.backend.openfortivpn_process import OpenFortiVPNProcess
+from vpn_doctor.i18n import _
 from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNStatus
@@ -73,30 +74,32 @@ class OpenFortiVPNBackend(VPNBackend):
         binary_found = shutil.which("openfortivpn") is not None
         items.append(
             DiagnosticItem(
-                name="openfortivpn binary",
+                name=_("openfortivpn binary"),
                 success=binary_found,
-                message="openfortivpn is installed" if binary_found else "openfortivpn is missing",
+                message=_("openfortivpn is installed")
+                if binary_found
+                else _("openfortivpn is missing"),
                 suggestion=None
                 if binary_found
-                else "Install openfortivpn using your distribution package manager",
+                else _("Install openfortivpn using your distribution package manager"),
             )
         )
 
         gateway_ok = self._is_gateway_reachable(profile.host, profile.port)
         items.append(
             DiagnosticItem(
-                name="gateway reachability",
+                name=_("gateway reachability"),
                 success=gateway_ok,
-                message=f"{profile.host}:{profile.port} is reachable"
-                if gateway_ok
-                else f"{profile.host}:{profile.port} is unreachable",
+                message=(
+                    _("{gateway} is reachable") if gateway_ok else _("{gateway} is unreachable")
+                ).format(gateway=f"{profile.host}:{profile.port}"),
                 suggestion=None
                 if gateway_ok
-                else "Check hostname, port, firewall or network connectivity",
+                else _("Check hostname, port, firewall or network connectivity"),
             )
         )
 
-        return DiagnosticReport.from_items("OpenFortiVPN basic diagnostics", items)
+        return DiagnosticReport.from_items(_("OpenFortiVPN basic diagnostics"), items)
 
     @staticmethod
     def _is_gateway_reachable(host: str, port: int, timeout: float = 3.0) -> bool:

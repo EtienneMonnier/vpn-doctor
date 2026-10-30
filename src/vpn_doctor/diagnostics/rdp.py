@@ -25,6 +25,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 
 from vpn_doctor.diagnostics.log_rules import LogRule, match_rules
+from vpn_doctor.i18n import N_, _
 from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport, DiagnosticSeverity
 
 DEFAULT_RDP_PORT = 3389
@@ -36,21 +37,21 @@ PROTOCOL_SSL = 0x01
 PROTOCOL_HYBRID = 0x02
 
 SELECTED_PROTOCOLS = {
-    0x00: "standard RDP security",
+    0x00: N_("standard RDP security"),
     0x01: "TLS",
     0x02: "NLA (CredSSP)",
     0x04: "RDSTLS",
-    0x08: "NLA (CredSSP with early user authorization)",
-    0x10: "RDS AAD authentication",
+    0x08: N_("NLA (CredSSP with early user authorization)"),
+    0x10: N_("RDS AAD authentication"),
 }
 
 NEGOTIATION_FAILURES = {
-    0x01: "the server requires TLS",
-    0x02: "the server does not allow TLS",
-    0x03: "the server has no TLS certificate",
-    0x04: "the client request was inconsistent",
-    0x05: "the server requires NLA (CredSSP)",
-    0x06: "the server requires TLS with user authentication",
+    0x01: N_("the server requires TLS"),
+    0x02: N_("the server does not allow TLS"),
+    0x03: N_("the server has no TLS certificate"),
+    0x04: N_("the client request was inconsistent"),
+    0x05: N_("the server requires NLA (CredSSP)"),
+    0x06: N_("the server requires TLS with user authentication"),
 }
 
 
@@ -68,8 +69,12 @@ class NegotiationResult:
 
     def describe(self) -> str:
         if self.accepted:
-            return SELECTED_PROTOCOLS.get(self.protocol, f"protocol 0x{self.protocol:x}")
-        return NEGOTIATION_FAILURES.get(self.failure_code, f"failure code 0x{self.failure_code:x}")
+            if self.protocol in SELECTED_PROTOCOLS:
+                return _(SELECTED_PROTOCOLS[self.protocol])
+            return _("protocol 0x{code:x}").format(code=self.protocol)
+        if self.failure_code in NEGOTIATION_FAILURES:
+            return _(NEGOTIATION_FAILURES[self.failure_code])
+        return _("failure code 0x{code:x}").format(code=self.failure_code)
 
 
 def build_connection_request(requested_protocols: int = PROTOCOL_SSL | PROTOCOL_HYBRID) -> bytes:
@@ -102,6 +107,7 @@ def parse_negotiation_response(data: bytes) -> NegotiationResult:
 def probe_rdp(host: str, port: int = DEFAULT_RDP_PORT, timeout: float = 5.0) -> DiagnosticReport:
     """Check phases 1 to 3 of an RDP connection. No credentials are sent."""
     target = f"{host}:{port}"
+    summary = _("RDP diagnostics")
     items: list[DiagnosticItem] = []
 
     try:
@@ -109,16 +115,24 @@ def probe_rdp(host: str, port: int = DEFAULT_RDP_PORT, timeout: float = 5.0) -> 
     except OSError as exc:
         items.append(
             _error(
-                "RDP port",
-                f"{target} is not reachable ({exc.strerror or exc}).",
-                "Check that the VPN routes this address, that Remote Desktop is enabled "
-                "on the server and that no firewall blocks the port.",
+                _("RDP port"),
+                _("{target} is not reachable ({error}).").format(
+                    target=target, error=exc.strerror or exc
+                ),
+                _(
+                    "Check that the VPN routes this address, that Remote Desktop is enabled "
+                    "on the server and that no firewall blocks the port."
+                ),
             )
         )
-        return DiagnosticReport.from_items("RDP diagnostics", items)
+        return DiagnosticReport.from_items(summary, items)
 
     with sock:
-        items.append(DiagnosticItem("RDP port", True, f"{target} accepts TCP connections."))
+        items.append(
+            DiagnosticItem(
+                _("RDP port"), True, _("{target} accepts TCP connections.").format(target=target)
+            )
+        )
 
         try:
             sock.sendall(build_connection_request())
@@ -126,29 +140,35 @@ def probe_rdp(host: str, port: int = DEFAULT_RDP_PORT, timeout: float = 5.0) -> 
         except (OSError, ValueError) as exc:
             items.append(
                 _error(
-                    "RDP negotiation",
-                    f"The service on {target} did not answer like an RDP server ({exc}).",
-                    "Check the port number: another service may be listening on it.",
+                    _("RDP negotiation"),
+                    _("The service on {target} did not answer like an RDP server ({error}).").format(
+                        target=target, error=exc
+                    ),
+                    _("Check the port number: another service may be listening on it."),
                 )
             )
-            return DiagnosticReport.from_items("RDP diagnostics", items)
+            return DiagnosticReport.from_items(summary, items)
 
         if not negotiation.accepted:
             items.append(
                 _error(
-                    "RDP negotiation",
-                    f"The server refused the security negotiation: {negotiation.describe()}.",
-                    "Align the security setting of the client (Remmina: Advanced > Security "
-                    "protocol negotiation) with what the server requires.",
+                    _("RDP negotiation"),
+                    _("The server refused the security negotiation: {reason}.").format(
+                        reason=negotiation.describe()
+                    ),
+                    _(
+                        "Align the security setting of the client (Remmina: Advanced > Security "
+                        "protocol negotiation) with what the server requires."
+                    ),
                 )
             )
-            return DiagnosticReport.from_items("RDP diagnostics", items)
+            return DiagnosticReport.from_items(summary, items)
 
         items.append(
             DiagnosticItem(
-                "RDP negotiation",
+                _("RDP negotiation"),
                 True,
-                f"The server selected {negotiation.describe()}.",
+                _("The server selected {protocol}.").format(protocol=negotiation.describe()),
             )
         )
 
@@ -157,13 +177,15 @@ def probe_rdp(host: str, port: int = DEFAULT_RDP_PORT, timeout: float = 5.0) -> 
 
     items.append(
         DiagnosticItem(
-            "Beyond this probe",
+            _("Beyond this probe"),
             True,
-            "Authentication, licensing and session start need credentials and are not tested "
-            "here. If the client still fails, analyse its log with --log.",
+            _(
+                "Authentication, licensing and session start need credentials and are not "
+                "tested here. If the client still fails, analyse its log with --log."
+            ),
         )
     )
-    return DiagnosticReport.from_items("RDP diagnostics", items)
+    return DiagnosticReport.from_items(summary, items)
 
 
 def _check_tls(sock: socket.socket, timeout: float) -> DiagnosticItem:
@@ -175,13 +197,17 @@ def _check_tls(sock: socket.socket, timeout: float) -> DiagnosticItem:
     sock.settimeout(timeout)
     try:
         with context.wrap_socket(sock) as tls:
-            return DiagnosticItem("TLS handshake", True, f"TLS works ({tls.version()}).")
+            return DiagnosticItem(
+                _("TLS handshake"), True, _("TLS works ({version}).").format(version=tls.version())
+            )
     except (OSError, ssl.SSLError) as exc:
         return _error(
-            "TLS handshake",
-            f"The TLS handshake failed ({exc}).",
-            "Old Windows servers only offer TLS 1.0/1.1. Lower the client TLS security "
-            "level (Remmina: Advanced > TLS Security Level = 0) or update the server.",
+            _("TLS handshake"),
+            _("The TLS handshake failed ({error}).").format(error=exc),
+            _(
+                "Old Windows servers only offer TLS 1.0/1.1. Lower the client TLS security "
+                "level (Remmina: Advanced > TLS Security Level = 0) or update the server."
+            ),
         )
 
 
@@ -190,70 +216,84 @@ def _check_tls(sock: socket.socket, timeout: float) -> DiagnosticItem:
 FREERDP_LOG_RULES = (
     LogRule(
         ("license connection sequence aborted", "ERRINFO_LICENSE_NO_LICENSE"),
-        "Remote Desktop licensing",
-        "Your credentials were accepted, then the server closed the connection during "
-        "the Remote Desktop licensing phase. This is a server-side problem, not a VPN "
-        "or password problem.",
-        "The RDS licensing grace period has probably expired or the license server is "
-        "unreachable. To confirm, connect in console mode, which bypasses licensing "
-        "(Remmina: Advanced > Attach to console, xfreerdp: /admin). The server "
-        "administrator should check RD Licensing and the TerminalServices-Licensing "
-        "event log.",
+        N_("Remote Desktop licensing"),
+        N_(
+            "Your credentials were accepted, then the server closed the connection during "
+            "the Remote Desktop licensing phase. This is a server-side problem, not a VPN "
+            "or password problem."
+        ),
+        N_(
+            "The RDS licensing grace period has probably expired or the license server is "
+            "unreachable. To confirm, connect in console mode, which bypasses licensing "
+            "(Remmina: Advanced > Attach to console, xfreerdp: /admin). The server "
+            "administrator should check RD Licensing and the TerminalServices-Licensing "
+            "event log."
+        ),
     ),
     LogRule(
         ("ERRCONNECT_PASSWORD_EXPIRED", "ERRCONNECT_PASSWORD_CERTAINLY_EXPIRED",
          "ERRCONNECT_PASSWORD_MUST_CHANGE"),
-        "Expired password",
-        "The Windows password has expired or must be changed.",
-        "NLA cannot change a password during login. Change it from another Windows "
-        "session or ask the administrator to reset it.",
+        N_("Expired password"),
+        N_("The Windows password has expired or must be changed."),
+        N_(
+            "NLA cannot change a password during login. Change it from another Windows "
+            "session or ask the administrator to reset it."
+        ),
     ),
     LogRule(
         ("ERRCONNECT_ACCOUNT_LOCKED_OUT", "ERRCONNECT_ACCOUNT_DISABLED",
          "ERRCONNECT_ACCOUNT_EXPIRED", "ERRCONNECT_ACCOUNT_RESTRICTION"),
-        "Windows account",
-        "The Windows account is locked, disabled, expired or restricted.",
-        "Ask the server administrator to check the account in Active Directory or in "
-        "the local users of the server.",
+        N_("Windows account"),
+        N_("The Windows account is locked, disabled, expired or restricted."),
+        N_(
+            "Ask the server administrator to check the account in Active Directory or in "
+            "the local users of the server."
+        ),
     ),
     LogRule(
         ("ERRCONNECT_LOGON_FAILURE", "ERRCONNECT_AUTHENTICATION_FAILED"),
-        "Credentials",
-        "The server rejected the username or the password.",
-        "Check the password, the username and the domain. A domain account is often "
-        "written DOMAIN\\user.",
+        N_("Credentials"),
+        N_("The server rejected the username or the password."),
+        N_(
+            "Check the password, the username and the domain. A domain account is often "
+            "written DOMAIN\\user."
+        ),
     ),
     LogRule(
         ("ERRCONNECT_LOGON_TYPE_NOT_GRANTED", "ERRINFO_SERVER_INSUFFICIENT_PRIVILEGES",
          "ERRCONNECT_INSUFFICIENT_PRIVILEGES", "ERRINFO_SERVER_DENIED_CONNECTION"),
-        "Remote Desktop permission",
-        "The account is valid but not allowed to open a Remote Desktop session.",
-        "Ask the administrator to add the account to the Remote Desktop Users group.",
+        N_("Remote Desktop permission"),
+        N_("The account is valid but not allowed to open a Remote Desktop session."),
+        N_("Ask the administrator to add the account to the Remote Desktop Users group."),
     ),
     LogRule(
         ("ERRCONNECT_TLS_CONNECT_FAILED",),
-        "TLS",
-        "The client could not establish TLS with the server.",
-        "Lower the client TLS security level (Remmina: Advanced > TLS Security Level = 0) "
-        "for old servers.",
+        N_("TLS"),
+        N_("The client could not establish TLS with the server."),
+        N_(
+            "Lower the client TLS security level (Remmina: Advanced > TLS Security Level = 0) "
+            "for old servers."
+        ),
     ),
     LogRule(
         ("ERRCONNECT_DNS_NAME_NOT_FOUND",),
-        "Server name",
-        "The client could not resolve the server name.",
-        "Check the name, or the DNS servers pushed by the VPN.",
+        N_("Server name"),
+        N_("The client could not resolve the server name."),
+        N_("Check the name, or the DNS servers pushed by the VPN."),
     ),
     LogRule(
         ("ERRCONNECT_CONNECT_FAILED", "ERRINFO_CONNECT_FAILED"),
-        "Network",
-        "The client could not reach the server.",
-        "Run `vpn-doctor rdp HOST` to test the route, the port and the negotiation.",
+        N_("Network"),
+        N_("The client could not reach the server."),
+        N_("Run `vpn-doctor rdp HOST` to test the route, the port and the negotiation."),
     ),
     LogRule(
         ("Configuration file does not specify default realm",),
-        "Kerberos warnings",
-        "FreeRDP tried Kerberos first, found no realm and fell back to NTLM. These "
-        "errors are harmless.",
+        N_("Kerberos warnings"),
+        N_(
+            "FreeRDP tried Kerberos first, found no realm and fell back to NTLM. These "
+            "errors are harmless."
+        ),
         None,
         DiagnosticSeverity.INFO,
     ),
@@ -268,7 +308,7 @@ def analyze_freerdp_log(lines: Iterable[str]) -> list[DiagnosticItem]:
     """
     matched = match_rules(lines, FREERDP_LOG_RULES)
     if not matched:
-        return [DiagnosticItem("Client log", True, "No known FreeRDP error was found.")]
+        return [DiagnosticItem(_("Client log"), True, _("No known FreeRDP error was found."))]
     return [rule.to_item() for rule in matched]
 
 

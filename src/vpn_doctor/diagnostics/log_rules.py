@@ -9,6 +9,7 @@ from __future__ import annotations
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 
+from vpn_doctor.i18n import _
 from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticSeverity
 
 
@@ -26,11 +27,12 @@ class LogRule:
         return any(marker in line for marker in self.markers)
 
     def to_item(self) -> DiagnosticItem:
+        """Texts are marked with N_() in rule tables and translated here."""
         return DiagnosticItem(
-            name=self.name,
+            name=_(self.name),
             success=self.severity == DiagnosticSeverity.INFO,
-            message=self.message,
-            suggestion=self.suggestion,
+            message=_(self.message),
+            suggestion=_(self.suggestion) if self.suggestion else None,
             severity=self.severity,
         )
 

@@ -15,9 +15,11 @@ import logging
 import re
 import shutil
 import subprocess
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from itertools import combinations
 
+from vpn_doctor.i18n import _
 from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticSeverity
 
 LOGGER = logging.getLogger(__name__)
@@ -119,13 +121,15 @@ def _full_tunnels(vpn: dict[str, str], routes: list[Route]) -> list[DiagnosticIt
     devices = sorted({r.device for r in routes if r.network in FULL_TUNNEL_PREFIXES})
     if len(devices) < 2:
         return []
-    names = " and ".join(sorted(vpn[d] for d in devices))
+    names = _join_names(vpn[d] for d in devices)
     return [
         DiagnosticItem(
-            "Two full tunnels",
+            _("Two full tunnels"),
             False,
-            f"{names} both want to carry all your traffic. Only one of them really does.",
-            "Keep one full-tunnel VPN, or ask for split tunneling on the other one.",
+            _("{names} both want to carry all your traffic. Only one of them really does.").format(
+                names=names
+            ),
+            _("Keep one full-tunnel VPN, or ask for split tunneling on the other one."),
             DiagnosticSeverity.ERROR,
         )
     ]
@@ -145,12 +149,22 @@ def _overlaps_between_vpns(vpn: dict[str, str], routes: list[Route]) -> list[Dia
         winner = _winner(first, second)
         items.append(
             DiagnosticItem(
-                "Overlapping VPN networks",
+                _("Overlapping VPN networks"),
                 False,
-                f"{vpn[first.device]} routes {first.network} and {vpn[second.device]} routes "
-                f"{second.network}. Traffic for the overlap goes to {vpn[winner.device]} only.",
-                "Disconnect one of these VPNs to reach hosts of the other one, or ask an "
-                "administrator to use distinct address ranges.",
+                _(
+                    "{first} routes {first_network} and {second} routes {second_network}. "
+                    "Traffic for the overlap goes to {winner} only."
+                ).format(
+                    first=vpn[first.device],
+                    first_network=first.network,
+                    second=vpn[second.device],
+                    second_network=second.network,
+                    winner=vpn[winner.device],
+                ),
+                _(
+                    "Disconnect one of these VPNs to reach hosts of the other one, or ask an "
+                    "administrator to use distinct address ranges."
+                ),
                 DiagnosticSeverity.WARNING,
             )
         )
@@ -170,13 +184,22 @@ def _overlaps_with_lan(
             if _overlap(route.network, lan.network):
                 items.append(
                     DiagnosticItem(
-                        "VPN overlaps your local network",
+                        _("VPN overlaps your local network"),
                         False,
-                        f"{vpn[route.device]} routes {route.network}, which overlaps your local "
-                        f"network {lan.network} on {lan.device}.",
-                        "Devices of your local network (router, printer, NAS) or remote hosts may "
-                        "become unreachable. Renumbering the local network avoids it, e.g. "
-                        "192.168.77.0/24 instead of 192.168.1.0/24.",
+                        _(
+                            "{vpn} routes {network}, which overlaps your local network "
+                            "{lan_network} on {device}."
+                        ).format(
+                            vpn=vpn[route.device],
+                            network=route.network,
+                            lan_network=lan.network,
+                            device=lan.device,
+                        ),
+                        _(
+                            "Devices of your local network (router, printer, NAS) or remote "
+                            "hosts may become unreachable. Renumbering the local network avoids "
+                            "it, e.g. 192.168.77.0/24 instead of 192.168.1.0/24."
+                        ),
                         DiagnosticSeverity.WARNING,
                     )
                 )
@@ -187,18 +210,27 @@ def _dns_catch_all(vpn: dict[str, str], domains: dict[str, list[str]]) -> list[D
     catch_all = sorted(link for link in vpn if "~." in domains.get(link, []))
     if len(catch_all) < 2:
         return []
-    names = " and ".join(sorted(vpn[link] for link in catch_all))
+    names = _join_names(vpn[link] for link in catch_all)
     return [
         DiagnosticItem(
-            "DNS claimed by several VPNs",
+            _("DNS claimed by several VPNs"),
             False,
-            f"{names} both ask to resolve every name. Answers may come from either VPN, so "
-            "internal names can fail at random.",
-            "Configure routing-only DNS domains (e.g. ~corp.example.com) on one of them in "
-            "the connection settings, under IPv4 > DNS search domains.",
+            _(
+                "{names} both ask to resolve every name. Answers may come from either VPN, so "
+                "internal names can fail at random."
+            ).format(names=names),
+            _(
+                "Configure routing-only DNS domains (e.g. ~corp.example.com) on one of them in "
+                "the connection settings, under IPv4 > DNS search domains."
+            ),
             DiagnosticSeverity.WARNING,
         )
     ]
+
+
+def _join_names(names: Iterable[str]) -> str:
+    # TRANSLATORS: separator between VPN connection names, as in "Office and Lab".
+    return _(" and ").join(sorted(names))
 
 
 def _overlap(first: Network, second: Network) -> bool:

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from vpn_doctor.i18n import _
+from vpn_doctor.i18n import _, ngettext
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
 
 
@@ -129,6 +129,8 @@ def boot_lines(
         _("Loading diagnostics engine… OK"),
         _("NetworkManager… {state}").format(state=_("ONLINE") if networkmanager else _("NOT FOUND")),
         _("Keyring… {state}").format(state=_("UNLOCKED") if keyring else _("UNAVAILABLE")),
-        _("Scanning connections… {count} found").format(count=connections),
+        ngettext(
+            "Scanning connections… {count} found", "Scanning connections… {count} found", connections
+        ).format(count=connections),
         _("Ready. Diagnose. Connect. Protect."),
     ]
