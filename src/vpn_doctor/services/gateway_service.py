@@ -13,6 +13,7 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+from vpn_doctor.i18n import _
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.services.privilege_service import HELPER_PATH, helper_command
 
@@ -77,7 +78,7 @@ class GatewayService:
     def _run(self, action: str, request: dict) -> tuple[bool, str]:
         command = helper_command(self.helper, action)
         if not command:
-            return False, "The VPN Doctor helper is not installed"
+            return False, _("The VPN Doctor helper is not installed")
         try:
             result = subprocess.run(
                 command,

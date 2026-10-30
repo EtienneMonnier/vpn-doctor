@@ -19,6 +19,7 @@ from vpn_doctor.backend.process_runner import line_buffering_command
 from vpn_doctor.backend.registry import BackendRegistry
 from vpn_doctor.diagnostics.conflicts import collect_snapshot, find_conflicts
 from vpn_doctor.diagnostics.rdp import DEFAULT_RDP_PORT, analyze_freerdp_log, probe_rdp
+from vpn_doctor.i18n import _
 from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
@@ -32,8 +33,6 @@ from vpn_doctor.services.secret_service import (
 )
 from vpn_doctor.services.settings_service import SettingsService
 from vpn_doctor.services.theme_service import Theme, ThemeService
-
-JSON_HELP = "Print one JSON object instead of text (for scripts and agents)"
 
 
 class ApplicationController:
@@ -81,7 +80,7 @@ class ApplicationController:
             if profile.name == name:
                 self.selected_profile_name = name
                 return profile
-        raise ValueError(f"Unknown profile: {name}")
+        raise ValueError(_("Unknown profile: {name}").format(name=name))
 
     def default_profile(self) -> VPNProfile:
         """Return the selected profile, or the first one."""
@@ -271,97 +270,100 @@ class ApplicationController:
         self.backend_manager.disconnect(profile or self.default_profile())
 
     def run(self, argv: list[str] | None = None) -> int:
+        json_help = _("Print one JSON object instead of text (for scripts and agents)")
         parser = argparse.ArgumentParser(prog="vpn-doctor")
-        parser.add_argument("--version", action="store_true", help="Show VPN Doctor version")
-        parser.add_argument("--json", action="store_true", help=JSON_HELP)
+        parser.add_argument("--version", action="store_true", help=_("Show VPN Doctor version"))
+        parser.add_argument("--json", action="store_true", help=json_help)
 
         subparsers = parser.add_subparsers(dest="command")
 
         # Also accepted after the command; SUPPRESS keeps the global value.
         json_option = argparse.ArgumentParser(add_help=False)
-        json_option.add_argument("--json", action="store_true", default=argparse.SUPPRESS, help=JSON_HELP)
+        json_option.add_argument("--json", action="store_true", default=argparse.SUPPRESS, help=json_help)
 
         profile_option = argparse.ArgumentParser(add_help=False, parents=[json_option])
         profile_option.add_argument(
             "--profile",
             metavar="NAME",
-            help="Profile or NetworkManager connection name (default: the first one)",
+            help=_("Profile or NetworkManager connection name (default: the first one)"),
         )
 
-        subparsers.add_parser("diagnose", help="Run basic diagnostics", parents=[profile_option])
-        subparsers.add_parser("profiles", help="List VPN connections and profiles", parents=[json_option])
-        subparsers.add_parser("status", help="Show connection status", parents=[profile_option])
-        subparsers.add_parser("gui", help="Launch the experimental GTK UI")
+        subparsers.add_parser("diagnose", help=_("Run basic diagnostics"), parents=[profile_option])
+        subparsers.add_parser("profiles", help=_("List VPN connections and profiles"), parents=[json_option])
+        subparsers.add_parser("status", help=_("Show connection status"), parents=[profile_option])
+        subparsers.add_parser("gui", help=_("Launch the experimental GTK UI"))
 
         connect_parser = subparsers.add_parser(
             "connect",
-            help="Connect a profile",
+            help=_("Connect a profile"),
             parents=[profile_option],
         )
         connect_parser.add_argument(
             "--dry-run",
             action="store_true",
-            help="Print the backend command without starting a VPN process",
+            help=_("Print the backend command without starting a VPN process"),
         )
         connect_parser.add_argument(
             "--wait",
             action="store_true",
-            help="Wait until the backend reports connected, failed or timeout",
+            help=_("Wait until the backend reports connected, failed or timeout"),
         )
         connect_parser.add_argument(
             "--timeout",
             type=float,
             default=60.0,
-            help="Maximum wait time in seconds when --wait is used",
+            help=_("Maximum wait time in seconds when --wait is used"),
         )
 
         subparsers.add_parser(
             "disconnect",
-            help="Disconnect the active VPN session",
+            help=_("Disconnect the active VPN session"),
             parents=[profile_option],
         )
 
         subparsers.add_parser(
             "gateways",
-            help="List the gateways approved on this computer",
+            help=_("List the gateways approved on this computer"),
             parents=[json_option],
         )
         subparsers.add_parser(
             "approve-gateway",
-            help="Approve the gateway of a profile (administrator password)",
+            help=_("Approve the gateway of a profile (administrator password)"),
             parents=[profile_option],
         )
         revoke_parser = subparsers.add_parser(
             "revoke-gateway",
-            help="Revoke an approved gateway (administrator password)",
+            help=_("Revoke an approved gateway (administrator password)"),
             parents=[json_option],
         )
         revoke_parser.add_argument("gateway", metavar="HOST:PORT")
 
         subparsers.add_parser(
             "conflicts",
-            help="Detect route and DNS conflicts between active VPNs and the local network",
+            help=_("Detect route and DNS conflicts between active VPNs and the local network"),
             parents=[json_option],
         )
 
         subparsers.add_parser(
             "forget-secrets",
-            help="Remove the secrets remembered in the keyring for a profile",
+            help=_("Remove the secrets remembered in the keyring for a profile"),
             parents=[profile_option],
         )
 
         rdp_parser = subparsers.add_parser(
             "rdp",
-            help="Diagnose a Remote Desktop server reached through the VPN",
+            help=_("Diagnose a Remote Desktop server reached through the VPN"),
             parents=[json_option],
         )
-        rdp_parser.add_argument("host", help="RDP server name or address")
+        rdp_parser.add_argument("host", help=_("RDP server name or address"))
         rdp_parser.add_argument("--port", type=int, default=DEFAULT_RDP_PORT)
         rdp_parser.add_argument(
             "--log",
             metavar="FILE",
-            help="FreeRDP/Remmina log to explain, '-' for stdin "
-            "(e.g. journalctl --user -b -o cat | vpn-doctor rdp HOST --log -)",
+            help=_(
+                "FreeRDP/Remmina log to explain, '-' for stdin "
+                "(e.g. journalctl --user -b -o cat | vpn-doctor rdp HOST --log -)"
+            ),
         )
 
         args = parser.parse_args(argv)
@@ -403,9 +405,9 @@ class ApplicationController:
             return self._result(ok, message)
 
         if args.command == "revoke-gateway":
-            host, _, port = args.gateway.rpartition(":")
+            host, _sep, port = args.gateway.rpartition(":")
             if not port.isdigit():
-                return self._error("Expected HOST:PORT", 2)
+                return self._error(_("Expected HOST:PORT"), 2)
             ok, message = self.revoke_gateway(ApprovedGateway(host.lower(), int(port)))
             return self._result(ok, message)
 
@@ -414,9 +416,9 @@ class ApplicationController:
 
         if args.command == "forget-secrets":
             if not self.forget_secrets():
-                return self._error("The keyring is not reachable: install PyGObject and libsecret.", 1)
+                return self._error(_("The keyring is not reachable: install PyGObject and libsecret."), 1)
             name = self.default_profile().name
-            return self._result(True, f"Secrets forgotten for {name}", profile=name)
+            return self._result(True, _("Secrets forgotten for {name}").format(name=name), profile=name)
 
         if args.command == "rdp":
             return self._rdp(args.host, args.port, args.log)
@@ -437,11 +439,11 @@ class ApplicationController:
         return 0 if result.success else 1
 
     def _conflicts(self) -> int:
-        report = DiagnosticReport.from_items("Network conflicts", self.network_conflicts())
+        report = DiagnosticReport.from_items(_("Network conflicts"), self.network_conflicts())
         if self._json_output:
             self._emit({"report": report.to_dict()})
         elif not report.items:
-            print("No conflict between active VPNs and the local network.")
+            print(_("No conflict between active VPNs and the local network."))
         else:
             self._print_report(report)
         return 0 if report.success else 1
@@ -457,8 +459,8 @@ class ApplicationController:
                     with Path(log_path).open(encoding="utf-8", errors="replace") as log_file:
                         items = analyze_freerdp_log(log_file)
             except OSError as exc:
-                return self._error(f"Cannot read {log_path}: {exc.strerror}", 2)
-            log_report = DiagnosticReport.from_items("RDP client log analysis", items)
+                return self._error(_("Cannot read {path}: {error}").format(path=log_path, error=exc.strerror), 2)
+            log_report = DiagnosticReport.from_items(_("RDP client log analysis"), items)
 
         if self._json_output:
             self._emit(
@@ -485,7 +487,11 @@ class ApplicationController:
             return 0
         for profile in profiles:
             if profile.vpn_type:
-                print(f"- {profile.name} ({profile.vpn_type} via NetworkManager)")
+                print(
+                    _("- {name} ({vpn_type} via NetworkManager)").format(
+                        name=profile.name, vpn_type=profile.vpn_type
+                    )
+                )
             else:
                 print(f"- {profile.name} ({profile.backend})")
         return 0
@@ -512,10 +518,10 @@ class ApplicationController:
             )
             return 0
         if not self.gateways.enforced:
-            print("The privileged helper is not installed: gateways need no approval.")
+            print(_("The privileged helper is not installed: gateways need no approval."))
         for gateway in gateways:
-            pin = gateway.trusted_cert[:16] + "…" if gateway.trusted_cert else "system CA"
-            print(f"- {gateway.label} (certificate: {pin})")
+            pin = gateway.trusted_cert[:16] + "…" if gateway.trusted_cert else _("system CA")
+            print(_("- {gateway} (certificate: {pin})").format(gateway=gateway.label, pin=pin))
         return 0
 
     def _connect(self, dry_run: bool = False, wait: bool = False, timeout_seconds: float = 60.0) -> int:
@@ -539,7 +545,7 @@ class ApplicationController:
                 prompt_handler=None if dry_run else self._keyring_answerer(profile),
             )
         except BackendProcessError as exc:
-            return self._error(f"Backend process error: {exc}", 1, logs=logs)
+            return self._error(_("Backend process error: {error}").format(error=exc), 1, logs=logs)
 
         if dry_run:
             return self._output({"profile": profile.name, "command": list(result)}, " ".join(result))
@@ -552,12 +558,12 @@ class ApplicationController:
                 self._print_status(result)
             return code
 
-        return self._output({"profile": profile.name, "started": True, "logs": logs}, "Connection started")
+        return self._output({"profile": profile.name, "started": True, "logs": logs}, _("Connection started"))
 
     def _disconnect(self) -> int:
         profile = self.default_profile()
         self.backend_manager.disconnect(profile)
-        return self._output({"profile": profile.name, "disconnected": True}, "Disconnected")
+        return self._output({"profile": profile.name, "disconnected": True}, _("Disconnected"))
 
     def _gui(self) -> int:
         from vpn_doctor.ui.main_window import run_ui
@@ -590,7 +596,7 @@ class ApplicationController:
             icon = "OK" if item.success else "FAIL"
             print(f"[{icon}] {item.name}: {item.message}")
             if item.suggestion:
-                print(f"      Suggestion: {item.suggestion}")
+                print("      " + _("Suggestion: {text}").format(text=item.suggestion))
 
     @staticmethod
     def _print_status(status: VPNStatus) -> None:
@@ -598,4 +604,4 @@ class ApplicationController:
         if status.message:
             print(status.message)
         if status.suggestion:
-            print(f"Suggestion: {status.suggestion}")
+            print(_("Suggestion: {text}").format(text=status.suggestion))

@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from vpn_doctor.backend.log_parser import OpenFortiVPNLogParser
 from vpn_doctor.backend.process_runner import ProcessRunner
 from vpn_doctor.backend.state_machine import ConnectionStateMachine
+from vpn_doctor.i18n import _
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
 
@@ -111,7 +112,7 @@ class OpenFortiVPNProcess:
                 return command
 
         self.logs.clear()
-        self.state_machine.transition(VPNConnectionState.CONNECTING, "Starting openfortivpn")
+        self.state_machine.transition(VPNConnectionState.CONNECTING, _("Starting openfortivpn"))
 
         stdin_text = None
         if password is not None:
@@ -177,7 +178,7 @@ class OpenFortiVPNProcess:
             )
 
     def disconnect(self) -> None:
-        self.state_machine.transition(VPNConnectionState.DISCONNECTING, "Stopping openfortivpn")
+        self.state_machine.transition(VPNConnectionState.DISCONNECTING, _("Stopping openfortivpn"))
         self.runner.terminate(
             privilege_command=self.privilege_command,
             close_stdin_first=bool(self.helper_command),
@@ -194,7 +195,7 @@ class OpenFortiVPNProcess:
                 return status
             time.sleep(0.1)
 
-        self.state_machine.transition(VPNConnectionState.FAILED, "Connection timeout")
+        self.state_machine.transition(VPNConnectionState.FAILED, _("Connection timeout"))
         return self.status()
 
     def status(self) -> VPNStatus:

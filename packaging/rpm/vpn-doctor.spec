@@ -11,6 +11,7 @@ BuildArch:      noarch
 BuildRequires:  python3-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  appstream
+BuildRequires:  gettext
 
 Requires:       python3-gobject
 Requires:       gtk4
@@ -44,6 +45,9 @@ custom skins.
 %pyproject_install
 %pyproject_save_files vpn_doctor
 
+po/compile.sh %{buildroot}%{_datadir}/locale
+%find_lang %{name}
+
 # The only code running as root (ADR-0012), with its polkit action.
 install -Dpm 0755 src/vpn_doctor/privileged_helper.py \
     %{buildroot}%{_libexecdir}/vpn-doctor/vpn-doctor-helper
@@ -64,7 +68,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/io.github.vpndoctor.V
 appstreamcli validate --no-net %{buildroot}%{_metainfodir}/io.github.vpndoctor.VPNDoctor.metainfo.xml
 %pyproject_check_import -e 'vpn_doctor.ui*'
 
-%files -f %{pyproject_files}
+%files -f %{pyproject_files} -f %{name}.lang
 %license LICENSE
 %doc README.md CHANGELOG.md
 %{_bindir}/vpn-doctor

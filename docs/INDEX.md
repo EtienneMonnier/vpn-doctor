@@ -28,6 +28,7 @@
 - [CLI Specification](development/CLI_SPECIFICATION.md)
 - [GTK UI Specification](development/GTK_UI_SPECIFICATION.md)
 - [Skins](development/THEMES.md)
+- [Internationalization](development/I18N_GUIDE.md)
 - [Packaging Guide](development/PACKAGING_GUIDE.md)
 - [CI/CD](development/CI_CD.md)
 - [Code Review Guide](development/CODE_REVIEW_GUIDE.md)
@@ -50,6 +51,7 @@ Implementation notes, validation and review notes for each sprint.
 - [Sprint 5.1](sprints/SPRINT5_1_IMPLEMENTATION_REPORT.md)
 - [Sprint 6](sprints/SPRINT6_IMPLEMENTATION_REPORT.md)
 - [Sprint 7.1](sprints/SPRINT7_1_IMPLEMENTATION_REPORT.md)
+- [Sprint 7.2](sprints/SPRINT7_2_IMPLEMENTATION_REPORT.md)
 
 ## Case studies
 

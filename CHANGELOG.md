@@ -165,3 +165,20 @@
 
 - `vpn-doctor rdp --log` with an unreadable file printed a Python traceback;
   it now reports the error and exits with code 2.
+
+## Sprint 7.2
+
+### Added
+
+- Translations: French, German, Spanish, Italian, Dutch, Portuguese and
+  Polish, for the GUI, the CLI and every diagnostic explanation.
+- `po/update.sh` (extract and merge) and `po/compile.sh` (compile with
+  `msgfmt --check`); `launch.sh` and the RPM compile the translations.
+- Tests: every language compiles and keeps every placeholder.
+
+### Fixed
+
+- Translations were looked up in a relative `locale` folder, so an installed
+  VPN Doctor could never find them.
+- About 170 user-visible strings (CLI, diagnostics, backends) were not
+  translatable; plurals now use `ngettext`.

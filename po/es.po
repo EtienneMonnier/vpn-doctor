@@ -1,0 +1,1463 @@
+# Spanish translations for vpn-doctor package.
+# Copyright (C) 2026 THE vpn-doctor'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the vpn-doctor package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: vpn-doctor 0.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/EtienneMonnier/vpn-doctor/issues\n"
+"POT-Creation-Date: 2026-10-30 12:28+0100\n"
+"PO-Revision-Date: 2026-10-30 12:28+0100\n"
+"Last-Translator: Claude (AI-assisted)\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/vpn_doctor/backend/log_parser.py:61
+msgid ""
+"The gateway refused the login. Check the password, the username and the "
+"realm. If they are correct, ask the administrator whether tunnel mode is "
+"allowed for this account."
+msgstr ""
+"La puerta de enlace rechazó el inicio de sesión. Compruebe la contraseña, el "
+"nombre de usuario y el realm. Si son correctos, pregunte al administrador si "
+"el modo túnel está permitido para esta cuenta."
+
+#: src/vpn_doctor/backend/log_parser.py:66
+msgid ""
+"The gateway certificate is not trusted. Verify its fingerprint with your "
+"administrator, then add it to the profile as trusted_cert."
+msgstr ""
+"El certificado de la puerta de enlace no es de confianza. Verifique su "
+"huella digital con su administrador y añádala al perfil como trusted_cert."
+
+#: src/vpn_doctor/backend/log_parser.py:70
+msgid ""
+"The gateway cannot be reached. Check the host name, the port, your Internet "
+"connection and any firewall in between."
+msgstr ""
+"No se puede alcanzar la puerta de enlace. Compruebe el nombre del equipo, el "
+"puerto, su conexión a Internet y cualquier cortafuegos intermedio."
+
+#: src/vpn_doctor/backend/log_parser.py:74
+msgid ""
+"This gateway, or its certificate, is not approved on this computer. Approve "
+"it once with an administrator password (Connect asks for it, or run vpn-"
+"doctor approve-gateway)."
+msgstr ""
+"Esta puerta de enlace, o su certificado, no está aprobada en este equipo. "
+"Apruébela una vez con una contraseña de administrador (Conectar la solicita, "
+"o ejecute vpn-doctor approve-gateway)."
+
+#: src/vpn_doctor/backend/log_parser.py:79
+msgid ""
+"The client private key could not be loaded: the PEM pass phrase is wrong or "
+"the user_key file is unreadable. If the pass phrase was remembered, forget "
+"the saved secrets and enter it again."
+msgstr ""
+"No se pudo cargar la clave privada del cliente: la frase de paso PEM es "
+"incorrecta o el archivo user_key no se puede leer. Si la frase de paso "
+"estaba recordada, olvide los secretos guardados e introdúzcala de nuevo."
+
+#: src/vpn_doctor/backend/log_parser.py:84
+msgid ""
+"openfortivpn needs administrator privileges to create the PPP interface and "
+"routes. Accept the administrator authentication prompt, or run it through "
+"pkexec or sudo."
+msgstr ""
+"openfortivpn necesita privilegios de administrador para crear la interfaz "
+"PPP y las rutas. Acepte la solicitud de autenticación de administrador, o "
+"ejecútelo mediante pkexec o sudo."
+
+#: src/vpn_doctor/backend/networkmanager.py:248
+#: src/vpn_doctor/backend/networkmanager.py:268
+msgid "Asking NetworkManager"
+msgstr "Consultando a NetworkManager"
+
+#: src/vpn_doctor/backend/networkmanager.py:281
+#: src/vpn_doctor/core/controller.py:566 src/vpn_doctor/ui/main_window.py:161
+#: src/vpn_doctor/ui/main_window.py:400 src/vpn_doctor/ui/view_models.py:81
+msgid "Disconnected"
+msgstr "Desconectado"
+
+#: src/vpn_doctor/backend/networkmanager.py:351
+msgid "NetworkManager diagnostics"
+msgstr "Diagnóstico de NetworkManager"
+
+#: src/vpn_doctor/backend/networkmanager.py:414
+#: src/vpn_doctor/backend/openfortivpn_process.py:198
+msgid "Connection timeout"
+msgstr "Tiempo de espera de la conexión agotado"
+
+#: src/vpn_doctor/backend/networkmanager.py:454
+msgid "NetworkManager is running"
+msgstr "NetworkManager está en ejecución"
+
+#: src/vpn_doctor/backend/networkmanager.py:458
+msgid "NetworkManager is not reachable through nmcli"
+msgstr "No se puede acceder a NetworkManager mediante nmcli"
+
+#: src/vpn_doctor/backend/networkmanager.py:459
+#, python-brace-format
+msgid "Check that NetworkManager is installed and running: {command}"
+msgstr "Compruebe que NetworkManager está instalado y en ejecución: {command}"
+
+#: src/vpn_doctor/backend/networkmanager.py:473
+#: src/vpn_doctor/backend/networkmanager.py:478
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:45
+msgid "VPN plugin"
+msgstr "Complemento VPN"
+
+#: src/vpn_doctor/backend/networkmanager.py:475
+#, python-brace-format
+msgid "The {vpn_type} plugin is installed"
+msgstr "El complemento {vpn_type} está instalado"
+
+#: src/vpn_doctor/backend/networkmanager.py:480
+#, python-brace-format
+msgid "The NetworkManager {vpn_type} plugin is missing"
+msgstr "Falta el complemento {vpn_type} de NetworkManager"
+
+#: src/vpn_doctor/backend/networkmanager.py:481
+#, python-brace-format
+msgid "Install it, for example: {command}"
+msgstr "Instálelo, por ejemplo: {command}"
+
+#: src/vpn_doctor/backend/openfortivpn.py:77
+msgid "openfortivpn binary"
+msgstr "Programa openfortivpn"
+
+#: src/vpn_doctor/backend/openfortivpn.py:79
+msgid "openfortivpn is installed"
+msgstr "openfortivpn está instalado"
+
+#: src/vpn_doctor/backend/openfortivpn.py:81
+msgid "openfortivpn is missing"
+msgstr "Falta openfortivpn"
+
+#: src/vpn_doctor/backend/openfortivpn.py:84
+msgid "Install openfortivpn using your distribution package manager"
+msgstr "Instale openfortivpn con el gestor de paquetes de su distribución"
+
+#: src/vpn_doctor/backend/openfortivpn.py:91
+msgid "gateway reachability"
+msgstr "accesibilidad de la puerta de enlace"
+
+#: src/vpn_doctor/backend/openfortivpn.py:94
+#, python-brace-format
+msgid "{gateway} is reachable"
+msgstr "{gateway} es accesible"
+
+#: src/vpn_doctor/backend/openfortivpn.py:94
+#, python-brace-format
+msgid "{gateway} is unreachable"
+msgstr "{gateway} no es accesible"
+
+#: src/vpn_doctor/backend/openfortivpn.py:98
+msgid "Check hostname, port, firewall or network connectivity"
+msgstr ""
+"Compruebe el nombre del equipo, el puerto, el cortafuegos o la conectividad "
+"de red"
+
+#: src/vpn_doctor/backend/openfortivpn.py:102
+msgid "OpenFortiVPN basic diagnostics"
+msgstr "Diagnóstico básico de OpenFortiVPN"
+
+#: src/vpn_doctor/backend/openfortivpn_process.py:115
+msgid "Starting openfortivpn"
+msgstr "Iniciando openfortivpn"
+
+#: src/vpn_doctor/backend/openfortivpn_process.py:181
+msgid "Stopping openfortivpn"
+msgstr "Deteniendo openfortivpn"
+
+#: src/vpn_doctor/backend/process_runner.py:55
+msgid "A backend process is already running"
+msgstr "Ya hay un proceso del motor en ejecución"
+
+#: src/vpn_doctor/backend/process_runner.py:86
+msgid "The backend process does not accept input"
+msgstr "El proceso del motor no acepta entradas"
+
+#: src/vpn_doctor/core/controller.py:83
+#, python-brace-format
+msgid "Unknown profile: {name}"
+msgstr "Perfil desconocido: {name}"
+
+#: src/vpn_doctor/core/controller.py:273
+msgid "Print one JSON object instead of text (for scripts and agents)"
+msgstr "Mostrar un objeto JSON en lugar de texto (para scripts y agentes)"
+
+#: src/vpn_doctor/core/controller.py:275
+msgid "Show VPN Doctor version"
+msgstr "Mostrar la versión de VPN Doctor"
+
+#: src/vpn_doctor/core/controller.py:288
+msgid "Profile or NetworkManager connection name (default: the first one)"
+msgstr ""
+"Nombre del perfil o de la conexión de NetworkManager (predeterminado: el "
+"primero)"
+
+#: src/vpn_doctor/core/controller.py:291
+msgid "Run basic diagnostics"
+msgstr "Ejecutar un diagnóstico básico"
+
+#: src/vpn_doctor/core/controller.py:292
+msgid "List VPN connections and profiles"
+msgstr "Listar las conexiones y perfiles VPN"
+
+#: src/vpn_doctor/core/controller.py:293
+msgid "Show connection status"
+msgstr "Mostrar el estado de la conexión"
+
+#: src/vpn_doctor/core/controller.py:294
+msgid "Launch the experimental GTK UI"
+msgstr "Iniciar la interfaz GTK experimental"
+
+#: src/vpn_doctor/core/controller.py:298
+msgid "Connect a profile"
+msgstr "Conectar un perfil"
+
+#: src/vpn_doctor/core/controller.py:304
+msgid "Print the backend command without starting a VPN process"
+msgstr "Mostrar la orden del motor sin iniciar ningún proceso VPN"
+
+#: src/vpn_doctor/core/controller.py:309
+msgid "Wait until the backend reports connected, failed or timeout"
+msgstr "Esperar hasta que el motor indique conectado, fallo o tiempo agotado"
+
+#: src/vpn_doctor/core/controller.py:315
+msgid "Maximum wait time in seconds when --wait is used"
+msgstr "Tiempo máximo de espera en segundos cuando se usa --wait"
+
+#: src/vpn_doctor/core/controller.py:320
+msgid "Disconnect the active VPN session"
+msgstr "Desconectar la sesión VPN activa"
+
+#: src/vpn_doctor/core/controller.py:326
+msgid "List the gateways approved on this computer"
+msgstr "Listar las puertas de enlace aprobadas en este equipo"
+
+#: src/vpn_doctor/core/controller.py:331
+msgid "Approve the gateway of a profile (administrator password)"
+msgstr "Aprobar la puerta de enlace de un perfil (contraseña de administrador)"
+
+#: src/vpn_doctor/core/controller.py:336
+msgid "Revoke an approved gateway (administrator password)"
+msgstr "Revocar una puerta de enlace aprobada (contraseña de administrador)"
+
+#: src/vpn_doctor/core/controller.py:343
+msgid ""
+"Detect route and DNS conflicts between active VPNs and the local network"
+msgstr ""
+"Detectar conflictos de rutas y DNS entre las VPN activas y la red local"
+
+#: src/vpn_doctor/core/controller.py:349
+msgid "Remove the secrets remembered in the keyring for a profile"
+msgstr ""
+"Eliminar los secretos recordados en el depósito de claves para un perfil"
+
+#: src/vpn_doctor/core/controller.py:355
+msgid "Diagnose a Remote Desktop server reached through the VPN"
+msgstr ""
+"Diagnosticar un servidor de Escritorio remoto accesible a través de la VPN"
+
+#: src/vpn_doctor/core/controller.py:358
+msgid "RDP server name or address"
+msgstr "Nombre o dirección del servidor RDP"
+
+#: src/vpn_doctor/core/controller.py:364
+msgid ""
+"FreeRDP/Remmina log to explain, '-' for stdin (e.g. journalctl --user -b -o "
+"cat | vpn-doctor rdp HOST --log -)"
+msgstr ""
+"Registro de FreeRDP/Remmina que explicar, «-» para stdin (p. ej. journalctl "
+"--user -b -o cat | vpn-doctor rdp HOST --log -)"
+
+#: src/vpn_doctor/core/controller.py:410
+msgid "Expected HOST:PORT"
+msgstr "Se esperaba HOST:PORT"
+
+#: src/vpn_doctor/core/controller.py:419
+msgid "The keyring is not reachable: install PyGObject and libsecret."
+msgstr ""
+"No se puede acceder al depósito de claves: instale PyGObject y libsecret."
+
+#: src/vpn_doctor/core/controller.py:421
+#, python-brace-format
+msgid "Secrets forgotten for {name}"
+msgstr "Secretos olvidados para {name}"
+
+#: src/vpn_doctor/core/controller.py:442 src/vpn_doctor/ui/main_window.py:827
+msgid "Network conflicts"
+msgstr "Conflictos de red"
+
+#: src/vpn_doctor/core/controller.py:446
+msgid "No conflict between active VPNs and the local network."
+msgstr "No hay conflictos entre las VPN activas y la red local."
+
+#: src/vpn_doctor/core/controller.py:462
+#, python-brace-format
+msgid "Cannot read {path}: {error}"
+msgstr "No se puede leer {path}: {error}"
+
+#: src/vpn_doctor/core/controller.py:463
+msgid "RDP client log analysis"
+msgstr "Análisis del registro del cliente RDP"
+
+#: src/vpn_doctor/core/controller.py:491
+#, python-brace-format
+msgid "- {name} ({vpn_type} via NetworkManager)"
+msgstr "- {name} ({vpn_type} mediante NetworkManager)"
+
+#: src/vpn_doctor/core/controller.py:521
+msgid "The privileged helper is not installed: gateways need no approval."
+msgstr ""
+"El asistente privilegiado no está instalado: las puertas de enlace no "
+"necesitan aprobación."
+
+#: src/vpn_doctor/core/controller.py:523 src/vpn_doctor/ui/main_window.py:350
+#: src/vpn_doctor/ui/main_window.py:678
+msgid "system CA"
+msgstr "CA del sistema"
+
+#: src/vpn_doctor/core/controller.py:524
+#, python-brace-format
+msgid "- {gateway} (certificate: {pin})"
+msgstr "- {gateway} (certificado: {pin})"
+
+#: src/vpn_doctor/core/controller.py:548
+#, python-brace-format
+msgid "Backend process error: {error}"
+msgstr "Error del proceso del motor: {error}"
+
+#: src/vpn_doctor/core/controller.py:561
+msgid "Connection started"
+msgstr "Conexión iniciada"
+
+#: src/vpn_doctor/core/controller.py:599 src/vpn_doctor/core/controller.py:607
+#: src/vpn_doctor/ui/main_window.py:416
+#, python-brace-format
+msgid "Suggestion: {text}"
+msgstr "Sugerencia: {text}"
+
+#: src/vpn_doctor/diagnostics/conflicts.py:127
+msgid "Two full tunnels"
+msgstr "Dos túneles completos"
+
+#: src/vpn_doctor/diagnostics/conflicts.py:129
+#, python-brace-format
+msgid ""
+"{names} both want to carry all your traffic. Only one of them really does."
+msgstr ""
+"{names} quieren transportar todo su tráfico. Solo una de ellas lo hace "
+"realmente."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:132
+msgid "Keep one full-tunnel VPN, or ask for split tunneling on the other one."
+msgstr ""
+"Mantenga una sola VPN de túnel completo, o solicite túnel dividido (split "
+"tunneling) en la otra."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:152
+msgid "Overlapping VPN networks"
+msgstr "Redes VPN superpuestas"
+
+#: src/vpn_doctor/diagnostics/conflicts.py:155
+#, python-brace-format
+msgid ""
+"{first} routes {first_network} and {second} routes {second_network}. Traffic "
+"for the overlap goes to {winner} only."
+msgstr ""
+"{first} enruta {first_network} y {second} enruta {second_network}. El "
+"tráfico de la zona superpuesta solo va a {winner}."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:165
+msgid ""
+"Disconnect one of these VPNs to reach hosts of the other one, or ask an "
+"administrator to use distinct address ranges."
+msgstr ""
+"Desconecte una de estas VPN para acceder a los equipos de la otra, o pida a "
+"un administrador que use rangos de direcciones distintos."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:187
+msgid "VPN overlaps your local network"
+msgstr "La VPN se superpone con su red local"
+
+#: src/vpn_doctor/diagnostics/conflicts.py:190
+#, python-brace-format
+msgid ""
+"{vpn} routes {network}, which overlaps your local network {lan_network} on "
+"{device}."
+msgstr ""
+"{vpn} enruta {network}, que se superpone con su red local {lan_network} en "
+"{device}."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:199
+msgid ""
+"Devices of your local network (router, printer, NAS) or remote hosts may "
+"become unreachable. Renumbering the local network avoids it, e.g. "
+"192.168.77.0/24 instead of 192.168.1.0/24."
+msgstr ""
+"Los dispositivos de su red local (router, impresora, NAS) o los equipos "
+"remotos pueden dejar de ser accesibles. Cambiar la numeración de la red "
+"local lo evita, p. ej. 192.168.77.0/24 en lugar de 192.168.1.0/24."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:216
+msgid "DNS claimed by several VPNs"
+msgstr "DNS reclamado por varias VPN"
+
+#: src/vpn_doctor/diagnostics/conflicts.py:219
+#, python-brace-format
+msgid ""
+"{names} both ask to resolve every name. Answers may come from either VPN, so "
+"internal names can fail at random."
+msgstr ""
+"{names} piden resolver todos los nombres. Las respuestas pueden venir de "
+"cualquiera de las VPN, por lo que los nombres internos pueden fallar al azar."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:223
+msgid ""
+"Configure routing-only DNS domains (e.g. ~corp.example.com) on one of them "
+"in the connection settings, under IPv4 > DNS search domains."
+msgstr ""
+"Configure dominios DNS solo de enrutamiento (p. ej. ~corp.example.com) en "
+"una de ellas, en la configuración de la conexión, en IPv4 > DNS search "
+"domains."
+
+#. TRANSLATORS: separator between VPN connection names, as in "Office and Lab".
+#: src/vpn_doctor/diagnostics/conflicts.py:233
+msgid " and "
+msgstr " y "
+
+#: src/vpn_doctor/diagnostics/rdp.py:40
+msgid "standard RDP security"
+msgstr "seguridad RDP estándar"
+
+#: src/vpn_doctor/diagnostics/rdp.py:44
+msgid "NLA (CredSSP with early user authorization)"
+msgstr "NLA (CredSSP con autorización temprana del usuario)"
+
+#: src/vpn_doctor/diagnostics/rdp.py:45
+msgid "RDS AAD authentication"
+msgstr "autenticación RDS AAD"
+
+#: src/vpn_doctor/diagnostics/rdp.py:49
+msgid "the server requires TLS"
+msgstr "el servidor requiere TLS"
+
+#: src/vpn_doctor/diagnostics/rdp.py:50
+msgid "the server does not allow TLS"
+msgstr "el servidor no permite TLS"
+
+#: src/vpn_doctor/diagnostics/rdp.py:51
+msgid "the server has no TLS certificate"
+msgstr "el servidor no tiene certificado TLS"
+
+#: src/vpn_doctor/diagnostics/rdp.py:52
+msgid "the client request was inconsistent"
+msgstr "la solicitud del cliente era incoherente"
+
+#: src/vpn_doctor/diagnostics/rdp.py:53
+msgid "the server requires NLA (CredSSP)"
+msgstr "el servidor requiere NLA (CredSSP)"
+
+#: src/vpn_doctor/diagnostics/rdp.py:54
+msgid "the server requires TLS with user authentication"
+msgstr "el servidor requiere TLS con autenticación de usuario"
+
+#: src/vpn_doctor/diagnostics/rdp.py:74
+#, python-brace-format
+msgid "protocol 0x{code:x}"
+msgstr "protocolo 0x{code:x}"
+
+#: src/vpn_doctor/diagnostics/rdp.py:77
+#, python-brace-format
+msgid "failure code 0x{code:x}"
+msgstr "código de fallo 0x{code:x}"
+
+#: src/vpn_doctor/diagnostics/rdp.py:110
+msgid "RDP diagnostics"
+msgstr "Diagnóstico RDP"
+
+#: src/vpn_doctor/diagnostics/rdp.py:118 src/vpn_doctor/diagnostics/rdp.py:133
+msgid "RDP port"
+msgstr "Puerto RDP"
+
+#: src/vpn_doctor/diagnostics/rdp.py:119
+#, python-brace-format
+msgid "{target} is not reachable ({error})."
+msgstr "{target} no es accesible ({error})."
+
+#: src/vpn_doctor/diagnostics/rdp.py:123
+msgid ""
+"Check that the VPN routes this address, that Remote Desktop is enabled on "
+"the server and that no firewall blocks the port."
+msgstr ""
+"Compruebe que la VPN enruta esta dirección, que el Escritorio remoto está "
+"activado en el servidor y que ningún cortafuegos bloquea el puerto."
+
+#: src/vpn_doctor/diagnostics/rdp.py:133
+#, python-brace-format
+msgid "{target} accepts TCP connections."
+msgstr "{target} acepta conexiones TCP."
+
+#: src/vpn_doctor/diagnostics/rdp.py:143 src/vpn_doctor/diagnostics/rdp.py:155
+#: src/vpn_doctor/diagnostics/rdp.py:169
+msgid "RDP negotiation"
+msgstr "Negociación RDP"
+
+#: src/vpn_doctor/diagnostics/rdp.py:144
+#, python-brace-format
+msgid "The service on {target} did not answer like an RDP server ({error})."
+msgstr "El servicio en {target} no respondió como un servidor RDP ({error})."
+
+#: src/vpn_doctor/diagnostics/rdp.py:147
+msgid "Check the port number: another service may be listening on it."
+msgstr ""
+"Compruebe el número de puerto: puede que otro servicio esté escuchando en él."
+
+#: src/vpn_doctor/diagnostics/rdp.py:156
+#, python-brace-format
+msgid "The server refused the security negotiation: {reason}."
+msgstr "El servidor rechazó la negociación de seguridad: {reason}."
+
+#: src/vpn_doctor/diagnostics/rdp.py:160
+msgid ""
+"Align the security setting of the client (Remmina: Advanced > Security "
+"protocol negotiation) with what the server requires."
+msgstr ""
+"Ajuste la configuración de seguridad del cliente (Remmina: Advanced > "
+"Security protocol negotiation) a lo que exige el servidor."
+
+#: src/vpn_doctor/diagnostics/rdp.py:171
+#, python-brace-format
+msgid "The server selected {protocol}."
+msgstr "El servidor eligió {protocol}."
+
+#: src/vpn_doctor/diagnostics/rdp.py:180
+msgid "Beyond this probe"
+msgstr "Más allá de esta prueba"
+
+#: src/vpn_doctor/diagnostics/rdp.py:183
+msgid ""
+"Authentication, licensing and session start need credentials and are not "
+"tested here. If the client still fails, analyse its log with --log."
+msgstr ""
+"La autenticación, las licencias y el inicio de sesión necesitan credenciales "
+"y no se prueban aquí. Si el cliente sigue fallando, analice su registro con "
+"--log."
+
+#: src/vpn_doctor/diagnostics/rdp.py:201 src/vpn_doctor/diagnostics/rdp.py:205
+msgid "TLS handshake"
+msgstr "Negociación TLS"
+
+#: src/vpn_doctor/diagnostics/rdp.py:201
+#, python-brace-format
+msgid "TLS works ({version})."
+msgstr "TLS funciona ({version})."
+
+#: src/vpn_doctor/diagnostics/rdp.py:206
+#, python-brace-format
+msgid "The TLS handshake failed ({error})."
+msgstr "La negociación TLS falló ({error})."
+
+#: src/vpn_doctor/diagnostics/rdp.py:208
+msgid ""
+"Old Windows servers only offer TLS 1.0/1.1. Lower the client TLS security "
+"level (Remmina: Advanced > TLS Security Level = 0) or update the server."
+msgstr ""
+"Los servidores Windows antiguos solo ofrecen TLS 1.0/1.1. Reduzca el nivel "
+"de seguridad TLS del cliente (Remmina: Advanced > TLS Security Level = 0) o "
+"actualice el servidor."
+
+#: src/vpn_doctor/diagnostics/rdp.py:219
+msgid "Remote Desktop licensing"
+msgstr "Licencias de Escritorio remoto"
+
+#: src/vpn_doctor/diagnostics/rdp.py:221
+msgid ""
+"Your credentials were accepted, then the server closed the connection during "
+"the Remote Desktop licensing phase. This is a server-side problem, not a VPN "
+"or password problem."
+msgstr ""
+"Sus credenciales se aceptaron, pero el servidor cerró la conexión durante la "
+"fase de licencias de Escritorio remoto. Es un problema del servidor, no de "
+"la VPN ni de la contraseña."
+
+#: src/vpn_doctor/diagnostics/rdp.py:226
+msgid ""
+"The RDS licensing grace period has probably expired or the license server is "
+"unreachable. To confirm, connect in console mode, which bypasses licensing "
+"(Remmina: Advanced > Attach to console, xfreerdp: /admin). The server "
+"administrator should check RD Licensing and the TerminalServices-Licensing "
+"event log."
+msgstr ""
+"Probablemente ha caducado el periodo de gracia de las licencias RDS o el "
+"servidor de licencias no es accesible. Para confirmarlo, conéctese en modo "
+"consola, que omite las licencias (Remmina: Advanced > Attach to console, "
+"xfreerdp: /admin). El administrador del servidor debe revisar RD Licensing y "
+"el registro de eventos TerminalServices-Licensing."
+
+#: src/vpn_doctor/diagnostics/rdp.py:236
+msgid "Expired password"
+msgstr "Contraseña caducada"
+
+#: src/vpn_doctor/diagnostics/rdp.py:237
+msgid "The Windows password has expired or must be changed."
+msgstr "La contraseña de Windows ha caducado o debe cambiarse."
+
+#: src/vpn_doctor/diagnostics/rdp.py:239
+msgid ""
+"NLA cannot change a password during login. Change it from another Windows "
+"session or ask the administrator to reset it."
+msgstr ""
+"NLA no puede cambiar una contraseña durante el inicio de sesión. Cámbiela "
+"desde otra sesión de Windows o pida al administrador que la restablezca."
+
+#: src/vpn_doctor/diagnostics/rdp.py:246
+msgid "Windows account"
+msgstr "Cuenta de Windows"
+
+#: src/vpn_doctor/diagnostics/rdp.py:247
+msgid "The Windows account is locked, disabled, expired or restricted."
+msgstr ""
+"La cuenta de Windows está bloqueada, desactivada, caducada o restringida."
+
+#: src/vpn_doctor/diagnostics/rdp.py:249
+msgid ""
+"Ask the server administrator to check the account in Active Directory or in "
+"the local users of the server."
+msgstr ""
+"Pida al administrador del servidor que revise la cuenta en Active Directory "
+"o en los usuarios locales del servidor."
+
+#: src/vpn_doctor/diagnostics/rdp.py:255
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:24
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:82
+msgid "Credentials"
+msgstr "Credenciales"
+
+#: src/vpn_doctor/diagnostics/rdp.py:256
+msgid "The server rejected the username or the password."
+msgstr "El servidor rechazó el nombre de usuario o la contraseña."
+
+#: src/vpn_doctor/diagnostics/rdp.py:258
+msgid ""
+"Check the password, the username and the domain. A domain account is often "
+"written DOMAIN\\user."
+msgstr ""
+"Compruebe la contraseña, el nombre de usuario y el dominio. Una cuenta de "
+"dominio suele escribirse DOMAIN\\user."
+
+#: src/vpn_doctor/diagnostics/rdp.py:265
+msgid "Remote Desktop permission"
+msgstr "Permiso de Escritorio remoto"
+
+#: src/vpn_doctor/diagnostics/rdp.py:266
+msgid "The account is valid but not allowed to open a Remote Desktop session."
+msgstr ""
+"La cuenta es válida, pero no tiene permiso para abrir una sesión de "
+"Escritorio remoto."
+
+#: src/vpn_doctor/diagnostics/rdp.py:267
+msgid ""
+"Ask the administrator to add the account to the Remote Desktop Users group."
+msgstr ""
+"Pida al administrador que añada la cuenta al grupo Remote Desktop Users."
+
+#: src/vpn_doctor/diagnostics/rdp.py:271
+msgid "TLS"
+msgstr "TLS"
+
+#: src/vpn_doctor/diagnostics/rdp.py:272
+msgid "The client could not establish TLS with the server."
+msgstr "El cliente no pudo establecer TLS con el servidor."
+
+#: src/vpn_doctor/diagnostics/rdp.py:274
+msgid ""
+"Lower the client TLS security level (Remmina: Advanced > TLS Security Level "
+"= 0) for old servers."
+msgstr ""
+"Reduzca el nivel de seguridad TLS del cliente (Remmina: Advanced > TLS "
+"Security Level = 0) para servidores antiguos."
+
+#: src/vpn_doctor/diagnostics/rdp.py:280
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:116
+msgid "Server name"
+msgstr "Nombre del servidor"
+
+#: src/vpn_doctor/diagnostics/rdp.py:281
+msgid "The client could not resolve the server name."
+msgstr "El cliente no pudo resolver el nombre del servidor."
+
+#: src/vpn_doctor/diagnostics/rdp.py:282
+msgid "Check the name, or the DNS servers pushed by the VPN."
+msgstr "Compruebe el nombre, o los servidores DNS enviados por la VPN."
+
+#: src/vpn_doctor/diagnostics/rdp.py:286
+msgid "Network"
+msgstr "Red"
+
+#: src/vpn_doctor/diagnostics/rdp.py:287
+msgid "The client could not reach the server."
+msgstr "El cliente no pudo alcanzar el servidor."
+
+#: src/vpn_doctor/diagnostics/rdp.py:288
+msgid ""
+"Run `vpn-doctor rdp HOST` to test the route, the port and the negotiation."
+msgstr ""
+"Ejecute `vpn-doctor rdp HOST` para probar la ruta, el puerto y la "
+"negociación."
+
+#: src/vpn_doctor/diagnostics/rdp.py:292
+msgid "Kerberos warnings"
+msgstr "Avisos de Kerberos"
+
+#: src/vpn_doctor/diagnostics/rdp.py:294
+msgid ""
+"FreeRDP tried Kerberos first, found no realm and fell back to NTLM. These "
+"errors are harmless."
+msgstr ""
+"FreeRDP probó primero Kerberos, no encontró ningún realm y recurrió a NTLM. "
+"Estos errores son inofensivos."
+
+#: src/vpn_doctor/diagnostics/rdp.py:311
+msgid "Client log"
+msgstr "Registro del cliente"
+
+#: src/vpn_doctor/diagnostics/rdp.py:311
+msgid "No known FreeRDP error was found."
+msgstr "No se encontró ningún error conocido de FreeRDP."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:25
+msgid "NetworkManager reports that the VPN refused the credentials."
+msgstr "NetworkManager indica que la VPN rechazó las credenciales."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:26
+msgid ""
+"Check the username and the password in the connection settings, then try "
+"again."
+msgstr ""
+"Compruebe el nombre de usuario y la contraseña en la configuración de la "
+"conexión y vuelva a intentarlo."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:30
+msgid "WireGuard key"
+msgstr "Clave de WireGuard"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:31
+msgid "The WireGuard private key is missing from the connection."
+msgstr "Falta la clave privada de WireGuard en la conexión."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:32
+msgid ""
+"Import the configuration again, or set the private key in the connection "
+"settings."
+msgstr ""
+"Importe de nuevo la configuración, o establezca la clave privada en la "
+"configuración de la conexión."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:36
+msgid "Password prompt"
+msgstr "Solicitud de contraseña"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:37
+msgid "The VPN needed a password, but none was entered."
+msgstr "La VPN necesitaba una contraseña, pero no se introdujo ninguna."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:39
+msgid ""
+"Enter the password when GNOME asks for it. Without a desktop session, "
+"connect with `nmcli --ask connection up <name>`."
+msgstr ""
+"Introduzca la contraseña cuando GNOME la solicite. Sin sesión de escritorio, "
+"conéctese con `nmcli --ask connection up <name>`."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:46
+msgid "NetworkManager could not start the VPN plugin for this connection type."
+msgstr ""
+"NetworkManager no pudo iniciar el complemento VPN para este tipo de conexión."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:48
+msgid ""
+"Check that the matching plugin package is installed (for example "
+"NetworkManager-openvpn), then restart NetworkManager."
+msgstr ""
+"Compruebe que el paquete del complemento correspondiente está instalado (por "
+"ejemplo NetworkManager-openvpn) y reinicie NetworkManager."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:54
+msgid "Server configuration"
+msgstr "Configuración del servidor"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:55
+msgid "The VPN server sent settings that NetworkManager could not apply."
+msgstr "El servidor VPN envió parámetros que NetworkManager no pudo aplicar."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:56
+msgid ""
+"Ask the VPN administrator to check the addresses and routes pushed to "
+"clients."
+msgstr ""
+"Pida al administrador de la VPN que revise las direcciones y rutas enviadas "
+"a los clientes."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:60
+msgid "IP address"
+msgstr "Dirección IP"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:61
+msgid "The tunnel started but no IP address could be configured."
+msgstr "El túnel se inició, pero no se pudo configurar ninguna dirección IP."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:62
+msgid ""
+"The VPN server may have no free address left. Contact the VPN administrator."
+msgstr ""
+"Puede que el servidor VPN no tenga direcciones libres. Póngase en contacto "
+"con el administrador de la VPN."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:66
+msgid "Timeout"
+msgstr "Tiempo agotado"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:67
+msgid "The connection did not complete in time."
+msgstr "La conexión no se completó a tiempo."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:68
+msgid ""
+"Check that the gateway is reachable, and answer any two-factor prompt "
+"quickly."
+msgstr ""
+"Compruebe que la puerta de enlace es accesible y responda rápido a cualquier "
+"solicitud de doble factor."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:72
+msgid "VPN program"
+msgstr "Programa VPN"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:73
+msgid "The VPN program started, then stopped. Its own log explains why."
+msgstr ""
+"El programa VPN se inició y luego se detuvo. Su propio registro explica por "
+"qué."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:74
+msgid "Look at the plugin log lines just before the failure."
+msgstr ""
+"Consulte las líneas del registro del complemento justo antes del fallo."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:83
+msgid "The VPN server refused the login."
+msgstr "El servidor VPN rechazó el inicio de sesión."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:85
+msgid ""
+"Check the username, the password and, for FortiGate, the realm. If they are "
+"correct, the account may be locked or not allowed to use the VPN."
+msgstr ""
+"Compruebe el nombre de usuario, la contraseña y, para FortiGate, el realm. "
+"Si son correctos, puede que la cuenta esté bloqueada o no tenga permiso para "
+"usar la VPN."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:91
+msgid "Private key"
+msgstr "Clave privada"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:92
+msgid "The password protecting the client private key is wrong."
+msgstr "La contraseña que protege la clave privada del cliente es incorrecta."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:93
+msgid "Enter the private key password again in the connection settings."
+msgstr ""
+"Introduzca de nuevo la contraseña de la clave privada en la configuración de "
+"la conexión."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:98
+msgid "Server certificate"
+msgstr "Certificado del servidor"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:99
+msgid "The VPN server certificate is not trusted."
+msgstr "El certificado del servidor VPN no es de confianza."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:101
+msgid ""
+"Verify the certificate with the VPN administrator, then set the right CA "
+"certificate or fingerprint in the connection settings."
+msgstr ""
+"Verifique el certificado con el administrador de la VPN y configure el "
+"certificado CA o la huella digital correctos en la configuración de la "
+"conexión."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:107
+msgid "No answer from the server"
+msgstr "Sin respuesta del servidor"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:108
+msgid "The VPN server did not complete the secure handshake."
+msgstr "El servidor VPN no completó la negociación segura."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:110
+msgid ""
+"The port or protocol may be blocked by the local network (OpenVPN often uses "
+"UDP). Try another network, or check the port and protocol in the settings."
+msgstr ""
+"Puede que la red local bloquee el puerto o el protocolo (OpenVPN suele usar "
+"UDP). Pruebe con otra red, o compruebe el puerto y el protocolo en la "
+"configuración."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:117
+msgid "The VPN server name could not be resolved."
+msgstr "No se pudo resolver el nombre del servidor VPN."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:118
+msgid "Check the gateway name in the connection settings and your DNS."
+msgstr ""
+"Compruebe el nombre de la puerta de enlace en la configuración de la "
+"conexión y su DNS."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:123
+msgid "Gateway unreachable"
+msgstr "Puerta de enlace inaccesible"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:124
+msgid "The VPN gateway could not be reached."
+msgstr "No se pudo alcanzar la puerta de enlace VPN."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:125
+msgid ""
+"Check your Internet connection, the gateway address and port, and any "
+"firewall."
+msgstr ""
+"Compruebe su conexión a Internet, la dirección y el puerto de la puerta de "
+"enlace, y cualquier cortafuegos."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:129
+msgid "Session expired"
+msgstr "Sesión caducada"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:130
+msgid "The VPN server ended the session."
+msgstr "El servidor VPN terminó la sesión."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:131
+msgid ""
+"Connect again. If it happens often, ask the administrator about session "
+"limits."
+msgstr ""
+"Conéctese de nuevo. Si ocurre a menudo, pregunte al administrador por los "
+"límites de sesión."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:135
+msgid "Configuration file"
+msgstr "Archivo de configuración"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:136
+msgid "The VPN configuration contains an option the VPN program rejects."
+msgstr "La configuración VPN contiene una opción que el programa VPN rechaza."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:137
+msgid "Import the configuration again, or remove the reported option."
+msgstr "Importe de nuevo la configuración, o elimine la opción indicada."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:141
+msgid "Connection lost"
+msgstr "Conexión perdida"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:142
+msgid "The VPN server stopped answering keepalive messages."
+msgstr "El servidor VPN dejó de responder a los mensajes keepalive."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:143
+msgid "The network may be unstable, or the server dropped the session."
+msgstr ""
+"Puede que la red sea inestable, o que el servidor haya cerrado la sesión."
+
+#: src/vpn_doctor/services/gateway_service.py:81
+msgid "The VPN Doctor helper is not installed"
+msgstr "El asistente de VPN Doctor no está instalado"
+
+#: src/vpn_doctor/services/settings_service.py:62
+#, python-brace-format
+msgid ""
+"Profile \"{name}\" contains a secret. Passwords must not be stored in "
+"profile files."
+msgstr ""
+"El perfil «{name}» contiene un secreto. Las contraseñas no deben guardarse "
+"en los archivos de perfil."
+
+#: src/vpn_doctor/ui/main_window.py:38
+msgid "Diagnose. Connect. Protect."
+msgstr "Diagnosticar. Conectar. Proteger."
+
+#: src/vpn_doctor/ui/main_window.py:105
+msgid "Remember in the keyring"
+msgstr "Recordar en el depósito de claves"
+
+#: src/vpn_doctor/ui/main_window.py:111 src/vpn_doctor/ui/main_window.py:359
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/vpn_doctor/ui/main_window.py:153
+msgid "■ STATUS"
+msgstr "■ ESTADO"
+
+#: src/vpn_doctor/ui/main_window.py:177
+msgid "■ CONNECTION"
+msgstr "■ CONEXIÓN"
+
+#: src/vpn_doctor/ui/main_window.py:183
+msgid "Settings…"
+msgstr "Configuración…"
+
+#: src/vpn_doctor/ui/main_window.py:186
+msgid "Edit this connection in NetworkManager"
+msgstr "Editar esta conexión en NetworkManager"
+
+#: src/vpn_doctor/ui/main_window.py:194
+msgid "TYPE"
+msgstr "TIPO"
+
+#: src/vpn_doctor/ui/main_window.py:195
+msgid "GATEWAY"
+msgstr "PUERTA ENLACE"
+
+#: src/vpn_doctor/ui/main_window.py:196
+msgid "MANAGED BY"
+msgstr "GESTIONADO POR"
+
+#: src/vpn_doctor/ui/main_window.py:208 src/vpn_doctor/ui/main_window.py:342
+msgid "Connect"
+msgstr "Conectar"
+
+#: src/vpn_doctor/ui/main_window.py:213
+msgid "Disconnect"
+msgstr "Desconectar"
+
+#: src/vpn_doctor/ui/main_window.py:217
+msgid "Diagnose"
+msgstr "Diagnosticar"
+
+#: src/vpn_doctor/ui/main_window.py:229
+msgid "■ LOG"
+msgstr "■ REGISTRO"
+
+#: src/vpn_doctor/ui/main_window.py:306
+#, python-brace-format
+msgid "Could not send the answer: {error}"
+msgstr "No se pudo enviar la respuesta: {error}"
+
+#: src/vpn_doctor/ui/main_window.py:311
+#, python-brace-format
+msgid "{name} asks for more information"
+msgstr "{name} solicita más información"
+
+#: src/vpn_doctor/ui/main_window.py:313
+msgid "Send"
+msgstr "Enviar"
+
+#: src/vpn_doctor/ui/main_window.py:330
+msgid "Using the password remembered in the keyring"
+msgstr "Usando la contraseña recordada en el depósito de claves"
+
+#: src/vpn_doctor/ui/main_window.py:340
+#, python-brace-format
+msgid "VPN password for {name}"
+msgstr "Contraseña VPN para {name}"
+
+#: src/vpn_doctor/ui/main_window.py:341
+msgid ""
+"The password is sent to openfortivpn through stdin, never written to a file."
+msgstr ""
+"La contraseña se envía a openfortivpn mediante stdin, nunca se escribe en un "
+"archivo."
+
+#: src/vpn_doctor/ui/main_window.py:352
+msgid "Approve this VPN gateway?"
+msgstr "¿Aprobar esta puerta de enlace VPN?"
+
+#: src/vpn_doctor/ui/main_window.py:354
+#, python-brace-format
+msgid ""
+"{gateway}\n"
+"Certificate: {pin}\n"
+"\n"
+"An administrator approves a gateway once. Then users of this computer "
+"connect to it without an administrator password, and VPN Doctor refuses any "
+"other gateway or certificate."
+msgstr ""
+"{gateway}\n"
+"Certificado: {pin}\n"
+"\n"
+"Un administrador aprueba una puerta de enlace una sola vez. Después, los "
+"usuarios de este equipo se conectan a ella sin contraseña de administrador, "
+"y VPN Doctor rechaza cualquier otra puerta de enlace o certificado."
+
+#: src/vpn_doctor/ui/main_window.py:360
+msgid "Approve"
+msgstr "Aprobar"
+
+#: src/vpn_doctor/ui/main_window.py:367
+#, python-brace-format
+msgid "Approving {gateway}…"
+msgstr "Aprobando {gateway}…"
+
+#: src/vpn_doctor/ui/main_window.py:381
+#, python-brace-format
+msgid "Connecting {name}…"
+msgstr "Conectando {name}…"
+
+#: src/vpn_doctor/ui/main_window.py:390
+#, python-brace-format
+msgid "Could not start the VPN backend: {error}"
+msgstr "No se pudo iniciar el motor VPN: {error}"
+
+#: src/vpn_doctor/ui/main_window.py:394
+msgid "Stopping connection…"
+msgstr "Deteniendo la conexión…"
+
+#: src/vpn_doctor/ui/main_window.py:398
+#, python-brace-format
+msgid "Disconnect failed: {error}"
+msgstr "Error al desconectar: {error}"
+
+#: src/vpn_doctor/ui/main_window.py:405
+msgid "Running diagnostics…"
+msgstr "Ejecutando el diagnóstico…"
+
+#: src/vpn_doctor/ui/main_window.py:409
+#, python-brace-format
+msgid "Diagnostics failed: {error}"
+msgstr "Error en el diagnóstico: {error}"
+
+#: src/vpn_doctor/ui/main_window.py:463
+msgid "Show"
+msgstr "Mostrar"
+
+#: src/vpn_doctor/ui/main_window.py:476
+msgid "Open a connection"
+msgstr "Abrir una conexión"
+
+#: src/vpn_doctor/ui/main_window.py:513
+msgid "Click or press a key to skip"
+msgstr "Haga clic o pulse una tecla para omitir"
+
+#: src/vpn_doctor/ui/main_window.py:561
+msgid "Connecting automatically (Preferences)"
+msgstr "Conectando automáticamente (Preferencias)"
+
+#: src/vpn_doctor/ui/main_window.py:572
+msgid "No NetworkManager connection editor is installed"
+msgstr "No hay ningún editor de conexiones de NetworkManager instalado"
+
+#: src/vpn_doctor/ui/main_window.py:578
+#, python-brace-format
+msgid "Cannot open the connection editor: {error}"
+msgstr "No se puede abrir el editor de conexiones: {error}"
+
+#: src/vpn_doctor/ui/main_window.py:586
+msgid "General"
+msgstr "General"
+
+#: src/vpn_doctor/ui/main_window.py:589
+msgid "Appearance"
+msgstr "Apariencia"
+
+#: src/vpn_doctor/ui/main_window.py:595
+msgid " (custom)"
+msgstr " (personalizado)"
+
+#: src/vpn_doctor/ui/main_window.py:596
+msgid "Skin"
+msgstr "Aspecto"
+
+#: src/vpn_doctor/ui/main_window.py:608
+msgid "Custom skins"
+msgstr "Aspectos personalizados"
+
+#: src/vpn_doctor/ui/main_window.py:609
+#, python-brace-format
+msgid "Drop CSS files in {path}"
+msgstr "Coloque archivos CSS en {path}"
+
+#: src/vpn_doctor/ui/main_window.py:611
+msgid "Open folder"
+msgstr "Abrir carpeta"
+
+#: src/vpn_doctor/ui/main_window.py:611
+msgid "Reload"
+msgstr "Recargar"
+
+#: src/vpn_doctor/ui/main_window.py:618
+msgid "Startup animation"
+msgstr "Animación de inicio"
+
+#: src/vpn_doctor/ui/main_window.py:619
+msgid "Logo and boot checks when VPN Doctor starts"
+msgstr "Logotipo y comprobaciones de arranque al iniciar VPN Doctor"
+
+#: src/vpn_doctor/ui/main_window.py:628
+msgid "Startup"
+msgstr "Inicio"
+
+#: src/vpn_doctor/ui/main_window.py:630
+msgid ""
+"To connect when the computer starts, without VPN Doctor, use the \"Connect "
+"automatically\" option of the connection in NetworkManager."
+msgstr ""
+"Para conectarse al encender el equipo, sin VPN Doctor, use la opción "
+"«Conectar automáticamente» de la conexión en NetworkManager."
+
+#: src/vpn_doctor/ui/main_window.py:638
+msgid "First connection"
+msgstr "Primera conexión"
+
+#: src/vpn_doctor/ui/main_window.py:641
+msgid "Default connection"
+msgstr "Conexión predeterminada"
+
+#: src/vpn_doctor/ui/main_window.py:647
+msgid "Connect automatically"
+msgstr "Conectar automáticamente"
+
+#: src/vpn_doctor/ui/main_window.py:648
+msgid "Connect the default connection when VPN Doctor starts"
+msgstr "Conectar la conexión predeterminada al iniciar VPN Doctor"
+
+#: src/vpn_doctor/ui/main_window.py:667
+msgid "Approved gateways"
+msgstr "Puertas de enlace aprobadas"
+
+#: src/vpn_doctor/ui/main_window.py:669
+msgid ""
+"openfortivpn gateways users of this computer may connect to without an "
+"administrator password. Revoking one asks for that password."
+msgstr ""
+"Puertas de enlace openfortivpn a las que los usuarios de este equipo pueden "
+"conectarse sin contraseña de administrador. Revocar una solicita esa "
+"contraseña."
+
+#: src/vpn_doctor/ui/main_window.py:676
+msgid "No approved gateway yet"
+msgstr "Aún no hay ninguna puerta de enlace aprobada"
+
+#: src/vpn_doctor/ui/main_window.py:679
+#, python-brace-format
+msgid "Certificate: {pin}"
+msgstr "Certificado: {pin}"
+
+#: src/vpn_doctor/ui/main_window.py:680 src/vpn_doctor/ui/main_window.py:688
+msgid "Revoke"
+msgstr "Revocar"
+
+#: src/vpn_doctor/ui/main_window.py:688
+msgid "Revoked"
+msgstr "Revocada"
+
+#: src/vpn_doctor/ui/main_window.py:698
+msgid "Saved secrets"
+msgstr "Secretos guardados"
+
+#: src/vpn_doctor/ui/main_window.py:700
+msgid ""
+"Passwords and PEM pass phrases of openfortivpn profiles, kept in the desktop "
+"keyring. NetworkManager connections keep theirs in GNOME Settings."
+msgstr ""
+"Contraseñas y frases de paso PEM de los perfiles openfortivpn, guardadas en "
+"el depósito de claves del escritorio. Las conexiones de NetworkManager "
+"guardan las suyas en la Configuración de GNOME."
+
+#: src/vpn_doctor/ui/main_window.py:707
+msgid "Forget"
+msgstr "Olvidar"
+
+#: src/vpn_doctor/ui/main_window.py:712
+msgid "Forgotten"
+msgstr "Olvidados"
+
+#: src/vpn_doctor/ui/main_window.py:727
+msgid ""
+"Linux VPN troubleshooting assistant.\n"
+"Diagnose. Connect. Protect."
+msgstr ""
+"Asistente de diagnóstico de VPN para Linux.\n"
+"Diagnosticar. Conectar. Proteger."
+
+#: src/vpn_doctor/ui/main_window.py:791
+msgid "Connections"
+msgstr "Conexiones"
+
+#: src/vpn_doctor/ui/main_window.py:793
+msgid "New VPN connection…"
+msgstr "Nueva conexión VPN…"
+
+#: src/vpn_doctor/ui/main_window.py:794
+msgid "Reload connections"
+msgstr "Recargar conexiones"
+
+#: src/vpn_doctor/ui/main_window.py:811
+#, python-brace-format
+msgid "⚠ {count} network conflict: {first}"
+msgid_plural "⚠ {count} network conflicts: {first}"
+msgstr[0] "⚠ {count} conflicto de red: {first}"
+msgstr[1] "⚠ {count} conflictos de red: {first}"
+
+#: src/vpn_doctor/ui/main_window.py:828
+msgid "Close"
+msgstr "Cerrar"
+
+#: src/vpn_doctor/ui/main_window.py:855
+msgid "Main menu"
+msgstr "Menú principal"
+
+#: src/vpn_doctor/ui/main_window.py:862
+msgid "Preferences"
+msgstr "Preferencias"
+
+#: src/vpn_doctor/ui/main_window.py:863
+msgid "Forget saved secrets of this connection"
+msgstr "Olvidar los secretos guardados de esta conexión"
+
+#: src/vpn_doctor/ui/main_window.py:866
+msgid "About VPN Doctor"
+msgstr "Acerca de VPN Doctor"
+
+#: src/vpn_doctor/ui/main_window.py:889
+#, python-brace-format
+msgid ""
+"{name} is managed by NetworkManager: edit its secrets in GNOME Settings."
+msgstr ""
+"{name} está gestionada por NetworkManager: edite sus secretos en la "
+"Configuración de GNOME."
+
+#: src/vpn_doctor/ui/main_window.py:894
+#, python-brace-format
+msgid "Saved secrets forgotten for {name}"
+msgstr "Secretos guardados olvidados para {name}"
+
+#: src/vpn_doctor/ui/main_window.py:896
+msgid "The keyring is not reachable"
+msgstr "No se puede acceder al depósito de claves"
+
+#: src/vpn_doctor/ui/main_window.py:930
+#, python-brace-format
+msgid "Skin {name}, line {line}: {error}"
+msgstr "Aspecto {name}, línea {line}: {error}"
+
+#: src/vpn_doctor/ui/view_models.py:32
+msgid "Waiting for you"
+msgstr "Esperándole"
+
+#: src/vpn_doctor/ui/view_models.py:37
+msgid "⌨ INPUT"
+msgstr "⌨ ENTRADA"
+
+#: src/vpn_doctor/ui/view_models.py:42
+msgid "Connected"
+msgstr "Conectada"
+
+#: src/vpn_doctor/ui/view_models.py:43
+msgid "VPN tunnel is active"
+msgstr "El túnel VPN está activo"
+
+#: src/vpn_doctor/ui/view_models.py:47
+msgid "● ONLINE"
+msgstr "● EN LÍNEA"
+
+#: src/vpn_doctor/ui/view_models.py:52
+msgid "Connecting"
+msgstr "Conectando"
+
+#: src/vpn_doctor/ui/view_models.py:53
+msgid "VPN connection is being established"
+msgstr "Se está estableciendo la conexión VPN"
+
+#: src/vpn_doctor/ui/view_models.py:57
+msgid "◐ LINKING"
+msgstr "◐ ENLAZANDO"
+
+#: src/vpn_doctor/ui/view_models.py:62
+msgid "Disconnecting"
+msgstr "Desconectando"
+
+#: src/vpn_doctor/ui/view_models.py:63
+msgid "VPN connection is being stopped"
+msgstr "Se está deteniendo la conexión VPN"
+
+#: src/vpn_doctor/ui/view_models.py:67
+msgid "◑ CLOSING"
+msgstr "◑ CERRANDO"
+
+#: src/vpn_doctor/ui/view_models.py:72
+msgid "Failed"
+msgstr "Fallida"
+
+#: src/vpn_doctor/ui/view_models.py:73
+msgid "VPN connection failed"
+msgstr "La conexión VPN falló"
+
+#: src/vpn_doctor/ui/view_models.py:77
+msgid "✕ FAILURE"
+msgstr "✕ FALLO"
+
+#: src/vpn_doctor/ui/view_models.py:82
+msgid "VPN is not connected"
+msgstr "La VPN no está conectada"
+
+#: src/vpn_doctor/ui/view_models.py:86
+msgid "○ OFFLINE"
+msgstr "○ SIN CONEXIÓN"
+
+#: src/vpn_doctor/ui/view_models.py:128
+#, python-brace-format
+msgid "VPN DOCTOR {version}"
+msgstr "VPN DOCTOR {version}"
+
+#: src/vpn_doctor/ui/view_models.py:129
+msgid "Loading diagnostics engine… OK"
+msgstr "Cargando el motor de diagnóstico… OK"
+
+#: src/vpn_doctor/ui/view_models.py:130
+msgid "NOT FOUND"
+msgstr "NO ENCONTRADO"
+
+#: src/vpn_doctor/ui/view_models.py:130
+#, python-brace-format
+msgid "NetworkManager… {state}"
+msgstr "NetworkManager… {state}"
+
+#: src/vpn_doctor/ui/view_models.py:130
+msgid "ONLINE"
+msgstr "EN LÍNEA"
+
+#: src/vpn_doctor/ui/view_models.py:131
+#, python-brace-format
+msgid "Keyring… {state}"
+msgstr "Depósito de claves… {state}"
+
+#: src/vpn_doctor/ui/view_models.py:131
+msgid "UNAVAILABLE"
+msgstr "NO DISPONIBLE"
+
+#: src/vpn_doctor/ui/view_models.py:131
+msgid "UNLOCKED"
+msgstr "DESBLOQUEADO"
+
+#: src/vpn_doctor/ui/view_models.py:133
+#, python-brace-format
+msgid "Scanning connections… {count} found"
+msgid_plural "Scanning connections… {count} found"
+msgstr[0] "Buscando conexiones… {count} encontrada"
+msgstr[1] "Buscando conexiones… {count} encontradas"
+
+#: src/vpn_doctor/ui/view_models.py:135
+msgid "Ready. Diagnose. Connect. Protect."
+msgstr "Listo. Diagnosticar. Conectar. Proteger."

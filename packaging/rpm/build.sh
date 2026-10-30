@@ -1,7 +1,7 @@
 #!/bin/sh
 # Build the RPM from the current commit, in a private rpmbuild tree.
 # Requires: rpm-build, pyproject-rpm-macros, python3-setuptools,
-#           desktop-file-utils, appstream (see BuildRequires in the spec).
+#           desktop-file-utils, appstream, gettext (see BuildRequires in the spec).
 set -eu
 
 repo=$(git rev-parse --show-toplevel)

@@ -3,6 +3,11 @@ import stat
 
 import pytest
 
+# Tests check English messages: never load the developer's translations.
+# This runs before any vpn_doctor import, so i18n sees it.
+os.environ["LANGUAGE"] = "C"
+os.environ.pop("VPN_DOCTOR_LOCALEDIR", None)
+
 
 @pytest.fixture(autouse=True)
 def isolated_home(tmp_path, monkeypatch):

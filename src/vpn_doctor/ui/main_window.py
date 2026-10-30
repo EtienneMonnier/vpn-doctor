@@ -24,7 +24,7 @@ import time
 from vpn_doctor import __version__
 from vpn_doctor.backend.errors import BackendError
 from vpn_doctor.core.controller import ApplicationController
-from vpn_doctor.i18n import _
+from vpn_doctor.i18n import N_, _, ngettext
 from vpn_doctor.models.status import VPNConnectionState
 from vpn_doctor.services.theme_service import BUILTIN_ASSET_DIR
 from vpn_doctor.ui.view_models import ConnectionStatusViewModel, ConnectionTimer, boot_lines
@@ -35,7 +35,7 @@ STATUS_REFRESH_MS = 500
 CONFLICT_REFRESH_MS = 5000
 STATE_CSS_CLASSES = ("vd-success", "vd-warning", "vd-error", "vd-neutral")
 DEFAULT_TITLE = "VPN Doctor"
-DEFAULT_TAGLINE = "Diagnose. Connect. Protect."
+DEFAULT_TAGLINE = N_("Diagnose. Connect. Protect.")
 APP_ID = "io.github.vpndoctor.VPNDoctor"
 BOOT_LINE_MS = 220
 BOOT_HOLD_MS = 500
@@ -807,7 +807,11 @@ def run_ui() -> int:
                     count = len(self.conflicts)
                     if count:
                         self.banner.set_title(
-                            _("⚠ {count} network conflict(s): {first}").format(
+                            ngettext(
+                                "⚠ {count} network conflict: {first}",
+                                "⚠ {count} network conflicts: {first}",
+                                count,
+                            ).format(
                                 count=count, first=self.conflicts[0].name
                             )
                         )

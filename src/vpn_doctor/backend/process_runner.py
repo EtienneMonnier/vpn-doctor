@@ -11,6 +11,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 
 from vpn_doctor.backend.errors import BackendAlreadyRunningError, BackendProcessError
+from vpn_doctor.i18n import _
 
 LOGGER = logging.getLogger(__name__)
 
@@ -51,7 +52,7 @@ class ProcessRunner:
         on_prompt: LineCallback | None = None,
     ) -> None:
         if self.is_running:
-            raise BackendAlreadyRunningError("A backend process is already running")
+            raise BackendAlreadyRunningError(_("A backend process is already running"))
 
         try:
             self.process = subprocess.Popen(
@@ -82,7 +83,7 @@ class ProcessRunner:
     def write_stdin(self, text: str) -> None:
         """Send text to a running process, e.g. the answer to a prompt."""
         if not self.is_running or self.process.stdin is None:
-            raise BackendProcessError("The backend process does not accept input")
+            raise BackendProcessError(_("The backend process does not accept input"))
         self.process.stdin.write(text)
         self.process.stdin.flush()
 

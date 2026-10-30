@@ -9,4 +9,8 @@ cd "$(dirname "$0")" || exit 1
 if [ "$#" -eq 0 ]; then
     set -- gui
 fi
+# Translations: compiled from po/ when gettext is installed, English otherwise.
+if command -v msgfmt >/dev/null 2>&1 && po/compile.sh build/locale; then
+    export VPN_DOCTOR_LOCALEDIR="$PWD/build/locale"
+fi
 PYTHONPATH=src exec python3 -m vpn_doctor.app "$@"

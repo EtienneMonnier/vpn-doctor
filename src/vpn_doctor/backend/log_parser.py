@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum
 
+from vpn_doctor.i18n import N_
 from vpn_doctor.models.status import VPNConnectionState
 
 
@@ -54,31 +55,32 @@ GATEWAY_ERROR_MARKERS = (
     "network is unreachable",
 )
 
+# Marked with N_(): translated by the state machine when it shows them.
 FAILURE_SUGGESTIONS: dict[ParsedLogKind, str] = {
-    ParsedLogKind.AUTHENTICATION_ERROR: (
+    ParsedLogKind.AUTHENTICATION_ERROR: N_(
         "The gateway refused the login. Check the password, the username and the realm. "
         "If they are correct, ask the administrator whether tunnel mode is allowed for "
         "this account."
     ),
-    ParsedLogKind.CERTIFICATE_ERROR: (
+    ParsedLogKind.CERTIFICATE_ERROR: N_(
         "The gateway certificate is not trusted. Verify its fingerprint with your "
         "administrator, then add it to the profile as trusted_cert."
     ),
-    ParsedLogKind.GATEWAY_ERROR: (
+    ParsedLogKind.GATEWAY_ERROR: N_(
         "The gateway cannot be reached. Check the host name, the port, your Internet "
         "connection and any firewall in between."
     ),
-    ParsedLogKind.GATEWAY_NOT_APPROVED: (
+    ParsedLogKind.GATEWAY_NOT_APPROVED: N_(
         "This gateway, or its certificate, is not approved on this computer. Approve it "
         "once with an administrator password (Connect asks for it, or run "
         "vpn-doctor approve-gateway)."
     ),
-    ParsedLogKind.PRIVATE_KEY_ERROR: (
+    ParsedLogKind.PRIVATE_KEY_ERROR: N_(
         "The client private key could not be loaded: the PEM pass phrase is wrong "
         "or the user_key file is unreadable. If the pass phrase was remembered, "
         "forget the saved secrets and enter it again."
     ),
-    ParsedLogKind.PRIVILEGE_ERROR: (
+    ParsedLogKind.PRIVILEGE_ERROR: N_(
         "openfortivpn needs administrator privileges to create the PPP interface "
         "and routes. Accept the administrator authentication prompt, or run it "
         "through pkexec or sudo."

@@ -142,12 +142,9 @@ Goals:
 
 ### Translations
 
-- Fix `i18n.py`: it looks for translations in a relative `locale` folder;
-  install `.mo` files under `/usr/share/locale` and bind the text domain.
-- Extract strings with xgettext into `po/vpn-doctor.pot`; compile in the RPM.
-- First languages: French, German, Spanish, Italian, Dutch, Portuguese,
-  Polish.
-- Diagnostic explanations are user-facing strings too: translate them.
+Done in Sprint 7.2: French, German, Spanish, Italian, Dutch, Portuguese and
+Polish. Remaining: review by native speakers; translate the desktop file and
+the AppStream metainfo.
 
 ## Later
 
