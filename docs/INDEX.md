@@ -49,6 +49,7 @@ Implementation notes, validation and review notes for each sprint.
 - [Sprint 4.3](sprints/SPRINT4_3_IMPLEMENTATION_REPORT.md)
 - [Sprint 5.1](sprints/SPRINT5_1_IMPLEMENTATION_REPORT.md)
 - [Sprint 6](sprints/SPRINT6_IMPLEMENTATION_REPORT.md)
+- [Sprint 7.1](sprints/SPRINT7_1_IMPLEMENTATION_REPORT.md)
 
 ## Case studies
 

@@ -151,3 +151,17 @@
 - RPM packaging: launcher, AppStream metainfo, icon, helper and policy.
 - "New VPN connection…" and "Settings…" open the NetworkManager editor.
 - Preferences: default connection and auto-connect at startup.
+
+## Sprint 7.1
+
+### Added
+
+- `--json` on every CLI command except `gui`, before or after the command:
+  one JSON object on stdout, same exit codes, documented schema
+  (`docs/development/CLI_SPECIFICATION.md`). Profiles never expose user
+  names or certificate paths.
+
+### Fixed
+
+- `vpn-doctor rdp --log` with an unreadable file printed a Python traceback;
+  it now reports the error and exits with code 2.

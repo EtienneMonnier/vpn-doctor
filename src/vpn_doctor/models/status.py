@@ -30,3 +30,14 @@ class VPNStatus:
     prompt: str | None = None
     vpn_ip: str | None = None
     connected_seconds: int | None = None
+
+    def to_dict(self) -> dict:
+        return {
+            "backend": self.backend,
+            "state": str(self.state),
+            "message": self.message,
+            "suggestion": self.suggestion,
+            "prompt": self.prompt,
+            "vpn_ip": self.vpn_ip,
+            "connected_seconds": self.connected_seconds,
+        }

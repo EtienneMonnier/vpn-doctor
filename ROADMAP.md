@@ -118,9 +118,9 @@ Goals:
 
 ### AI agents: JSON output, then an MCP server
 
-1. `--json` on every CLI command (status, profiles, diagnose, conflicts,
-   gateways, rdp), with a stable, documented schema. Useful for scripts and
-   for any agent that can run a command.
+1. Done in Sprint 7.1: `--json` on every CLI command, with a stable,
+   documented schema. Useful for scripts and for any agent that can run a
+   command.
 2. `docs/AGENTS_USAGE.md`: how an agent diagnoses a VPN with VPN Doctor
    (commands, JSON fields, what each failure means, what never to do).
 3. `vpn-doctor mcp`: a stdio MCP server, as an optional extra
