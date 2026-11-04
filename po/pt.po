@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vpn-doctor 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/EtienneMonnier/vpn-doctor/issues\n"
-"POT-Creation-Date: 2026-10-30 12:28+0100\n"
+"POT-Creation-Date: 2026-11-04 11:19+0100\n"
 "PO-Revision-Date: 2026-10-30 12:28+0100\n"
 "Last-Translator: Claude (AI-assisted)\n"
 "Language-Team: Portuguese\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/vpn_doctor/backend/log_parser.py:61
+#: src/vpn_doctor/backend/log_parser.py:67
 msgid ""
 "The gateway refused the login. Check the password, the username and the "
 "realm. If they are correct, ask the administrator whether tunnel mode is "
@@ -27,7 +27,24 @@ msgstr ""
 "utilizador e o realm. Se estiverem corretos, pergunte ao administrador se o "
 "modo túnel é permitido para esta conta."
 
-#: src/vpn_doctor/backend/log_parser.py:66
+#: src/vpn_doctor/backend/log_parser.py:72
+msgid ""
+"The gateway was reached and the client key, if any, was loaded: it is the "
+"gateway that refused the login. The password may be wrong or expired, or the "
+"account locked. Check the password, the username and the realm, but do not "
+"retry too often: repeated failures can lock the account. If they are "
+"correct, ask the administrator to check the account (locked, expired "
+"password, revoked certificate, tunnel mode allowed)."
+msgstr ""
+"O gateway foi alcançado e a chave do cliente, se existir, foi carregada: foi"
+" o gateway que recusou o início de sessão. A palavra-passe pode estar errada"
+" ou expirada, ou a conta bloqueada. Verifique a palavra-passe, o nome de "
+"utilizador e o realm, mas não tente demasiadas vezes: falhas repetidas podem"
+" bloquear a conta. Se estiverem corretos, peça ao administrador que "
+"verifique a conta (bloqueada, palavra-passe expirada, certificado revogado, "
+"modo túnel permitido)."
+
+#: src/vpn_doctor/backend/log_parser.py:80
 msgid ""
 "The gateway certificate is not trusted. Verify its fingerprint with your "
 "administrator, then add it to the profile as trusted_cert."
@@ -36,7 +53,7 @@ msgstr ""
 "digital com o administrador e, em seguida, adicione-a ao perfil como "
 "trusted_cert."
 
-#: src/vpn_doctor/backend/log_parser.py:70
+#: src/vpn_doctor/backend/log_parser.py:84
 msgid ""
 "The gateway cannot be reached. Check the host name, the port, your Internet "
 "connection and any firewall in between."
@@ -44,7 +61,7 @@ msgstr ""
 "Não é possível contactar o gateway. Verifique o nome do anfitrião, a porta, "
 "a sua ligação à Internet e qualquer firewall pelo caminho."
 
-#: src/vpn_doctor/backend/log_parser.py:74
+#: src/vpn_doctor/backend/log_parser.py:88
 msgid ""
 "This gateway, or its certificate, is not approved on this computer. Approve "
 "it once with an administrator password (Connect asks for it, or run vpn-"
@@ -54,7 +71,7 @@ msgstr ""
 "Aprove-o uma vez com uma palavra-passe de administrador (Ligar pede-a, ou "
 "execute vpn-doctor approve-gateway)."
 
-#: src/vpn_doctor/backend/log_parser.py:79
+#: src/vpn_doctor/backend/log_parser.py:93
 msgid ""
 "The client private key could not be loaded: the PEM pass phrase is wrong or "
 "the user_key file is unreadable. If the pass phrase was remembered, forget "
@@ -64,7 +81,7 @@ msgstr ""
 "errada ou o ficheiro user_key não é legível. Se a frase-passe foi "
 "memorizada, esqueça os segredos guardados e introduza-a novamente."
 
-#: src/vpn_doctor/backend/log_parser.py:84
+#: src/vpn_doctor/backend/log_parser.py:98
 msgid ""
 "openfortivpn needs administrator privileges to create the PPP interface and "
 "routes. Accept the administrator authentication prompt, or run it through "

@@ -41,7 +41,7 @@ stateDiagram-v2
 | `Remote gateway has allocated a VPN` | VPN configuration received |
 | `Tunnel is up and running` | connected |
 | `Gateway certificate validation failed` | certificate rejected |
-| `Could not authenticate` | authentication failed |
+| `Could not authenticate` | login refused by the gateway (TLS up, client key loaded) |
 | `pppd` / `link was terminated` | PPP problem or disconnected |
 
 ## Command construction rules

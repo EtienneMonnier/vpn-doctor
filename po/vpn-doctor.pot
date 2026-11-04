@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vpn-doctor 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/EtienneMonnier/vpn-doctor/issues\n"
-"POT-Creation-Date: 2026-10-30 12:28+0100\n"
+"POT-Creation-Date: 2026-11-04 11:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,40 +18,50 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/vpn_doctor/backend/log_parser.py:61
+#: src/vpn_doctor/backend/log_parser.py:67
 msgid ""
 "The gateway refused the login. Check the password, the username and the "
 "realm. If they are correct, ask the administrator whether tunnel mode is "
 "allowed for this account."
 msgstr ""
 
-#: src/vpn_doctor/backend/log_parser.py:66
+#: src/vpn_doctor/backend/log_parser.py:72
+msgid ""
+"The gateway was reached and the client key, if any, was loaded: it is the "
+"gateway that refused the login. The password may be wrong or expired, or the "
+"account locked. Check the password, the username and the realm, but do not "
+"retry too often: repeated failures can lock the account. If they are "
+"correct, ask the administrator to check the account (locked, expired "
+"password, revoked certificate, tunnel mode allowed)."
+msgstr ""
+
+#: src/vpn_doctor/backend/log_parser.py:80
 msgid ""
 "The gateway certificate is not trusted. Verify its fingerprint with your "
 "administrator, then add it to the profile as trusted_cert."
 msgstr ""
 
-#: src/vpn_doctor/backend/log_parser.py:70
+#: src/vpn_doctor/backend/log_parser.py:84
 msgid ""
 "The gateway cannot be reached. Check the host name, the port, your Internet "
 "connection and any firewall in between."
 msgstr ""
 
-#: src/vpn_doctor/backend/log_parser.py:74
+#: src/vpn_doctor/backend/log_parser.py:88
 msgid ""
 "This gateway, or its certificate, is not approved on this computer. Approve "
 "it once with an administrator password (Connect asks for it, or run vpn-"
 "doctor approve-gateway)."
 msgstr ""
 
-#: src/vpn_doctor/backend/log_parser.py:79
+#: src/vpn_doctor/backend/log_parser.py:93
 msgid ""
 "The client private key could not be loaded: the PEM pass phrase is wrong or "
 "the user_key file is unreadable. If the pass phrase was remembered, forget "
 "the saved secrets and enter it again."
 msgstr ""
 
-#: src/vpn_doctor/backend/log_parser.py:84
+#: src/vpn_doctor/backend/log_parser.py:98
 msgid ""
 "openfortivpn needs administrator privileges to create the PPP interface and "
 "routes. Accept the administrator authentication prompt, or run it through "

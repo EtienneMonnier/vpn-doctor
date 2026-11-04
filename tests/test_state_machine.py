@@ -39,6 +39,9 @@ def test_state_machine_explains_wrong_password():
     assert machine.state == VPNConnectionState.FAILED
     assert machine.suggestion is not None
     assert "password" in machine.suggestion
+    # The key loaded and the gateway answered: say so, and warn about lockout.
+    assert "client key" in machine.suggestion
+    assert "lock the account" in machine.suggestion
 
 
 def test_state_machine_clears_suggestion_on_new_attempt():

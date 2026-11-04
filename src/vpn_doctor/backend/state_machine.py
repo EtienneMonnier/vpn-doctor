@@ -48,6 +48,7 @@ class ConnectionStateMachine:
         elif parsed.kind in {
             ParsedLogKind.CERTIFICATE_ERROR,
             ParsedLogKind.AUTHENTICATION_ERROR,
+            ParsedLogKind.LOGIN_REFUSED,
             ParsedLogKind.GATEWAY_ERROR,
             ParsedLogKind.PRIVILEGE_ERROR,
             ParsedLogKind.PRIVATE_KEY_ERROR,
