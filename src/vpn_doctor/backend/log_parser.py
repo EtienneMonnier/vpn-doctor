@@ -24,6 +24,7 @@ class ParsedLogKind(StrEnum):
     TUNNEL_DOWN = "tunnel_down"
     CERTIFICATE_ERROR = "certificate_error"
     AUTHENTICATION_ERROR = "authentication_error"
+    LOGIN_REFUSED = "login_refused"
     GATEWAY_ERROR = "gateway_error"
     PRIVILEGE_ERROR = "privilege_error"
     PRIVATE_KEY_ERROR = "private_key_error"
@@ -37,9 +38,14 @@ PRIVILEGE_ERROR_MARKERS = (
     "error executing command as another user",
 )
 
-AUTHENTICATION_ERROR_MARKERS = (
+# openfortivpn prints these after the TLS session is up, so the client key (if
+# any) was loaded and the gateway itself refused the login.
+LOGIN_REFUSED_MARKERS = (
     "could not authenticate to gateway",
     "could not authenticate to the gateway",
+)
+
+AUTHENTICATION_ERROR_MARKERS = (
     "permission denied",
     "authentication failed",
     "bad credentials",
@@ -61,6 +67,14 @@ FAILURE_SUGGESTIONS: dict[ParsedLogKind, str] = {
         "The gateway refused the login. Check the password, the username and the realm. "
         "If they are correct, ask the administrator whether tunnel mode is allowed for "
         "this account."
+    ),
+    ParsedLogKind.LOGIN_REFUSED: N_(
+        "The gateway was reached and the client key, if any, was loaded: it is the "
+        "gateway that refused the login. The password may be wrong or expired, or "
+        "the account locked. Check the password, the username and the realm, but do "
+        "not retry too often: repeated failures can lock the account. If they are "
+        "correct, ask the administrator to check the account (locked, expired "
+        "password, revoked certificate, tunnel mode allowed)."
     ),
     ParsedLogKind.CERTIFICATE_ERROR: N_(
         "The gateway certificate is not trusted. Verify its fingerprint with your "
@@ -121,6 +135,9 @@ class OpenFortiVPNLogParser:
         if "ssl_ctx_use_privatekey_file" in lowered:
             return ParsedLogLine(raw=raw, kind=ParsedLogKind.PRIVATE_KEY_ERROR, message=raw)
 
+        if any(marker in lowered for marker in LOGIN_REFUSED_MARKERS):
+            return ParsedLogLine(raw=raw, kind=ParsedLogKind.LOGIN_REFUSED, message=raw)
+
         if any(marker in lowered for marker in AUTHENTICATION_ERROR_MARKERS):
             return ParsedLogLine(raw=raw, kind=ParsedLogKind.AUTHENTICATION_ERROR, message=raw)
 
@@ -166,6 +183,7 @@ class OpenFortiVPNLogParser:
         if parsed.kind in {
             ParsedLogKind.CERTIFICATE_ERROR,
             ParsedLogKind.AUTHENTICATION_ERROR,
+            ParsedLogKind.LOGIN_REFUSED,
             ParsedLogKind.GATEWAY_ERROR,
             ParsedLogKind.PRIVILEGE_ERROR,
             ParsedLogKind.PRIVATE_KEY_ERROR,

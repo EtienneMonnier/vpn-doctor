@@ -182,3 +182,14 @@
   VPN Doctor could never find them.
 - About 170 user-visible strings (CLI, diagnostics, backends) were not
   translatable; plurals now use `ngettext`.
+
+## Unreleased (after Sprint 7.2)
+
+### Changed
+
+- openfortivpn "Could not authenticate to gateway" now has its own explanation:
+  the gateway was reached and the client key loaded, so the gateway itself
+  refused the login (wrong or expired password, locked account, revoked
+  certificate). It warns that repeated attempts can lock the account, which
+  matters for gateways backed by Active Directory. Translated in all seven
+  languages.

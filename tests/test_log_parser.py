@@ -31,7 +31,7 @@ def test_log_parser_wrong_password():
         "ERROR:  Could not authenticate to gateway. Please check the password, "
         "client certificate, etc."
     )
-    assert parsed.kind == ParsedLogKind.AUTHENTICATION_ERROR
+    assert parsed.kind == ParsedLogKind.LOGIN_REFUSED
 
 
 def test_log_parser_tunnel_mode_refused():
@@ -40,6 +40,12 @@ def test_log_parser_tunnel_mode_refused():
         "ERROR:  Could not authenticate to the gateway. Please make sure tunnel mode "
         "is allowed by the gateway, check the realm, etc."
     )
+    assert parsed.kind == ParsedLogKind.LOGIN_REFUSED
+
+
+def test_log_parser_generic_authentication_error_is_not_login_refused():
+    parser = OpenFortiVPNLogParser()
+    parsed = parser.parse("ERROR:  Authentication failed.")
     assert parsed.kind == ParsedLogKind.AUTHENTICATION_ERROR
 
 
