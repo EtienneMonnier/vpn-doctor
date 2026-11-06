@@ -134,3 +134,29 @@ def boot_lines(
         ).format(count=connections),
         _("Ready. Diagnose. Connect. Protect."),
     ]
+
+
+def tab_changes(
+    profile_names: list[str], open_names: list[str], active_names: set[str]
+) -> tuple[list[str], list[str]]:
+    """Return the tabs to open and to close so that each connection has one tab.
+
+    A tab whose connection disappeared is kept while it is still active, so a
+    reload never hides a running VPN.
+    """
+    to_open = [name for name in profile_names if name not in open_names]
+    to_close = [
+        name for name in open_names if name not in profile_names and name not in active_names
+    ]
+    return to_open, to_close
+
+
+def editor_environment(dark: bool, environ) -> dict[str, str]:
+    """Environment overrides for the GTK3 NetworkManager connection editor.
+
+    GTK3 Adwaita ignores the GNOME dark preference, so the editor would open
+    light next to a dark VPN Doctor. A GTK_THEME chosen by the user wins.
+    """
+    if dark and "GTK_THEME" not in environ:
+        return {"GTK_THEME": "Adwaita:dark"}
+    return {}

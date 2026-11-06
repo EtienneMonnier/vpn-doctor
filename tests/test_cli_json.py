@@ -88,6 +88,7 @@ def test_diagnose_json_keeps_the_exit_code(controller, capsys, monkeypatch):
     )
     report = DiagnosticReport.from_items("1 problem", [item])
     monkeypatch.setattr(controller.backend_manager, "diagnose", lambda profile: report)
+    monkeypatch.setattr(controller, "latency_items", lambda profile=None: [])  # no network in tests
 
     code, data = run_json(controller, capsys, "diagnose", "--json")
 

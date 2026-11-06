@@ -96,6 +96,17 @@ def parse_gateway(value: str) -> tuple[str, int]:
     return host, int(port) if port.isdigit() else 0
 
 
+def parse_wireguard_endpoint(peers: str) -> tuple[str, int]:
+    """Host and port of the first peer endpoint in `nmcli -g wireguard.peers`."""
+    for part in unescape_value(peers).split():
+        if part.startswith("endpoint="):
+            endpoint = part.removeprefix("endpoint=")
+            host, _sep, port = endpoint.rpartition(":")
+            host = host.strip("[]")  # IPv6 endpoints are written [addr]:port
+            return (host, int(port)) if port.isdigit() and host else (endpoint, 0)
+    return "", 0
+
+
 def parse_addresses(output: str) -> set[str]:
     """Return the addresses, without prefix, of `nmcli -g IP4.ADDRESS,IP6.ADDRESS`."""
     addresses = set()
@@ -328,6 +339,23 @@ class NetworkManagerBackend(VPNBackend):
                 if iface:
                     links[iface] = name
         return links
+
+    def gateway(self, profile: VPNProfile) -> tuple[str, int]:
+        """Gateway host and port; WireGuard keeps it in its peers, not in vpn.data."""
+        if profile.host or profile.vpn_type != "wireguard" or not profile.nm_uuid:
+            return profile.host, profile.port
+        try:
+            peers = self._nmcli("-g", "wireguard.peers", "connection", "show", "uuid", profile.nm_uuid)
+        except BackendProcessError:
+            return "", 0
+        return parse_wireguard_endpoint(peers)
+
+    def tunnel_interface(self, profile: VPNProfile) -> str | None:
+        """Network interface of the profile while it is active."""
+        for iface, name in self.active_links().items():
+            if name == profile.name:
+                return iface
+        return None
 
     @staticmethod
     def _ip_addresses() -> str:
