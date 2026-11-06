@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vpn-doctor 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/EtienneMonnier/vpn-doctor/issues\n"
-"POT-Creation-Date: 2026-11-04 11:19+0100\n"
+"POT-Creation-Date: 2026-11-06 09:48+0100\n"
 "PO-Revision-Date: 2026-10-30 12:28+0100\n"
 "Last-Translator: Claude (AI-assisted)\n"
 "Language-Team: Polish\n"
@@ -39,9 +39,9 @@ msgid ""
 msgstr ""
 "Połączono z bramą, a klucz klienta, jeśli jest używany, został wczytany: to "
 "brama odrzuciła logowanie. Hasło może być błędne lub wygasłe albo konto "
-"zablokowane. Sprawdź hasło, nazwę użytkownika i realm, ale nie ponawiaj prób"
-" zbyt często: powtarzające się niepowodzenia mogą zablokować konto. Jeśli są"
-" poprawne, poproś administratora o sprawdzenie konta (zablokowane, wygasłe "
+"zablokowane. Sprawdź hasło, nazwę użytkownika i realm, ale nie ponawiaj prób "
+"zbyt często: powtarzające się niepowodzenia mogą zablokować konto. Jeśli są "
+"poprawne, poproś administratora o sprawdzenie konta (zablokowane, wygasłe "
 "hasło, unieważniony certyfikat, dozwolony tryb tunelu)."
 
 #: src/vpn_doctor/backend/log_parser.py:80
@@ -90,58 +90,58 @@ msgstr ""
 "trasy. Należy zaakceptować prośbę o uwierzytelnienie administratora lub "
 "uruchomić go przez pkexec albo sudo."
 
-#: src/vpn_doctor/backend/networkmanager.py:248
-#: src/vpn_doctor/backend/networkmanager.py:268
+#: src/vpn_doctor/backend/networkmanager.py:259
+#: src/vpn_doctor/backend/networkmanager.py:279
 msgid "Asking NetworkManager"
 msgstr "Odpytywanie NetworkManagera"
 
-#: src/vpn_doctor/backend/networkmanager.py:281
-#: src/vpn_doctor/core/controller.py:566 src/vpn_doctor/ui/main_window.py:161
-#: src/vpn_doctor/ui/main_window.py:400 src/vpn_doctor/ui/view_models.py:81
+#: src/vpn_doctor/backend/networkmanager.py:292
+#: src/vpn_doctor/core/controller.py:607 src/vpn_doctor/ui/main_window.py:184
+#: src/vpn_doctor/ui/main_window.py:451 src/vpn_doctor/ui/view_models.py:81
 msgid "Disconnected"
 msgstr "Rozłączono"
 
-#: src/vpn_doctor/backend/networkmanager.py:351
+#: src/vpn_doctor/backend/networkmanager.py:379
 msgid "NetworkManager diagnostics"
 msgstr "Diagnostyka NetworkManagera"
 
-#: src/vpn_doctor/backend/networkmanager.py:414
+#: src/vpn_doctor/backend/networkmanager.py:442
 #: src/vpn_doctor/backend/openfortivpn_process.py:198
 msgid "Connection timeout"
 msgstr "Przekroczono czas połączenia"
 
-#: src/vpn_doctor/backend/networkmanager.py:454
+#: src/vpn_doctor/backend/networkmanager.py:482
 msgid "NetworkManager is running"
 msgstr "NetworkManager działa"
 
-#: src/vpn_doctor/backend/networkmanager.py:458
+#: src/vpn_doctor/backend/networkmanager.py:486
 msgid "NetworkManager is not reachable through nmcli"
 msgstr "NetworkManager jest nieosiągalny przez nmcli"
 
-#: src/vpn_doctor/backend/networkmanager.py:459
+#: src/vpn_doctor/backend/networkmanager.py:487
 #, python-brace-format
 msgid "Check that NetworkManager is installed and running: {command}"
 msgstr ""
 "Proszę sprawdzić, czy NetworkManager jest zainstalowany i uruchomiony: "
 "{command}"
 
-#: src/vpn_doctor/backend/networkmanager.py:473
-#: src/vpn_doctor/backend/networkmanager.py:478
+#: src/vpn_doctor/backend/networkmanager.py:501
+#: src/vpn_doctor/backend/networkmanager.py:506
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:45
 msgid "VPN plugin"
 msgstr "Wtyczka VPN"
 
-#: src/vpn_doctor/backend/networkmanager.py:475
+#: src/vpn_doctor/backend/networkmanager.py:503
 #, python-brace-format
 msgid "The {vpn_type} plugin is installed"
 msgstr "Wtyczka {vpn_type} jest zainstalowana"
 
-#: src/vpn_doctor/backend/networkmanager.py:480
+#: src/vpn_doctor/backend/networkmanager.py:508
 #, python-brace-format
 msgid "The NetworkManager {vpn_type} plugin is missing"
 msgstr "Brak wtyczki {vpn_type} dla NetworkManagera"
 
-#: src/vpn_doctor/backend/networkmanager.py:481
+#: src/vpn_doctor/backend/networkmanager.py:509
 #, python-brace-format
 msgid "Install it, for example: {command}"
 msgstr "Należy ją zainstalować, na przykład: {command}"
@@ -201,89 +201,97 @@ msgstr "Proces zaplecza już działa"
 msgid "The backend process does not accept input"
 msgstr "Proces zaplecza nie przyjmuje danych wejściowych"
 
-#: src/vpn_doctor/core/controller.py:83
+#: src/vpn_doctor/core/controller.py:94
 #, python-brace-format
 msgid "Unknown profile: {name}"
 msgstr "Nieznany profil: {name}"
 
-#: src/vpn_doctor/core/controller.py:273
+#: src/vpn_doctor/core/controller.py:198
+msgid "Gateway latency"
+msgstr "Opóźnienie bramy"
+
+#: src/vpn_doctor/core/controller.py:203
+msgid "Tunnel latency"
+msgstr "Opóźnienie tunelu"
+
+#: src/vpn_doctor/core/controller.py:314
 msgid "Print one JSON object instead of text (for scripts and agents)"
 msgstr "Wypisuje jeden obiekt JSON zamiast tekstu (dla skryptów i agentów)"
 
-#: src/vpn_doctor/core/controller.py:275
+#: src/vpn_doctor/core/controller.py:316
 msgid "Show VPN Doctor version"
 msgstr "Wyświetla wersję programu VPN Doctor"
 
-#: src/vpn_doctor/core/controller.py:288
+#: src/vpn_doctor/core/controller.py:329
 msgid "Profile or NetworkManager connection name (default: the first one)"
 msgstr "Nazwa profilu lub połączenia NetworkManagera (domyślnie: pierwsze)"
 
-#: src/vpn_doctor/core/controller.py:291
+#: src/vpn_doctor/core/controller.py:332
 msgid "Run basic diagnostics"
 msgstr "Uruchamia podstawową diagnostykę"
 
-#: src/vpn_doctor/core/controller.py:292
+#: src/vpn_doctor/core/controller.py:333
 msgid "List VPN connections and profiles"
 msgstr "Wyświetla listę połączeń VPN i profili"
 
-#: src/vpn_doctor/core/controller.py:293
+#: src/vpn_doctor/core/controller.py:334
 msgid "Show connection status"
 msgstr "Wyświetla stan połączenia"
 
-#: src/vpn_doctor/core/controller.py:294
+#: src/vpn_doctor/core/controller.py:335
 msgid "Launch the experimental GTK UI"
 msgstr "Uruchamia eksperymentalny interfejs GTK"
 
-#: src/vpn_doctor/core/controller.py:298
+#: src/vpn_doctor/core/controller.py:339
 msgid "Connect a profile"
 msgstr "Łączy profil"
 
-#: src/vpn_doctor/core/controller.py:304
+#: src/vpn_doctor/core/controller.py:345
 msgid "Print the backend command without starting a VPN process"
 msgstr "Wypisuje polecenie zaplecza bez uruchamiania procesu VPN"
 
-#: src/vpn_doctor/core/controller.py:309
+#: src/vpn_doctor/core/controller.py:350
 msgid "Wait until the backend reports connected, failed or timeout"
 msgstr "Czeka, aż zaplecze zgłosi połączenie, błąd lub przekroczenie czasu"
 
-#: src/vpn_doctor/core/controller.py:315
+#: src/vpn_doctor/core/controller.py:356
 msgid "Maximum wait time in seconds when --wait is used"
 msgstr "Maksymalny czas oczekiwania w sekundach przy użyciu --wait"
 
-#: src/vpn_doctor/core/controller.py:320
+#: src/vpn_doctor/core/controller.py:361
 msgid "Disconnect the active VPN session"
 msgstr "Rozłącza aktywną sesję VPN"
 
-#: src/vpn_doctor/core/controller.py:326
+#: src/vpn_doctor/core/controller.py:367
 msgid "List the gateways approved on this computer"
 msgstr "Wyświetla listę bram zatwierdzonych na tym komputerze"
 
-#: src/vpn_doctor/core/controller.py:331
+#: src/vpn_doctor/core/controller.py:372
 msgid "Approve the gateway of a profile (administrator password)"
 msgstr "Zatwierdza bramę profilu (hasło administratora)"
 
-#: src/vpn_doctor/core/controller.py:336
+#: src/vpn_doctor/core/controller.py:377
 msgid "Revoke an approved gateway (administrator password)"
 msgstr "Unieważnia zatwierdzoną bramę (hasło administratora)"
 
-#: src/vpn_doctor/core/controller.py:343
+#: src/vpn_doctor/core/controller.py:384
 msgid ""
 "Detect route and DNS conflicts between active VPNs and the local network"
 msgstr "Wykrywa konflikty tras i DNS między aktywnymi VPN a siecią lokalną"
 
-#: src/vpn_doctor/core/controller.py:349
+#: src/vpn_doctor/core/controller.py:390
 msgid "Remove the secrets remembered in the keyring for a profile"
 msgstr "Usuwa sekrety profilu zapamiętane w bazie kluczy"
 
-#: src/vpn_doctor/core/controller.py:355
+#: src/vpn_doctor/core/controller.py:396
 msgid "Diagnose a Remote Desktop server reached through the VPN"
 msgstr "Diagnozuje serwer pulpitu zdalnego osiągany przez VPN"
 
-#: src/vpn_doctor/core/controller.py:358
+#: src/vpn_doctor/core/controller.py:399
 msgid "RDP server name or address"
 msgstr "Nazwa lub adres serwera RDP"
 
-#: src/vpn_doctor/core/controller.py:364
+#: src/vpn_doctor/core/controller.py:405
 msgid ""
 "FreeRDP/Remmina log to explain, '-' for stdin (e.g. journalctl --user -b -o "
 "cat | vpn-doctor rdp HOST --log -)"
@@ -291,69 +299,69 @@ msgstr ""
 "Dziennik FreeRDP/Remmina do wyjaśnienia, „-” oznacza standardowe wejście "
 "(np. journalctl --user -b -o cat | vpn-doctor rdp HOST --log -)"
 
-#: src/vpn_doctor/core/controller.py:410
+#: src/vpn_doctor/core/controller.py:451
 msgid "Expected HOST:PORT"
 msgstr "Oczekiwano HOST:PORT"
 
-#: src/vpn_doctor/core/controller.py:419
+#: src/vpn_doctor/core/controller.py:460
 msgid "The keyring is not reachable: install PyGObject and libsecret."
 msgstr ""
 "Baza kluczy jest nieosiągalna: należy zainstalować PyGObject i libsecret."
 
-#: src/vpn_doctor/core/controller.py:421
+#: src/vpn_doctor/core/controller.py:462
 #, python-brace-format
 msgid "Secrets forgotten for {name}"
 msgstr "Zapomniano sekrety: {name}"
 
-#: src/vpn_doctor/core/controller.py:442 src/vpn_doctor/ui/main_window.py:827
+#: src/vpn_doctor/core/controller.py:483 src/vpn_doctor/ui/main_window.py:906
 msgid "Network conflicts"
 msgstr "Konflikty sieciowe"
 
-#: src/vpn_doctor/core/controller.py:446
+#: src/vpn_doctor/core/controller.py:487
 msgid "No conflict between active VPNs and the local network."
 msgstr "Brak konfliktów między aktywnymi VPN a siecią lokalną."
 
-#: src/vpn_doctor/core/controller.py:462
+#: src/vpn_doctor/core/controller.py:503
 #, python-brace-format
 msgid "Cannot read {path}: {error}"
 msgstr "Nie można odczytać {path}: {error}"
 
-#: src/vpn_doctor/core/controller.py:463
+#: src/vpn_doctor/core/controller.py:504
 msgid "RDP client log analysis"
 msgstr "Analiza dziennika klienta RDP"
 
-#: src/vpn_doctor/core/controller.py:491
+#: src/vpn_doctor/core/controller.py:532
 #, python-brace-format
 msgid "- {name} ({vpn_type} via NetworkManager)"
 msgstr "- {name} ({vpn_type} przez NetworkManagera)"
 
-#: src/vpn_doctor/core/controller.py:521
+#: src/vpn_doctor/core/controller.py:562
 msgid "The privileged helper is not installed: gateways need no approval."
 msgstr ""
 "Uprzywilejowany program pomocniczy nie jest zainstalowany: bramy nie "
 "wymagają zatwierdzenia."
 
-#: src/vpn_doctor/core/controller.py:523 src/vpn_doctor/ui/main_window.py:350
-#: src/vpn_doctor/ui/main_window.py:678
+#: src/vpn_doctor/core/controller.py:564 src/vpn_doctor/ui/main_window.py:401
+#: src/vpn_doctor/ui/main_window.py:736
 msgid "system CA"
 msgstr "systemowy CA"
 
-#: src/vpn_doctor/core/controller.py:524
+#: src/vpn_doctor/core/controller.py:565
 #, python-brace-format
 msgid "- {gateway} (certificate: {pin})"
 msgstr "- {gateway} (certyfikat: {pin})"
 
-#: src/vpn_doctor/core/controller.py:548
+#: src/vpn_doctor/core/controller.py:589
 #, python-brace-format
 msgid "Backend process error: {error}"
 msgstr "Błąd procesu zaplecza: {error}"
 
-#: src/vpn_doctor/core/controller.py:561
+#: src/vpn_doctor/core/controller.py:602
 msgid "Connection started"
 msgstr "Rozpoczęto połączenie"
 
-#: src/vpn_doctor/core/controller.py:599 src/vpn_doctor/core/controller.py:607
-#: src/vpn_doctor/ui/main_window.py:416
+#: src/vpn_doctor/core/controller.py:640 src/vpn_doctor/core/controller.py:648
+#: src/vpn_doctor/ui/main_window.py:330 src/vpn_doctor/ui/main_window.py:467
 #, python-brace-format
 msgid "Suggestion: {text}"
 msgstr "Sugestia: {text}"
@@ -440,10 +448,76 @@ msgstr ""
 "Należy skonfigurować domeny DNS tylko do trasowania (np. ~corp.example.com) "
 "w jednym z nich w ustawieniach połączenia, w IPv4 > DNS search domains."
 
-#. TRANSLATORS: separator between VPN connection names, as in "Office and Lab".
+#. TRANSLATORS: separator between VPN connection names, as in "Office and
+#. Lab".
 #: src/vpn_doctor/diagnostics/conflicts.py:233
 msgid " and "
 msgstr " i "
+
+#: src/vpn_doctor/diagnostics/latency.py:99
+msgid "good"
+msgstr "dobre"
+
+#: src/vpn_doctor/diagnostics/latency.py:100
+msgid "fair"
+msgstr "średnie"
+
+#: src/vpn_doctor/diagnostics/latency.py:101
+msgid "poor"
+msgstr "słabe"
+
+#: src/vpn_doctor/diagnostics/latency.py:112
+#, python-brace-format
+msgid "{target} does not answer through the tunnel"
+msgstr "{target} nie odpowiada przez tunel"
+
+#: src/vpn_doctor/diagnostics/latency.py:116
+msgid ""
+"The tunnel is up but traffic does not flow: check the routes, or the "
+"firewall on the other side."
+msgstr ""
+"Tunel działa, ale ruch nie przechodzi: sprawdź trasy lub zaporę po drugiej "
+"stronie."
+
+#: src/vpn_doctor/diagnostics/latency.py:124
+#, python-brace-format
+msgid "{target} does not answer ping and no TCP port to measure"
+msgstr "{target} nie odpowiada na ping i brak portu TCP do pomiaru"
+
+#: src/vpn_doctor/diagnostics/latency.py:127
+msgid "Many gateways block ping: this is not an error by itself."
+msgstr "Wiele bram blokuje ping: samo w sobie nie jest to błędem."
+
+#: src/vpn_doctor/diagnostics/latency.py:132
+#, python-brace-format
+msgid "{quality}: {average:.0f} ms to {target} (TCP connection)"
+msgstr "{quality}: {average:.0f} ms do {target} (połączenie TCP)"
+
+#: src/vpn_doctor/diagnostics/latency.py:137
+#, python-brace-format
+msgid ""
+"{quality}: {average:.0f} ms to {target}, jitter {jitter:.0f} ms, {loss:.0f}% "
+"loss"
+msgstr ""
+"{quality}: {average:.0f} ms do {target}, zmienność {jitter:.0f} ms, utrata "
+"{loss:.0f}%"
+
+#: src/vpn_doctor/diagnostics/latency.py:150
+msgid ""
+"Slow or unstable tunnel: remote desktop and calls will lag. Compare with the "
+"gateway latency: if the gateway is fast, the slowness is behind the VPN."
+msgstr ""
+"Wolny lub niestabilny tunel: pulpit zdalny i rozmowy będą się zacinać. "
+"Porównaj z opóźnieniem bramy: jeśli brama jest szybka, spowolnienie jest za "
+"VPN."
+
+#: src/vpn_doctor/diagnostics/latency.py:155
+msgid ""
+"Slow or unstable path to the gateway: check your own Internet connection (Wi-"
+"Fi, mobile data) before blaming the VPN."
+msgstr ""
+"Wolna lub niestabilna droga do bramy: sprawdź najpierw własne połączenie z "
+"Internetem (Wi-Fi, dane komórkowe), zanim obwinisz VPN."
 
 #: src/vpn_doctor/diagnostics/rdp.py:40
 msgid "standard RDP security"
@@ -995,97 +1069,111 @@ msgstr ""
 "Profil „{name}” zawiera sekret. Haseł nie wolno przechowywać w plikach "
 "profili."
 
-#: src/vpn_doctor/ui/main_window.py:38
+#: src/vpn_doctor/ui/main_window.py:46
 msgid "Diagnose. Connect. Protect."
 msgstr "Diagnozuj. Łącz. Chroń."
 
-#: src/vpn_doctor/ui/main_window.py:105
+#: src/vpn_doctor/ui/main_window.py:125
 msgid "Remember in the keyring"
 msgstr "Zapamiętanie w bazie kluczy"
 
-#: src/vpn_doctor/ui/main_window.py:111 src/vpn_doctor/ui/main_window.py:359
+#: src/vpn_doctor/ui/main_window.py:131 src/vpn_doctor/ui/main_window.py:410
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: src/vpn_doctor/ui/main_window.py:153
+#: src/vpn_doctor/ui/main_window.py:176
 msgid "■ STATUS"
 msgstr "■ STAN"
 
-#: src/vpn_doctor/ui/main_window.py:177
+#: src/vpn_doctor/ui/main_window.py:200
 msgid "■ CONNECTION"
 msgstr "■ POŁĄCZENIE"
 
-#: src/vpn_doctor/ui/main_window.py:183
+#: src/vpn_doctor/ui/main_window.py:206
 msgid "Settings…"
 msgstr "Ustawienia…"
 
-#: src/vpn_doctor/ui/main_window.py:186
+#: src/vpn_doctor/ui/main_window.py:209
 msgid "Edit this connection in NetworkManager"
 msgstr "Edytuje to połączenie w NetworkManagerze"
 
-#: src/vpn_doctor/ui/main_window.py:194
+#: src/vpn_doctor/ui/main_window.py:217
 msgid "TYPE"
 msgstr "TYP"
 
-#: src/vpn_doctor/ui/main_window.py:195
+#: src/vpn_doctor/ui/main_window.py:218
 msgid "GATEWAY"
 msgstr "BRAMA"
 
-#: src/vpn_doctor/ui/main_window.py:196
+#: src/vpn_doctor/ui/main_window.py:219
 msgid "MANAGED BY"
 msgstr "ZARZĄDZA"
 
-#: src/vpn_doctor/ui/main_window.py:208 src/vpn_doctor/ui/main_window.py:342
+#: src/vpn_doctor/ui/main_window.py:231 src/vpn_doctor/ui/main_window.py:393
 msgid "Connect"
 msgstr "Połącz"
 
-#: src/vpn_doctor/ui/main_window.py:213
+#: src/vpn_doctor/ui/main_window.py:236
 msgid "Disconnect"
 msgstr "Rozłącz"
 
-#: src/vpn_doctor/ui/main_window.py:217
+#: src/vpn_doctor/ui/main_window.py:240
 msgid "Diagnose"
 msgstr "Diagnozuj"
 
-#: src/vpn_doctor/ui/main_window.py:229
+#: src/vpn_doctor/ui/main_window.py:252
 msgid "■ LOG"
 msgstr "■ DZIENNIK"
 
-#: src/vpn_doctor/ui/main_window.py:306
+#: src/vpn_doctor/ui/main_window.py:291
+#, python-brace-format
+msgid "{name} was already connected before VPN Doctor started"
+msgstr "{name} był już połączony przed uruchomieniem VPN Doctor"
+
+#: src/vpn_doctor/ui/main_window.py:321
+msgid "Measuring latency…"
+msgstr "Pomiar opóźnienia…"
+
+#: src/vpn_doctor/ui/main_window.py:325
+#, python-brace-format
+msgid "Latency measure failed: {error}"
+msgstr "Pomiar opóźnienia nie powiódł się: {error}"
+
+#: src/vpn_doctor/ui/main_window.py:357
 #, python-brace-format
 msgid "Could not send the answer: {error}"
 msgstr "Nie można wysłać odpowiedzi: {error}"
 
-#: src/vpn_doctor/ui/main_window.py:311
+#: src/vpn_doctor/ui/main_window.py:362
 #, python-brace-format
 msgid "{name} asks for more information"
 msgstr "Połączenie {name} prosi o więcej informacji"
 
-#: src/vpn_doctor/ui/main_window.py:313
+#: src/vpn_doctor/ui/main_window.py:364
 msgid "Send"
 msgstr "Wyślij"
 
-#: src/vpn_doctor/ui/main_window.py:330
+#: src/vpn_doctor/ui/main_window.py:381
 msgid "Using the password remembered in the keyring"
 msgstr "Używanie hasła zapamiętanego w bazie kluczy"
 
-#: src/vpn_doctor/ui/main_window.py:340
+#: src/vpn_doctor/ui/main_window.py:391
 #, python-brace-format
 msgid "VPN password for {name}"
 msgstr "Hasło VPN: {name}"
 
-#: src/vpn_doctor/ui/main_window.py:341
+#: src/vpn_doctor/ui/main_window.py:392
 msgid ""
 "The password is sent to openfortivpn through stdin, never written to a file."
 msgstr ""
 "Hasło jest przekazywane do openfortivpn przez standardowe wejście i nigdy "
 "nie jest zapisywane w pliku."
 
-#: src/vpn_doctor/ui/main_window.py:352
+#: src/vpn_doctor/ui/main_window.py:403
 msgid "Approve this VPN gateway?"
 msgstr "Zatwierdzić tę bramę VPN?"
 
-#: src/vpn_doctor/ui/main_window.py:354
+#: src/vpn_doctor/ui/main_window.py:405
 #, python-brace-format
 msgid ""
 "{gateway}\n"
@@ -1102,114 +1190,114 @@ msgstr ""
 "komputera łączą się z nią bez hasła administratora, a VPN Doctor odrzuca "
 "każdą inną bramę lub certyfikat."
 
-#: src/vpn_doctor/ui/main_window.py:360
+#: src/vpn_doctor/ui/main_window.py:411
 msgid "Approve"
 msgstr "Zatwierdź"
 
-#: src/vpn_doctor/ui/main_window.py:367
+#: src/vpn_doctor/ui/main_window.py:418
 #, python-brace-format
 msgid "Approving {gateway}…"
 msgstr "Zatwierdzanie {gateway}…"
 
-#: src/vpn_doctor/ui/main_window.py:381
+#: src/vpn_doctor/ui/main_window.py:432
 #, python-brace-format
 msgid "Connecting {name}…"
 msgstr "Łączenie: {name}…"
 
-#: src/vpn_doctor/ui/main_window.py:390
+#: src/vpn_doctor/ui/main_window.py:441
 #, python-brace-format
 msgid "Could not start the VPN backend: {error}"
 msgstr "Nie można uruchomić zaplecza VPN: {error}"
 
-#: src/vpn_doctor/ui/main_window.py:394
+#: src/vpn_doctor/ui/main_window.py:445
 msgid "Stopping connection…"
 msgstr "Zatrzymywanie połączenia…"
 
-#: src/vpn_doctor/ui/main_window.py:398
+#: src/vpn_doctor/ui/main_window.py:449
 #, python-brace-format
 msgid "Disconnect failed: {error}"
 msgstr "Rozłączenie się nie powiodło: {error}"
 
-#: src/vpn_doctor/ui/main_window.py:405
+#: src/vpn_doctor/ui/main_window.py:456
 msgid "Running diagnostics…"
 msgstr "Wykonywanie diagnostyki…"
 
-#: src/vpn_doctor/ui/main_window.py:409
+#: src/vpn_doctor/ui/main_window.py:460
 #, python-brace-format
 msgid "Diagnostics failed: {error}"
 msgstr "Diagnostyka się nie powiodła: {error}"
 
-#: src/vpn_doctor/ui/main_window.py:463
+#: src/vpn_doctor/ui/main_window.py:515
 msgid "Show"
 msgstr "Wyświetl"
 
-#: src/vpn_doctor/ui/main_window.py:476
-msgid "Open a connection"
-msgstr "Otwórz połączenie"
+#: src/vpn_doctor/ui/main_window.py:528
+msgid "New or reload connections"
+msgstr "Nowe połączenie lub ponowne wczytanie"
 
-#: src/vpn_doctor/ui/main_window.py:513
+#: src/vpn_doctor/ui/main_window.py:565
 msgid "Click or press a key to skip"
 msgstr "Kliknięcie lub naciśnięcie klawisza pomija"
 
-#: src/vpn_doctor/ui/main_window.py:561
+#: src/vpn_doctor/ui/main_window.py:613
 msgid "Connecting automatically (Preferences)"
 msgstr "Automatyczne łączenie (Preferencje)"
 
-#: src/vpn_doctor/ui/main_window.py:572
+#: src/vpn_doctor/ui/main_window.py:624
 msgid "No NetworkManager connection editor is installed"
 msgstr "Nie zainstalowano edytora połączeń NetworkManagera"
 
-#: src/vpn_doctor/ui/main_window.py:578
+#: src/vpn_doctor/ui/main_window.py:636
 #, python-brace-format
 msgid "Cannot open the connection editor: {error}"
 msgstr "Nie można otworzyć edytora połączeń: {error}"
 
-#: src/vpn_doctor/ui/main_window.py:586
+#: src/vpn_doctor/ui/main_window.py:644
 msgid "General"
 msgstr "Ogólne"
 
-#: src/vpn_doctor/ui/main_window.py:589
+#: src/vpn_doctor/ui/main_window.py:647
 msgid "Appearance"
 msgstr "Wygląd"
 
-#: src/vpn_doctor/ui/main_window.py:595
+#: src/vpn_doctor/ui/main_window.py:653
 msgid " (custom)"
 msgstr " (własna)"
 
-#: src/vpn_doctor/ui/main_window.py:596
+#: src/vpn_doctor/ui/main_window.py:654
 msgid "Skin"
 msgstr "Skórka"
 
-#: src/vpn_doctor/ui/main_window.py:608
+#: src/vpn_doctor/ui/main_window.py:666
 msgid "Custom skins"
 msgstr "Własne skórki"
 
-#: src/vpn_doctor/ui/main_window.py:609
+#: src/vpn_doctor/ui/main_window.py:667
 #, python-brace-format
 msgid "Drop CSS files in {path}"
 msgstr "Pliki CSS należy umieścić w {path}"
 
-#: src/vpn_doctor/ui/main_window.py:611
+#: src/vpn_doctor/ui/main_window.py:669
 msgid "Open folder"
 msgstr "Otwórz katalog"
 
-#: src/vpn_doctor/ui/main_window.py:611
+#: src/vpn_doctor/ui/main_window.py:669
 msgid "Reload"
 msgstr "Wczytaj ponownie"
 
-#: src/vpn_doctor/ui/main_window.py:618
+#: src/vpn_doctor/ui/main_window.py:676
 msgid "Startup animation"
 msgstr "Animacja startowa"
 
-#: src/vpn_doctor/ui/main_window.py:619
+#: src/vpn_doctor/ui/main_window.py:677
 msgid "Logo and boot checks when VPN Doctor starts"
 msgstr "Logo i testy startowe przy uruchamianiu programu VPN Doctor"
 
-#: src/vpn_doctor/ui/main_window.py:628
+#: src/vpn_doctor/ui/main_window.py:686
 msgid "Startup"
 msgstr "Uruchamianie"
 
-#: src/vpn_doctor/ui/main_window.py:630
+#: src/vpn_doctor/ui/main_window.py:688
 msgid ""
 "To connect when the computer starts, without VPN Doctor, use the \"Connect "
 "automatically\" option of the connection in NetworkManager."
@@ -1217,27 +1305,27 @@ msgstr ""
 "Aby łączyć się przy uruchamianiu komputera bez programu VPN Doctor, należy "
 "użyć opcji „Connect automatically” połączenia w NetworkManagerze."
 
-#: src/vpn_doctor/ui/main_window.py:638
+#: src/vpn_doctor/ui/main_window.py:696
 msgid "First connection"
 msgstr "Pierwsze połączenie"
 
-#: src/vpn_doctor/ui/main_window.py:641
+#: src/vpn_doctor/ui/main_window.py:699
 msgid "Default connection"
 msgstr "Domyślne połączenie"
 
-#: src/vpn_doctor/ui/main_window.py:647
+#: src/vpn_doctor/ui/main_window.py:705
 msgid "Connect automatically"
 msgstr "Automatyczne łączenie"
 
-#: src/vpn_doctor/ui/main_window.py:648
+#: src/vpn_doctor/ui/main_window.py:706
 msgid "Connect the default connection when VPN Doctor starts"
 msgstr "Łączy domyślne połączenie przy uruchamianiu programu VPN Doctor"
 
-#: src/vpn_doctor/ui/main_window.py:667
+#: src/vpn_doctor/ui/main_window.py:725
 msgid "Approved gateways"
 msgstr "Zatwierdzone bramy"
 
-#: src/vpn_doctor/ui/main_window.py:669
+#: src/vpn_doctor/ui/main_window.py:727
 msgid ""
 "openfortivpn gateways users of this computer may connect to without an "
 "administrator password. Revoking one asks for that password."
@@ -1245,28 +1333,28 @@ msgstr ""
 "Bramy openfortivpn, z którymi użytkownicy tego komputera mogą się łączyć bez "
 "hasła administratora. Unieważnienie bramy wymaga tego hasła."
 
-#: src/vpn_doctor/ui/main_window.py:676
+#: src/vpn_doctor/ui/main_window.py:734
 msgid "No approved gateway yet"
 msgstr "Brak zatwierdzonych bram"
 
-#: src/vpn_doctor/ui/main_window.py:679
+#: src/vpn_doctor/ui/main_window.py:737
 #, python-brace-format
 msgid "Certificate: {pin}"
 msgstr "Certyfikat: {pin}"
 
-#: src/vpn_doctor/ui/main_window.py:680 src/vpn_doctor/ui/main_window.py:688
+#: src/vpn_doctor/ui/main_window.py:738 src/vpn_doctor/ui/main_window.py:746
 msgid "Revoke"
 msgstr "Unieważnij"
 
-#: src/vpn_doctor/ui/main_window.py:688
+#: src/vpn_doctor/ui/main_window.py:746
 msgid "Revoked"
 msgstr "Unieważniono"
 
-#: src/vpn_doctor/ui/main_window.py:698
+#: src/vpn_doctor/ui/main_window.py:756
 msgid "Saved secrets"
 msgstr "Zapisane sekrety"
 
-#: src/vpn_doctor/ui/main_window.py:700
+#: src/vpn_doctor/ui/main_window.py:758
 msgid ""
 "Passwords and PEM pass phrases of openfortivpn profiles, kept in the desktop "
 "keyring. NetworkManager connections keep theirs in GNOME Settings."
@@ -1274,15 +1362,15 @@ msgstr ""
 "Hasła i hasła PEM profili openfortivpn przechowywane w bazie kluczy pulpitu. "
 "Połączenia NetworkManagera przechowują swoje w Ustawieniach GNOME."
 
-#: src/vpn_doctor/ui/main_window.py:707
+#: src/vpn_doctor/ui/main_window.py:765
 msgid "Forget"
 msgstr "Zapomnij"
 
-#: src/vpn_doctor/ui/main_window.py:712
+#: src/vpn_doctor/ui/main_window.py:770
 msgid "Forgotten"
 msgstr "Zapomniano"
 
-#: src/vpn_doctor/ui/main_window.py:727
+#: src/vpn_doctor/ui/main_window.py:785
 msgid ""
 "Linux VPN troubleshooting assistant.\n"
 "Diagnose. Connect. Protect."
@@ -1290,19 +1378,15 @@ msgstr ""
 "Asystent rozwiązywania problemów z VPN w systemie Linux.\n"
 "Diagnozuj. Łącz. Chroń."
 
-#: src/vpn_doctor/ui/main_window.py:791
-msgid "Connections"
-msgstr "Połączenia"
-
-#: src/vpn_doctor/ui/main_window.py:793
+#: src/vpn_doctor/ui/main_window.py:873
 msgid "New VPN connection…"
 msgstr "Nowe połączenie VPN…"
 
-#: src/vpn_doctor/ui/main_window.py:794
+#: src/vpn_doctor/ui/main_window.py:874
 msgid "Reload connections"
 msgstr "Wczytuje ponownie połączenia"
 
-#: src/vpn_doctor/ui/main_window.py:811
+#: src/vpn_doctor/ui/main_window.py:890
 #, python-brace-format
 msgid "⚠ {count} network conflict: {first}"
 msgid_plural "⚠ {count} network conflicts: {first}"
@@ -1310,27 +1394,27 @@ msgstr[0] "⚠ {count} konflikt sieciowy: {first}"
 msgstr[1] "⚠ {count} konflikty sieciowe: {first}"
 msgstr[2] "⚠ {count} konfliktów sieciowych: {first}"
 
-#: src/vpn_doctor/ui/main_window.py:828
+#: src/vpn_doctor/ui/main_window.py:907
 msgid "Close"
 msgstr "Zamknij"
 
-#: src/vpn_doctor/ui/main_window.py:855
+#: src/vpn_doctor/ui/main_window.py:930
 msgid "Main menu"
 msgstr "Menu główne"
 
-#: src/vpn_doctor/ui/main_window.py:862
+#: src/vpn_doctor/ui/main_window.py:937
 msgid "Preferences"
 msgstr "Preferencje"
 
-#: src/vpn_doctor/ui/main_window.py:863
+#: src/vpn_doctor/ui/main_window.py:938
 msgid "Forget saved secrets of this connection"
 msgstr "Zapomina zapisane sekrety tego połączenia"
 
-#: src/vpn_doctor/ui/main_window.py:866
+#: src/vpn_doctor/ui/main_window.py:941
 msgid "About VPN Doctor"
 msgstr "O programie VPN Doctor"
 
-#: src/vpn_doctor/ui/main_window.py:889
+#: src/vpn_doctor/ui/main_window.py:960
 #, python-brace-format
 msgid ""
 "{name} is managed by NetworkManager: edit its secrets in GNOME Settings."
@@ -1338,16 +1422,16 @@ msgstr ""
 "Połączeniem {name} zarządza NetworkManager: jego sekrety można edytować w "
 "Ustawieniach GNOME."
 
-#: src/vpn_doctor/ui/main_window.py:894
+#: src/vpn_doctor/ui/main_window.py:965
 #, python-brace-format
 msgid "Saved secrets forgotten for {name}"
 msgstr "Zapomniano zapisane sekrety: {name}"
 
-#: src/vpn_doctor/ui/main_window.py:896
+#: src/vpn_doctor/ui/main_window.py:967
 msgid "The keyring is not reachable"
 msgstr "Baza kluczy jest nieosiągalna"
 
-#: src/vpn_doctor/ui/main_window.py:930
+#: src/vpn_doctor/ui/main_window.py:1001
 #, python-brace-format
 msgid "Skin {name}, line {line}: {error}"
 msgstr "Skórka {name}, wiersz {line}: {error}"
@@ -1462,3 +1546,9 @@ msgstr[2] "Skanowanie połączeń… znaleziono {count}"
 #: src/vpn_doctor/ui/view_models.py:135
 msgid "Ready. Diagnose. Connect. Protect."
 msgstr "Gotowe. Diagnozuj. Łącz. Chroń."
+
+#~ msgid "Open a connection"
+#~ msgstr "Otwórz połączenie"
+
+#~ msgid "Connections"
+#~ msgstr "Połączenia"

@@ -187,6 +187,22 @@
 
 ### Changed
 
+- GUI: every available connection gets its own tab at startup, the default
+  connection selected. The "+" menu now only creates a new connection or
+  reloads them; a reload opens tabs for new connections, brings back closed
+  tabs and closes the tab of a connection that disappeared (unless it is still
+  active).
+- GUI: tab titles carry a colored dot (green connected, orange in progress,
+  red failed) instead of text marks, and a tab whose VPN was already up when
+  VPN Doctor started says so in its log.
+- GUI: the NetworkManager connection editor (GTK3) opens in its dark variant
+  when the VPN Doctor window is dark, unless the user set `GTK_THEME`.
+- Latency checks: `diagnose` (CLI, `--json`, GUI) measures the latency to the
+  gateway (ping, or TCP connection time when ping is blocked) and, while
+  connected, through the tunnel, with a good / fair / poor verdict, jitter and
+  packet loss. The GUI logs them once when a connection comes up. Translated in
+  all seven languages.
+
 - openfortivpn "Could not authenticate to gateway" now has its own explanation:
   the gateway was reached and the client key loaded, so the gateway itself
   refused the login (wrong or expired password, locked account, revoked

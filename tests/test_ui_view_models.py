@@ -1,5 +1,11 @@
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
-from vpn_doctor.ui.view_models import ConnectionStatusViewModel, ConnectionTimer, format_elapsed
+from vpn_doctor.ui.view_models import (
+    ConnectionStatusViewModel,
+    ConnectionTimer,
+    editor_environment,
+    format_elapsed,
+    tab_changes,
+)
 
 
 def test_view_model_disconnected():
@@ -86,3 +92,24 @@ def test_boot_lines_report_real_checks():
     assert "NetworkManager… ONLINE" in lines
     assert "Keyring… UNAVAILABLE" in lines
     assert "Scanning connections… 4 found" in lines
+
+
+def test_tab_changes_opens_a_tab_per_connection():
+    assert tab_changes(["a", "b", "c"], [], set()) == (["a", "b", "c"], [])
+
+
+def test_tab_changes_reopens_closed_tabs_and_drops_removed_connections():
+    assert tab_changes(["a", "c"], ["a", "b"], set()) == (["c"], ["b"])
+
+
+def test_tab_changes_keeps_the_tab_of_an_active_removed_connection():
+    assert tab_changes(["a"], ["a", "b"], {"b"}) == ([], [])
+
+
+def test_editor_environment_follows_a_dark_window():
+    assert editor_environment(True, {}) == {"GTK_THEME": "Adwaita:dark"}
+
+
+def test_editor_environment_leaves_light_windows_and_user_themes_alone():
+    assert editor_environment(False, {}) == {}
+    assert editor_environment(True, {"GTK_THEME": "Arc-Dark"}) == {}

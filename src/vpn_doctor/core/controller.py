@@ -18,6 +18,15 @@ from vpn_doctor.backend.openfortivpn_process import OpenFortiVPNProcess
 from vpn_doctor.backend.process_runner import line_buffering_command
 from vpn_doctor.backend.registry import BackendRegistry
 from vpn_doctor.diagnostics.conflicts import collect_snapshot, find_conflicts
+from vpn_doctor.diagnostics.latency import (
+    LatencyResult,
+    interface_info,
+    measure_gateway,
+    measure_ping,
+    ppp_interfaces,
+    tunnel_target,
+)
+from vpn_doctor.diagnostics.latency import describe as describe_latency
 from vpn_doctor.diagnostics.rdp import DEFAULT_RDP_PORT, analyze_freerdp_log, probe_rdp
 from vpn_doctor.i18n import _
 from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport
@@ -33,6 +42,8 @@ from vpn_doctor.services.secret_service import (
 )
 from vpn_doctor.services.settings_service import SettingsService
 from vpn_doctor.services.theme_service import Theme, ThemeService
+
+UDP_VPN_TYPES = {"wireguard", "openvpn"}
 
 
 class ApplicationController:
@@ -160,7 +171,37 @@ class ApplicationController:
         return self.backend_manager.status(profile or self.default_profile())
 
     def diagnose_default_profile(self, profile: VPNProfile | None = None) -> DiagnosticReport:
-        return self.backend_manager.diagnose(profile or self.default_profile())
+        """Backend checks, then the latency to the gateway and through the tunnel."""
+        profile = profile or self.default_profile()
+        report = self.backend_manager.diagnose(profile)
+        return DiagnosticReport.from_items(report.summary, [*report.items, *self.latency_items(profile)])
+
+    def latency_items(self, profile: VPNProfile | None = None) -> list[DiagnosticItem]:
+        """Latency to the gateway and, while connected, to the other side of the tunnel."""
+        profile = profile or self.default_profile()
+        nm_backend = self.backend_manager.registry.get("networkmanager")
+        connected = self.backend_manager.status(profile).state == VPNConnectionState.CONNECTED
+
+        if profile.nm_uuid:
+            host, port = nm_backend.gateway(profile)
+            iface = nm_backend.tunnel_interface(profile) if connected else None
+        else:
+            host, port = profile.host, profile.port
+            links = ppp_interfaces() if connected else []
+            iface = links[0] if links else None
+
+        items = []
+        if host:
+            # WireGuard and OpenVPN usually listen on UDP: no TCP fallback.
+            tcp = profile.vpn_type not in UDP_VPN_TYPES
+            result = measure_gateway(host, port, tcp=tcp)
+            items.append(describe_latency(_("Gateway latency"), result, inside_tunnel=False))
+        if iface:
+            target = tunnel_target(*interface_info(iface))
+            if target:
+                result = measure_ping(target) or LatencyResult(target, "ping", 0, 0)
+                items.append(describe_latency(_("Tunnel latency"), result, inside_tunnel=True))
+        return items
 
     def stored_password(self, profile: VPNProfile | None = None) -> str | None:
         """Return the password remembered in the keyring."""
@@ -431,7 +472,7 @@ class ApplicationController:
 
     def _diagnose(self) -> int:
         profile = self.default_profile()
-        result = self.backend_manager.diagnose(profile)
+        result = self.diagnose_default_profile(profile)
         if self._json_output:
             self._emit({"profile": profile.name, "report": result.to_dict()})
         else:

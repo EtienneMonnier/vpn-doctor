@@ -3,8 +3,9 @@
 The module imports GTK lazily inside `run_ui()` so CLI tests and non-GNOME
 environments can import vpn_doctor without requiring PyGObject at import time.
 
-Layout: one tab per connection (several VPNs can run at once), a banner for
-conflicts between them, and a main menu (☰).
+Layout: one tab per available connection (several VPNs can run at once), a
+"+" menu to create or reload connections, a banner for conflicts between them,
+and a main menu (☰).
 
 Threading rule: backend callbacks (log lines) arrive on reader threads and
 blocking work (diagnostics, disconnect, conflict checks) runs on worker
@@ -18,6 +19,7 @@ docs/development/THEMES.md. A skin is a CSS file applied at user priority.
 from __future__ import annotations
 
 import logging
+import os
 import threading
 import time
 
@@ -27,7 +29,13 @@ from vpn_doctor.core.controller import ApplicationController
 from vpn_doctor.i18n import N_, _, ngettext
 from vpn_doctor.models.status import VPNConnectionState
 from vpn_doctor.services.theme_service import BUILTIN_ASSET_DIR
-from vpn_doctor.ui.view_models import ConnectionStatusViewModel, ConnectionTimer, boot_lines
+from vpn_doctor.ui.view_models import (
+    ConnectionStatusViewModel,
+    ConnectionTimer,
+    boot_lines,
+    editor_environment,
+    tab_changes,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -39,9 +47,21 @@ DEFAULT_TAGLINE = N_("Diagnose. Connect. Protect.")
 APP_ID = "io.github.vpndoctor.VPNDoctor"
 BOOT_LINE_MS = 220
 BOOT_HOLD_MS = 500
-TAB_MARKS = {
-    VPNConnectionState.CONNECTED: "●",
-    VPNConnectionState.FAILED: "✕",
+# States that end in CONNECTED when the user (or autoconnect) starts a tunnel.
+JUST_CONNECTING = {
+    VPNConnectionState.CONNECTING,
+    VPNConnectionState.AUTHENTICATING,
+    VPNConnectionState.DISCONNECTED,
+    VPNConnectionState.FAILED,
+}
+
+# Colored dot before a tab title (assets/status/*.svg); none when disconnected.
+TAB_INDICATORS = {
+    VPNConnectionState.CONNECTED: "connected",
+    VPNConnectionState.CONNECTING: "connecting",
+    VPNConnectionState.AUTHENTICATING: "connecting",
+    VPNConnectionState.DISCONNECTING: "connecting",
+    VPNConnectionState.FAILED: "failed",
 }
 
 
@@ -136,6 +156,9 @@ def run_ui() -> int:
             self.busy = False
             self.asked_prompt: str | None = None
             self.state = VPNConnectionState.DISCONNECTED
+            # The first refresh only reads the state: a tunnel already up at
+            # startup is not "just connected".
+            self.refreshed = False
 
             panels = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16, homogeneous=True)
             panels.append(self.build_status_card())
@@ -256,7 +279,20 @@ def run_ui() -> int:
 
         def refresh(self) -> None:
             status = controller.current_status(self.profile)
-            self.state = status.state
+            previous, self.state = self.state, status.state
+            if (
+                self.refreshed
+                and previous in JUST_CONNECTING
+                and status.state == VPNConnectionState.CONNECTED
+            ):
+                self.log_latency()
+            if not self.refreshed and status.state == VPNConnectionState.CONNECTED:
+                self.append_log(
+                    _("{name} was already connected before VPN Doctor started").format(
+                        name=self.profile.name
+                    )
+                )
+            self.refreshed = True
             view_model = ConnectionStatusViewModel.from_status(status)
             state_class = f"vd-{view_model.css_class}"
 
@@ -279,6 +315,21 @@ def run_ui() -> int:
                 self.asked_prompt = status.prompt
                 if status.prompt:
                     self.ask_prompt(status.prompt)
+
+        def log_latency(self) -> None:
+            """Measure the gateway and the tunnel once the connection is up."""
+            self.append_log(_("Measuring latency…"))
+
+            def done(result) -> None:
+                if isinstance(result, Exception):
+                    self.append_log(_("Latency measure failed: {error}").format(error=result))
+                    return
+                for item in result:
+                    self.append_log(f"{item.name}: {item.message}")
+                    if item.suggestion:
+                        self.append_log("      " + _("Suggestion: {text}").format(text=item.suggestion))
+
+            run_in_background(lambda: controller.latency_items(self.profile), done)
 
         def run_busy(self, work, on_done) -> None:
             self.busy = True
@@ -427,6 +478,7 @@ def run_ui() -> int:
             self.css_provider: Gtk.CssProvider | None = None
             self.conflicts = []
             self.checking_conflicts = False
+            self.indicator_icons = {}
 
             Gtk.IconTheme.get_for_display(self.get_display()).add_search_path(
                 str(BUILTIN_ASSET_DIR / "icons")
@@ -473,7 +525,7 @@ def run_ui() -> int:
             tab_bar.set_autohide(False)
             tab_bar.add_css_class("vd-tabs")
             self.open_menu_button = Gtk.MenuButton(label="+")
-            self.open_menu_button.set_tooltip_text(_("Open a connection"))
+            self.open_menu_button.set_tooltip_text(_("New or reload connections"))
             self.open_menu_button.add_css_class("vd-open-button")
             tab_bar.set_end_action_widget(self.open_menu_button)
 
@@ -572,7 +624,13 @@ def run_ui() -> int:
                     panel.append_log(_("No NetworkManager connection editor is installed"))
                 return
             try:
-                editor = Gio.Subprocess.new(command, Gio.SubprocessFlags.NONE)
+                # The editor is a GTK3 app: give it the dark variant when our window
+                # is dark, otherwise it opens light on top of a dark VPN Doctor.
+                launcher = Gio.SubprocessLauncher.new(Gio.SubprocessFlags.NONE)
+                dark = Adw.StyleManager.get_default().get_dark()
+                for name, value in editor_environment(dark, os.environ).items():
+                    launcher.setenv(name, value, True)
+                editor = launcher.spawnv(command)
             except GLib.Error as exc:
                 if panel is not None:
                     panel.append_log(_("Cannot open the connection editor: {error}").format(error=exc.message))
@@ -750,12 +808,34 @@ def run_ui() -> int:
             return panel
 
         def open_initial_tabs(self) -> None:
-            """Open the selected connection, plus every connection already active."""
-            self.open_tab(controller.default_profile())
+            """Open one tab per available connection and select the default one."""
             for profile in controller.profiles():
-                if controller.current_status(profile).state == VPNConnectionState.CONNECTED:
-                    self.open_tab(profile, select=False)
+                self.open_tab(profile, select=False)
+            self.open_tab(controller.default_profile())
             self.check_conflicts()
+
+        def sync_tabs(self) -> None:
+            """Match the tabs to the connections after a reload.
+
+            New connections get a tab, closed tabs come back, and the tab of a
+            connection that disappeared is closed unless it is still active.
+            """
+            profiles = controller.profiles()
+            panels = {panel.profile.name: panel for panel in self.panels()}
+            active = {
+                name
+                for name, panel in panels.items()
+                if panel.state != VPNConnectionState.DISCONNECTED
+            }
+            to_open, to_close = tab_changes(
+                [profile.name for profile in profiles], list(panels), active
+            )
+            for profile in profiles:
+                if profile.name in to_open:
+                    self.open_tab(profile, select=False)
+            for name in to_close:
+                if self.tab_view.get_n_pages() > 1:
+                    self.tab_view.close_page(self.tab_view.get_page(panels[name]))
 
         def on_tab_selected(self, *_args) -> None:
             page = self.tab_view.get_selected_page()
@@ -763,7 +843,7 @@ def run_ui() -> int:
                 controller.select_profile(page.get_child().profile.name)
 
         def on_close_page(self, tab_view, page) -> bool:
-            # Keep one tab. Closing a tab never disconnects: reopen it with "+".
+            # Keep one tab. Closing a tab never disconnects: "+" > Reload brings it back.
             tab_view.close_page_finish(page, tab_view.get_n_pages() > 1)
             return True  # handled here
 
@@ -771,28 +851,27 @@ def run_ui() -> int:
             for panel in self.panels():
                 panel.refresh()
                 page = self.tab_view.get_page(panel)
-                mark = TAB_MARKS.get(panel.state, "○")
-                page.set_title(f"{mark} {panel.profile.name}")
+                page.set_title(panel.profile.name)
+                page.set_indicator_icon(self.tab_indicator(panel.state))
                 page.set_loading(
                     panel.state in {VPNConnectionState.CONNECTING, VPNConnectionState.AUTHENTICATING}
                 )
             return GLib.SOURCE_CONTINUE
 
+        def tab_indicator(self, state):
+            name = TAB_INDICATORS.get(state)
+            if name is None:
+                return None
+            if name not in self.indicator_icons:
+                path = BUILTIN_ASSET_DIR / "status" / f"{name}.svg"
+                self.indicator_icons[name] = Gio.FileIcon.new(Gio.File.new_for_path(str(path)))
+            return self.indicator_icons[name]
+
         def populate_open_menu(self) -> None:
+            # Every connection already has its tab: "+" creates or reloads them.
             menu = Gio.Menu()
-            connections = Gio.Menu()
-            for profile in controller.profiles():
-                kind = profile.vpn_type or profile.backend
-                item = Gio.MenuItem.new(f"{profile.name} ({kind})", None)
-                item.set_action_and_target_value(
-                    "win.open-tab", GLib.Variant.new_string(profile.name)
-                )
-                connections.append_item(item)
-            menu.append_section(_("Connections"), connections)
-            tools = Gio.Menu()
-            tools.append(_("New VPN connection…"), "win.new-connection")
-            tools.append(_("Reload connections"), "win.reload-connections")
-            menu.append_section(None, tools)
+            menu.append(_("New VPN connection…"), "win.new-connection")
+            menu.append(_("Reload connections"), "win.reload-connections")
             self.open_menu_button.set_menu_model(menu)
 
         # -- conflicts -----------------------------------------------------------
@@ -831,10 +910,6 @@ def run_ui() -> int:
         # -- main menu -----------------------------------------------------------
 
         def build_main_menu(self) -> Gtk.MenuButton:
-            open_tab = Gio.SimpleAction.new("open-tab", GLib.VariantType.new("s"))
-            open_tab.connect("activate", self.on_open_tab)
-            self.add_action(open_tab)
-
             simple_actions = {
                 "preferences": self.show_preferences,
                 "new-connection": self.open_connection_editor,
@@ -867,13 +942,9 @@ def run_ui() -> int:
             menu.append_section(None, about)
             self.menu_button.set_menu_model(menu)
 
-        def on_open_tab(self, _action, value) -> None:
-            controller.select_profile(value.get_string())
-            self.open_tab(controller.default_profile())
-
         def reload_connections(self) -> None:
             controller.reload_profiles()
-            self.populate_open_menu()
+            self.sync_tabs()
 
         def current_panel(self) -> ConnectionPanel | None:
             page = self.tab_view.get_selected_page()
