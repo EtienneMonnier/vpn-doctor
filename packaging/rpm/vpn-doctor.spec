@@ -65,6 +65,8 @@ po/compile.sh %{buildroot}%{_datadir}/locale
 # The only code running as root (ADR-0012), with its polkit action.
 install -Dpm 0755 src/vpn_doctor/privileged_helper.py \
     %{buildroot}%{_libexecdir}/vpn-doctor/vpn-doctor-helper
+# The copy inside the Python package is only imported (tests, constants), never run.
+sed -i '1{/^#!/d}' %{buildroot}%{python3_sitelib}/vpn_doctor/privileged_helper.py
 install -Dpm 0644 data/io.github.vpndoctor.helper.policy \
     %{buildroot}%{_datadir}/polkit-1/actions/io.github.vpndoctor.helper.policy
 # Gateways approved by an administrator (ADR-0013), written by the helper.
@@ -94,7 +96,7 @@ appstreamcli validate --no-net %{buildroot}%{_metainfodir}/io.github.vpndoctor.V
 %{_libexecdir}/vpn-doctor/vpn-doctor-helper
 %{_datadir}/polkit-1/actions/io.github.vpndoctor.helper.policy
 %dir %{_sysconfdir}/vpn-doctor
-%ghost %config(noreplace) %{_sysconfdir}/vpn-doctor/gateways.json
+%ghost %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/vpn-doctor/gateways.json
 %{_datadir}/applications/io.github.vpndoctor.VPNDoctor.desktop
 %{_metainfodir}/io.github.vpndoctor.VPNDoctor.metainfo.xml
 %{_datadir}/icons/hicolor/*/apps/io.github.vpndoctor.VPNDoctor.png
