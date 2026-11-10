@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shlex
 import shutil
 import sys
 from collections.abc import Callable
@@ -27,9 +28,10 @@ from vpn_doctor.diagnostics.latency import (
     tunnel_target,
 )
 from vpn_doctor.diagnostics.latency import describe as describe_latency
+from vpn_doctor.diagnostics.ovpn_check import check_ovpn
 from vpn_doctor.diagnostics.rdp import DEFAULT_RDP_PORT, analyze_freerdp_log, probe_rdp
 from vpn_doctor.i18n import _
-from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport
+from vpn_doctor.models.diagnostic import DiagnosticItem, DiagnosticReport, DiagnosticSeverity
 from vpn_doctor.models.profile import VPNProfile
 from vpn_doctor.models.status import VPNConnectionState, VPNStatus
 from vpn_doctor.services.gateway_service import ApprovedGateway, GatewayService
@@ -407,6 +409,13 @@ class ApplicationController:
             ),
         )
 
+        check_ovpn_parser = subparsers.add_parser(
+            "check-ovpn",
+            help=_("Check an OpenVPN file (.ovpn) before importing it into NetworkManager"),
+            parents=[json_option],
+        )
+        check_ovpn_parser.add_argument("file", help=_("OpenVPN configuration file"))
+
         args = parser.parse_args(argv)
         self._json_output = args.json
 
@@ -464,6 +473,9 @@ class ApplicationController:
         if args.command == "rdp":
             return self._rdp(args.host, args.port, args.log)
 
+        if args.command == "check-ovpn":
+            return self._check_ovpn(args.file)
+
         if args.command == "gui":
             return self._gui()
 
@@ -520,6 +532,36 @@ class ApplicationController:
 
         success = report.success and (log_report is None or log_report.success)
         return 0 if success else 1
+
+    def _check_ovpn(self, file: str) -> int:
+        path = Path(file)
+        try:
+            items = check_ovpn(path)
+        except OSError as exc:
+            message = _("Cannot read {path}: {error}").format(path=file, error=exc.strerror)
+            return self._error(message, 2)
+        report = DiagnosticReport.from_items(_("OpenVPN file check"), items)
+        errors = [item for item in items if item.severity == DiagnosticSeverity.ERROR]
+        if self._json_output:
+            self._emit({"file": str(path), "report": report.to_dict()})
+        else:
+            print(report.summary + f": {path.name}")
+            icons = {
+                DiagnosticSeverity.ERROR: "FAIL",
+                DiagnosticSeverity.WARNING: "WARN",
+                DiagnosticSeverity.INFO: "NOTE",
+            }
+            for item in items:
+                icon = "OK" if item.success and item.name == _("Import") else icons[item.severity]
+                print(f"[{icon}] {item.name}: {item.message}")
+                if item.suggestion:
+                    print("      " + _("Suggestion: {text}").format(text=item.suggestion))
+            if not errors:
+                print()
+                print(_("Import it with: nmcli connection import type openvpn file {file}").format(
+                    file=shlex.quote(str(path))
+                ))
+        return 1 if errors else 0
 
     def _profiles(self) -> int:
         profiles = self.profiles()

@@ -121,6 +121,12 @@ for the system's crypto policy, expired certificates or a wrong clock, legacy
 `tls-crypt` keys, no common data cipher (BF-CBC) and compression pushed by the
 server.
 
+Before importing an OpenVPN file, `vpn-doctor check-ovpn client.ovpn` tells
+what NetworkManager will silently drop (`redirect-gateway`, `route-nopull`,
+`dhcp-option`...), what OpenVPN 2.7 and OpenSSL 3 will refuse (BF-CBC,
+`tls-remote`, compression, weak or expired certificates) and which referenced
+files are missing.
+
 ```bash
 vpn-doctor profiles
 vpn-doctor connect --profile "Office VPN" --wait

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vpn-doctor 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/EtienneMonnier/vpn-doctor/issues\n"
-"POT-Creation-Date: 2026-11-10 09:30+0100\n"
+"POT-Creation-Date: 2026-11-10 10:00+0100\n"
 "PO-Revision-Date: 2026-10-30 12:28+0100\n"
 "Last-Translator: Claude (AI-assisted)\n"
 "Language-Team: Polish\n"
@@ -96,7 +96,7 @@ msgid "Asking NetworkManager"
 msgstr "Odpytywanie NetworkManagera"
 
 #: src/vpn_doctor/backend/networkmanager.py:292
-#: src/vpn_doctor/core/controller.py:607 src/vpn_doctor/ui/main_window.py:184
+#: src/vpn_doctor/core/controller.py:649 src/vpn_doctor/ui/main_window.py:184
 #: src/vpn_doctor/ui/main_window.py:451 src/vpn_doctor/ui/view_models.py:81
 msgid "Disconnected"
 msgstr "Rozłączono"
@@ -201,97 +201,97 @@ msgstr "Proces zaplecza już działa"
 msgid "The backend process does not accept input"
 msgstr "Proces zaplecza nie przyjmuje danych wejściowych"
 
-#: src/vpn_doctor/core/controller.py:94
+#: src/vpn_doctor/core/controller.py:96
 #, python-brace-format
 msgid "Unknown profile: {name}"
 msgstr "Nieznany profil: {name}"
 
-#: src/vpn_doctor/core/controller.py:198
+#: src/vpn_doctor/core/controller.py:200
 msgid "Gateway latency"
 msgstr "Opóźnienie bramy"
 
-#: src/vpn_doctor/core/controller.py:203
+#: src/vpn_doctor/core/controller.py:205
 msgid "Tunnel latency"
 msgstr "Opóźnienie tunelu"
 
-#: src/vpn_doctor/core/controller.py:314
+#: src/vpn_doctor/core/controller.py:316
 msgid "Print one JSON object instead of text (for scripts and agents)"
 msgstr "Wypisuje jeden obiekt JSON zamiast tekstu (dla skryptów i agentów)"
 
-#: src/vpn_doctor/core/controller.py:316
+#: src/vpn_doctor/core/controller.py:318
 msgid "Show VPN Doctor version"
 msgstr "Wyświetla wersję programu VPN Doctor"
 
-#: src/vpn_doctor/core/controller.py:329
+#: src/vpn_doctor/core/controller.py:331
 msgid "Profile or NetworkManager connection name (default: the first one)"
 msgstr "Nazwa profilu lub połączenia NetworkManagera (domyślnie: pierwsze)"
 
-#: src/vpn_doctor/core/controller.py:332
+#: src/vpn_doctor/core/controller.py:334
 msgid "Run basic diagnostics"
 msgstr "Uruchamia podstawową diagnostykę"
 
-#: src/vpn_doctor/core/controller.py:333
+#: src/vpn_doctor/core/controller.py:335
 msgid "List VPN connections and profiles"
 msgstr "Wyświetla listę połączeń VPN i profili"
 
-#: src/vpn_doctor/core/controller.py:334
+#: src/vpn_doctor/core/controller.py:336
 msgid "Show connection status"
 msgstr "Wyświetla stan połączenia"
 
-#: src/vpn_doctor/core/controller.py:335
+#: src/vpn_doctor/core/controller.py:337
 msgid "Launch the experimental GTK UI"
 msgstr "Uruchamia eksperymentalny interfejs GTK"
 
-#: src/vpn_doctor/core/controller.py:339
+#: src/vpn_doctor/core/controller.py:341
 msgid "Connect a profile"
 msgstr "Łączy profil"
 
-#: src/vpn_doctor/core/controller.py:345
+#: src/vpn_doctor/core/controller.py:347
 msgid "Print the backend command without starting a VPN process"
 msgstr "Wypisuje polecenie zaplecza bez uruchamiania procesu VPN"
 
-#: src/vpn_doctor/core/controller.py:350
+#: src/vpn_doctor/core/controller.py:352
 msgid "Wait until the backend reports connected, failed or timeout"
 msgstr "Czeka, aż zaplecze zgłosi połączenie, błąd lub przekroczenie czasu"
 
-#: src/vpn_doctor/core/controller.py:356
+#: src/vpn_doctor/core/controller.py:358
 msgid "Maximum wait time in seconds when --wait is used"
 msgstr "Maksymalny czas oczekiwania w sekundach przy użyciu --wait"
 
-#: src/vpn_doctor/core/controller.py:361
+#: src/vpn_doctor/core/controller.py:363
 msgid "Disconnect the active VPN session"
 msgstr "Rozłącza aktywną sesję VPN"
 
-#: src/vpn_doctor/core/controller.py:367
+#: src/vpn_doctor/core/controller.py:369
 msgid "List the gateways approved on this computer"
 msgstr "Wyświetla listę bram zatwierdzonych na tym komputerze"
 
-#: src/vpn_doctor/core/controller.py:372
+#: src/vpn_doctor/core/controller.py:374
 msgid "Approve the gateway of a profile (administrator password)"
 msgstr "Zatwierdza bramę profilu (hasło administratora)"
 
-#: src/vpn_doctor/core/controller.py:377
+#: src/vpn_doctor/core/controller.py:379
 msgid "Revoke an approved gateway (administrator password)"
 msgstr "Unieważnia zatwierdzoną bramę (hasło administratora)"
 
-#: src/vpn_doctor/core/controller.py:384
+#: src/vpn_doctor/core/controller.py:386
 msgid ""
 "Detect route and DNS conflicts between active VPNs and the local network"
 msgstr "Wykrywa konflikty tras i DNS między aktywnymi VPN a siecią lokalną"
 
-#: src/vpn_doctor/core/controller.py:390
+#: src/vpn_doctor/core/controller.py:392
 msgid "Remove the secrets remembered in the keyring for a profile"
 msgstr "Usuwa sekrety profilu zapamiętane w bazie kluczy"
 
-#: src/vpn_doctor/core/controller.py:396
+#: src/vpn_doctor/core/controller.py:398
 msgid "Diagnose a Remote Desktop server reached through the VPN"
 msgstr "Diagnozuje serwer pulpitu zdalnego osiągany przez VPN"
 
-#: src/vpn_doctor/core/controller.py:399
+#: src/vpn_doctor/core/controller.py:401
 msgid "RDP server name or address"
 msgstr "Nazwa lub adres serwera RDP"
 
-#: src/vpn_doctor/core/controller.py:405
+#: src/vpn_doctor/core/controller.py:407
 msgid ""
 "FreeRDP/Remmina log to explain, '-' for stdin (e.g. journalctl --user -b -o "
 "cat | vpn-doctor rdp HOST --log -)"
@@ -299,72 +299,96 @@ msgstr ""
 "Dziennik FreeRDP/Remmina do wyjaśnienia, „-” oznacza standardowe wejście "
 "(np. journalctl --user -b -o cat | vpn-doctor rdp HOST --log -)"
 
-#: src/vpn_doctor/core/controller.py:451
+#: src/vpn_doctor/core/controller.py:414
+msgid "Check an OpenVPN file (.ovpn) before importing it into NetworkManager"
+msgstr "Sprawdza plik OpenVPN (.ovpn) przed zaimportowaniem go do NetworkManagera"
+
+#: src/vpn_doctor/core/controller.py:417
+#
+msgid "OpenVPN configuration file"
+msgstr "Plik konfiguracyjny OpenVPN"
+
+#: src/vpn_doctor/core/controller.py:460
 msgid "Expected HOST:PORT"
 msgstr "Oczekiwano HOST:PORT"
 
-#: src/vpn_doctor/core/controller.py:460
+#: src/vpn_doctor/core/controller.py:469
 msgid "The keyring is not reachable: install PyGObject and libsecret."
 msgstr ""
 "Baza kluczy jest nieosiągalna: należy zainstalować PyGObject i libsecret."
 
-#: src/vpn_doctor/core/controller.py:462
+#: src/vpn_doctor/core/controller.py:471
 #, python-brace-format
 msgid "Secrets forgotten for {name}"
 msgstr "Zapomniano sekrety: {name}"
 
-#: src/vpn_doctor/core/controller.py:483 src/vpn_doctor/ui/main_window.py:906
+#: src/vpn_doctor/core/controller.py:495 src/vpn_doctor/ui/main_window.py:906
 msgid "Network conflicts"
 msgstr "Konflikty sieciowe"
 
-#: src/vpn_doctor/core/controller.py:487
+#: src/vpn_doctor/core/controller.py:499
 msgid "No conflict between active VPNs and the local network."
 msgstr "Brak konfliktów między aktywnymi VPN a siecią lokalną."
 
-#: src/vpn_doctor/core/controller.py:503
+#: src/vpn_doctor/core/controller.py:515 src/vpn_doctor/core/controller.py:541
 #, python-brace-format
 msgid "Cannot read {path}: {error}"
 msgstr "Nie można odczytać {path}: {error}"
 
-#: src/vpn_doctor/core/controller.py:504
+#: src/vpn_doctor/core/controller.py:516
 msgid "RDP client log analysis"
 msgstr "Analiza dziennika klienta RDP"
 
-#: src/vpn_doctor/core/controller.py:532
+#: src/vpn_doctor/core/controller.py:543
+msgid "OpenVPN file check"
+msgstr "Sprawdzenie pliku OpenVPN"
+
+#: src/vpn_doctor/core/controller.py:555
+#: src/vpn_doctor/diagnostics/ovpn_check.py:228
+msgid "Import"
+msgstr "Import"
+
+#: src/vpn_doctor/core/controller.py:558 src/vpn_doctor/core/controller.py:682
+#: src/vpn_doctor/core/controller.py:690 src/vpn_doctor/ui/main_window.py:330
+#: src/vpn_doctor/ui/main_window.py:467
+#, python-brace-format
+msgid "Suggestion: {text}"
+msgstr "Sugestia: {text}"
+
+#: src/vpn_doctor/core/controller.py:561
+#, python-brace-format
+msgid "Import it with: nmcli connection import type openvpn file {file}"
+msgstr "Należy go zaimportować poleceniem: nmcli connection import type openvpn file {file}"
+
+#: src/vpn_doctor/core/controller.py:574
 #, python-brace-format
 msgid "- {name} ({vpn_type} via NetworkManager)"
 msgstr "- {name} ({vpn_type} przez NetworkManagera)"
 
-#: src/vpn_doctor/core/controller.py:562
+#: src/vpn_doctor/core/controller.py:604
 msgid "The privileged helper is not installed: gateways need no approval."
 msgstr ""
 "Uprzywilejowany program pomocniczy nie jest zainstalowany: bramy nie "
 "wymagają zatwierdzenia."
 
-#: src/vpn_doctor/core/controller.py:564 src/vpn_doctor/ui/main_window.py:401
+#: src/vpn_doctor/core/controller.py:606 src/vpn_doctor/ui/main_window.py:401
 #: src/vpn_doctor/ui/main_window.py:736
 msgid "system CA"
 msgstr "systemowy CA"
 
-#: src/vpn_doctor/core/controller.py:565
+#: src/vpn_doctor/core/controller.py:607
 #, python-brace-format
 msgid "- {gateway} (certificate: {pin})"
 msgstr "- {gateway} (certyfikat: {pin})"
 
-#: src/vpn_doctor/core/controller.py:589
+#: src/vpn_doctor/core/controller.py:631
 #, python-brace-format
 msgid "Backend process error: {error}"
 msgstr "Błąd procesu zaplecza: {error}"
 
-#: src/vpn_doctor/core/controller.py:602
+#: src/vpn_doctor/core/controller.py:644
 msgid "Connection started"
 msgstr "Rozpoczęto połączenie"
-
-#: src/vpn_doctor/core/controller.py:640 src/vpn_doctor/core/controller.py:648
-#: src/vpn_doctor/ui/main_window.py:330 src/vpn_doctor/ui/main_window.py:467
-#, python-brace-format
-msgid "Suggestion: {text}"
-msgstr "Sugestia: {text}"
 
 #: src/vpn_doctor/diagnostics/conflicts.py:127
 msgid "Two full tunnels"
@@ -517,6 +541,453 @@ msgid ""
 msgstr ""
 "Wolna lub niestabilna droga do bramy: sprawdź najpierw własne połączenie z "
 "Internetem (Wi-Fi, dane komórkowe), zanim obwinisz VPN."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:211
+msgid "File"
+msgstr "Plik"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:211
+msgid "This file is too large to be an OpenVPN configuration."
+msgstr "Ten plik jest zbyt duży, aby był konfiguracją OpenVPN."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:230
+msgid "Nothing in this file should prevent NetworkManager from using it."
+msgstr "Nic w tym pliku nie powinno przeszkodzić NetworkManagerowi w jego użyciu."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:242
+#: src/vpn_doctor/diagnostics/ovpn_check.py:252
+msgid "Damaged file"
+msgstr "Uszkodzony plik"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:244
+#, python-brace-format
+msgid "The <{tag}> block is never closed: everything after it is ignored."
+msgstr "Blok <{tag}> nie jest nigdy zamknięty: wszystko po nim jest ignorowane."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:246
+#, python-brace-format
+msgid "Add the missing </{tag}> line, or ask for the file again."
+msgstr "Należy dodać brakujący wiersz </{tag}> lub poprosić ponownie o plik."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:254
+#, python-brace-format
+msgid ""
+"Lines {lines} cannot belong to an OpenVPN file (merge conflict markers, "
+"stray closing tags or file names). They are ignored."
+msgstr "Wiersze {lines} nie mogą należeć do pliku OpenVPN (znaczniki konfliktu scalania, zbędne znaczniki zamykające lub nazwy plików). Są ignorowane."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:257
+msgid ""
+"Check these lines: part of the configuration may be missing or mixed up."
+msgstr "Należy sprawdzić te wiersze: części konfiguracji może brakować lub może być pomieszana."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:261
+#
+msgid "Server"
+msgstr "Serwer"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:262
+msgid ""
+"The file has no `remote` line: it does not say which server to connect to."
+msgstr "Plik nie ma wiersza `remote`: nie określa, z którym serwerem się połączyć."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:263
+msgid "Ask the VPN provider for the client configuration file."
+msgstr "Należy poprosić dostawcę VPN o plik konfiguracyjny klienta."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:267
+msgid "Static key"
+msgstr "Klucz statyczny"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:269
+msgid ""
+"The file uses a static key (`secret`) instead of certificates. OpenVPN 2.7 "
+"deprecates this mode and refuses its weak ciphers."
+msgstr "Plik używa klucza statycznego (`secret`) zamiast certyfikatów. OpenVPN 2.7 uznaje ten tryb za przestarzały i odrzuca jego słabe szyfry."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:272
+msgid ""
+"Ask the VPN administrator for a configuration with certificates (TLS mode)."
+msgstr "Należy poprosić administratora VPN o konfigurację z certyfikatami (tryb TLS)."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:281
+#
+msgid "Removed option"
+msgstr "Usunięta opcja"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:283
+msgid ""
+"`tls-remote` was removed from OpenVPN 2.4. NetworkManager imports it, but "
+"OpenVPN refuses to start with it."
+msgstr "Opcja `tls-remote` została usunięta w OpenVPN 2.4. NetworkManager ją importuje, ale OpenVPN odmawia uruchomienia z nią."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:287
+msgid ""
+"Replace it with `verify-x509-name <server name> name`, or set the server "
+"name in the TLS authentication settings of the connection after import."
+msgstr "Należy ją zastąpić przez `verify-x509-name <server name> name` lub po imporcie ustawić nazwę serwera w ustawieniach uwierzytelniania TLS połączenia."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:293
+msgid "Deprecated option"
+msgstr "Przestarzała opcja"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:294
+msgid ""
+"`ns-cert-type` is deprecated and checks an obsolete certificate extension."
+msgstr "Opcja `ns-cert-type` jest przestarzała i sprawdza nieaktualne rozszerzenie certyfikatu."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:295
+msgid "Replace it with `remote-cert-tls server`."
+msgstr "Należy ją zastąpić przez `remote-cert-tls server`."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:316
+#, python-brace-format
+msgid ""
+"{file} is next to the configuration: replace the path with just `{file}` in "
+"the `{option}` line before importing."
+msgstr "{file} znajduje się obok konfiguracji: przed importem należy zastąpić ścieżkę samą nazwą `{file}` w wierszu `{option}`."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:321
+#, python-brace-format
+msgid ""
+"Put the file next to the .ovpn file and use just its name in the `{option}` "
+"line, or ask the VPN provider for a configuration with inline certificates."
+msgstr "Należy umieścić plik obok pliku .ovpn i użyć samej jego nazwy w wierszu `{option}` lub poprosić dostawcę VPN o konfigurację z certyfikatami osadzonymi w pliku."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:326
+msgid "Missing file"
+msgstr "Brakujący plik"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:328
+#, python-brace-format
+msgid ""
+"`{option}` points to {file}, which does not exist. NetworkManager imports "
+"the path anyway and the connection will fail."
+msgstr "`{option}` wskazuje na {file}, który nie istnieje. NetworkManager i tak importuje ścieżkę, a połączenie się nie powiedzie."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:347
+#: src/vpn_doctor/diagnostics/ovpn_check.py:359
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:167
+msgid "Data cipher"
+msgstr "Szyfrowanie danych"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:349
+#, python-brace-format
+msgid ""
+"The file asks for {ciphers}, which OpenVPN can no longer use with OpenSSL 3: "
+"these old 64-bit block ciphers are only in its legacy provider."
+msgstr "Plik wymaga {ciphers}, których OpenVPN nie może już używać z OpenSSL 3: te stare szyfry o 64-bitowych blokach są dostępne tylko w jego dostawcy legacy."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:353
+msgid ""
+"Ask the VPN provider to enable AES-256-GCM on the server and remove the old "
+"cipher from the file."
+msgstr "Należy poprosić dostawcę VPN o włączenie AES-256-GCM na serwerze i usunąć stary szyfr z pliku."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:361
+#, python-brace-format
+msgid ""
+"The file asks for {ciphers}: triple DES still works but is deprecated (64-"
+"bit blocks, vulnerable to SWEET32 on long sessions)."
+msgstr "Plik wymaga {ciphers}: potrójny DES nadal działa, ale jest przestarzały (bloki 64-bitowe, podatność na SWEET32 przy długich sesjach)."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:364
+msgid "Ask the VPN provider to enable AES-256-GCM on the server."
+msgstr "Należy poprosić dostawcę VPN o włączenie AES-256-GCM na serwerze."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:369
+#
+msgid "Packet authentication"
+msgstr "Uwierzytelnianie pakietów"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:370
+#, python-brace-format
+msgid "The file authenticates packets with {digest}, which is weak."
+msgstr "Plik uwierzytelnia pakiety za pomocą {digest}, co jest słabe."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:373
+msgid ""
+"Ask the VPN provider to use SHA256 or an AEAD cipher such as AES-256-GCM."
+msgstr "Należy poprosić dostawcę VPN o użycie SHA256 lub szyfru AEAD, takiego jak AES-256-GCM."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:387
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:181
+msgid "Compression"
+msgstr "Kompresja"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:389
+#
+msgid ""
+"The file turns compression on. Recent OpenVPN versions refuse it by default "
+"because compressing encrypted traffic can leak its content (VORACLE); if the "
+"server insists, the connection fails."
+msgstr "Plik włącza kompresję. Nowsze wersje OpenVPN domyślnie ją odrzucają, ponieważ kompresja zaszyfrowanego ruchu może ujawnić jego treść (VORACLE); jeśli serwer jej wymaga, połączenie się nie powiedzie."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:394
+#
+msgid ""
+"Ask the VPN provider to disable compression. Removing `comp-lzo` / "
+"`compress` from the file only works if the server does not require it."
+msgstr "Należy poprosić dostawcę VPN o wyłączenie kompresji. Usunięcie `comp-lzo` / `compress` z pliku działa tylko wtedy, gdy serwer jej nie wymaga."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:407
+#
+msgid "Server identity"
+msgstr "Tożsamość serwera"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:409
+msgid ""
+"The file never checks that the server certificate is a server certificate "
+"(`remote-cert-tls server`): another client of the same VPN could impersonate "
+"the server."
+msgstr "Plik nigdy nie sprawdza, czy certyfikat serwera jest certyfikatem serwera (`remote-cert-tls server`): inny klient tej samej sieci VPN mógłby podszyć się pod serwer."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:413
+msgid "Add `remote-cert-tls server` to the file before importing it."
+msgstr "Przed importem należy dodać `remote-cert-tls server` do pliku."
+
+#
+#: src/vpn_doctor/diagnostics/ovpn_check.py:424
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:153
+msgid "TLS key"
+msgstr "Klucz TLS"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:426
+msgid ""
+"The file uses a `tls-auth` key without a key direction. Most servers expect "
+"1 on clients; with the wrong direction, the server never answers."
+msgstr "Plik używa klucza `tls-auth` bez kierunku klucza. Większość serwerów oczekuje 1 po stronie klientów; przy złym kierunku serwer nigdy nie odpowiada."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:429
+msgid "Add `key-direction 1` to the file, unless the provider says otherwise."
+msgstr "Należy dodać `key-direction 1` do pliku, chyba że dostawca zaleca inaczej."
+
+#
+#: src/vpn_doctor/diagnostics/ovpn_check.py:434
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:140
+msgid "TLS version"
+msgstr "Wersja TLS"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:436
+#, python-brace-format
+msgid "The file limits TLS to version {version}, which the system refuses."
+msgstr "Plik ogranicza TLS do wersji {version}, którą system odrzuca."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:438
+msgid ""
+"Remove `tls-version-max` and ask the provider to enable TLS 1.2 or newer."
+msgstr "Należy usunąć `tls-version-max` i poprosić dostawcę o włączenie TLS 1.2 lub nowszego."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:448
+msgid ""
+"`redirect-gateway` is ignored by NetworkManager: unless the server pushes "
+"it, only the VPN's own networks go through the tunnel, not all traffic."
+msgstr "NetworkManager ignoruje `redirect-gateway`: jeśli serwer tego nie wymusi, przez tunel przechodzą tylko sieci samej VPN, a nie cały ruch."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:452
+msgid ""
+"After import, check that \"Use this connection only for resources on its "
+"network\" is off in the IPv4 and IPv6 settings, then verify your public "
+"address once connected."
+msgstr "Po imporcie należy sprawdzić, czy opcja \"Używanie tego połączenia tylko dla zasobów w jej sieci\" jest wyłączona w ustawieniach IPv4 i IPv6, a po połączeniu zweryfikować swój adres publiczny."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:459
+msgid ""
+"`route-nopull` is ignored by NetworkManager: the routes pushed by the server "
+"are applied anyway."
+msgstr "NetworkManager ignoruje `route-nopull`: trasy przesłane przez serwer i tak są stosowane."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:463
+msgid ""
+"After import, turn on \"Ignore automatically obtained routes\" in the IPv4 "
+"routes settings of the connection."
+msgstr "Po imporcie należy włączyć \"Ignorowanie automatycznie uzyskanych tras\" w ustawieniach tras IPv4 połączenia."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:469
+msgid ""
+"`pull-filter` is ignored by NetworkManager: settings the file wanted to "
+"refuse from the server (routes, DNS...) are applied anyway."
+msgstr "NetworkManager ignoruje `pull-filter`: ustawienia, które plik miał odrzucać z serwera (trasy, DNS...), i tak są stosowane."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:473
+msgid ""
+"After import, ignore automatic routes or DNS in the IPv4 and IPv6 settings "
+"if that was the goal."
+msgstr "Jeśli taki był cel, po imporcie należy zignorować automatyczne trasy lub DNS w ustawieniach IPv4 i IPv6."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:479
+msgid ""
+"`dhcp-option` in the file is ignored by NetworkManager: only the DNS servers "
+"pushed by the VPN server are used."
+msgstr "NetworkManager ignoruje `dhcp-option` w pliku: używane są tylko serwery DNS przesłane przez serwer VPN."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:482
+msgid ""
+"After import, add the DNS servers in the IPv4 settings of the connection."
+msgstr "Po imporcie należy dodać serwery DNS w ustawieniach IPv4 połączenia."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:486
+msgid ""
+"`ncp-ciphers` is the old name of `data-ciphers` (renamed in OpenVPN 2.5) and "
+"NetworkManager ignores it: the default data ciphers are used instead."
+msgstr "`ncp-ciphers` to stara nazwa `data-ciphers` (zmieniona w OpenVPN 2.5) i NetworkManager ją ignoruje: zamiast tego używane są domyślne szyfry danych."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:489
+msgid "Rename `ncp-ciphers` to `data-ciphers` in the file before importing."
+msgstr "Przed importem należy zmienić w pliku `ncp-ciphers` na `data-ciphers`."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:493
+msgid ""
+"`route-ipv6` is ignored by NetworkManager: these IPv6 routes are not added."
+msgstr "NetworkManager ignoruje `route-ipv6`: te trasy IPv6 nie są dodawane."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:495
+msgid ""
+"After import, add the IPv6 routes in the IPv6 settings of the connection."
+msgstr "Po imporcie należy dodać trasy IPv6 w ustawieniach IPv6 połączenia."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:499
+msgid ""
+"`remote-cert-eku` is ignored by NetworkManager: this check of the server "
+"certificate is lost."
+msgstr "NetworkManager ignoruje `remote-cert-eku`: to sprawdzenie certyfikatu serwera zostaje utracone."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:503
+msgid ""
+"Make sure `remote-cert-tls server` or `verify-x509-name` is also in the "
+"file, so the server is still verified."
+msgstr "Należy upewnić się, że w pliku jest także `remote-cert-tls server` lub `verify-x509-name`, aby serwer był nadal weryfikowany."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:511
+#: src/vpn_doctor/diagnostics/ovpn_check.py:521
+#
+msgid "Ignored by NetworkManager"
+msgstr "Ignorowane przez NetworkManagera"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:524
+#, python-brace-format
+msgid ""
+"NetworkManager does not import these options: {options}. Check that none of "
+"them matters for this VPN."
+msgstr "NetworkManager nie importuje tych opcji: {options}. Należy sprawdzić, czy żadna z nich nie ma znaczenia dla tej sieci VPN."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:531
+msgid "Password in the file"
+msgstr "Hasło w pliku"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:533
+msgid ""
+"The file contains a user name and a password in clear text. NetworkManager "
+"does not import them, but anyone who can read this file can."
+msgstr "Plik zawiera nazwę użytkownika i hasło jawnym tekstem. NetworkManager ich nie importuje, ale może je odczytać każdy, kto ma dostęp do tego pliku."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:537
+msgid ""
+"Enter the password when NetworkManager asks for it, then delete this copy of "
+"the file or remove the <auth-user-pass> block from it."
+msgstr "Należy wpisać hasło, gdy NetworkManager o nie poprosi, a następnie usunąć tę kopię pliku lub usunąć z niej blok <auth-user-pass>."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:543
+#
+msgid "Password"
+msgstr "Hasło"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:546
+msgid ""
+"The password file named by `auth-user-pass` is not imported: NetworkManager "
+"asks for the password and keeps it in the keyring."
+msgstr "Plik z hasłem wskazany przez `auth-user-pass` nie jest importowany: NetworkManager prosi o hasło i przechowuje je w bazie kluczy."
+
+#
+#: src/vpn_doctor/diagnostics/ovpn_check.py:582
+#
+msgid "Old certificates"
+msgstr "Stare certyfikaty"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:585
+#, python-brace-format
+msgid ""
+"`{option}` also contains expired or weak certificates next to valid ones. "
+"OpenVPN uses the valid ones, so this is harmless."
+msgstr "`{option}` zawiera także wygasłe lub słabe certyfikaty obok ważnych. OpenVPN używa ważnych, więc jest to nieszkodliwe."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:600
+#, python-brace-format
+msgid "`{option}` certificate {subject}"
+msgstr "Certyfikat `{option}` {subject}"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:603
+#
+msgid "Expired certificate"
+msgstr "Wygasły certyfikat"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:604
+#, python-brace-format
+msgid "{label} expired on {date}."
+msgstr "{label} wygasł {date}."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:605
+msgid "Ask the VPN provider for an up-to-date configuration."
+msgstr "Należy poprosić dostawcę VPN o aktualną konfigurację."
+
+#
+#: src/vpn_doctor/diagnostics/ovpn_check.py:609
+#
+msgid "Certificate not valid yet"
+msgstr "Certyfikat jeszcze nieważny"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:610
+#, python-brace-format
+msgid "{label} is only valid from {date}."
+msgstr "{label} jest ważny dopiero od {date}."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:613
+#
+msgid "Check the date and time of this computer."
+msgstr "Należy sprawdzić datę i godzinę tego komputera."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:617
+#
+msgid "Certificate expires soon"
+msgstr "Certyfikat wkrótce wygaśnie"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:618
+#, python-brace-format
+msgid "{label} expires on {date}."
+msgstr "{label} wygasa {date}."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:619
+msgid "Ask the VPN provider when it will be renewed."
+msgstr "Należy zapytać dostawcę VPN, kiedy zostanie odnowiony."
+
+#
+#: src/vpn_doctor/diagnostics/ovpn_check.py:623
+#: src/vpn_doctor/diagnostics/ovpn_check.py:634
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:101
+msgid "Weak certificate"
+msgstr "Słaby certyfikat"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:625
+#, python-brace-format
+msgid ""
+"{label} uses a {bits}-bit {type} key, which the system's cryptographic "
+"policy refuses (2048 bits minimum)."
+msgstr "{label} używa klucza {type} o długości {bits} bitów, który polityka kryptograficzna systemu odrzuca (minimum 2048 bitów)."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:628
+msgid "Ask the VPN provider for new certificates (RSA 2048 bits or more)."
+msgstr "Należy poprosić dostawcę VPN o nowe certyfikaty (RSA 2048 bitów lub więcej)."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:636
+#, python-brace-format
+msgid ""
+"{label} is signed with {algorithm}, which the system's cryptographic policy "
+"refuses."
+msgstr "{label} jest podpisany algorytmem {algorithm}, który polityka kryptograficzna systemu odrzuca."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:639
+msgid "Ask the VPN provider for certificates signed with SHA-256."
+msgstr "Należy poprosić dostawcę VPN o certyfikaty podpisane SHA-256."
 
 #: src/vpn_doctor/diagnostics/rdp.py:40
 msgid "standard RDP security"
@@ -958,16 +1429,13 @@ msgid "Enter the private key password again in the connection settings."
 msgstr ""
 "Należy ponownie wpisać hasło klucza prywatnego w ustawieniach połączenia."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:101
-#
-msgid "Weak certificate"
-msgstr "Słaby certyfikat"
-
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:103
 msgid ""
 "A certificate of this VPN uses a key or a signature that the system's "
 "cryptographic policy refuses (RSA shorter than 2048 bits, SHA-1 or MD5)."
-msgstr "Certyfikat tej sieci VPN używa klucza lub podpisu, które polityka kryptograficzna systemu odrzuca (RSA krótszy niż 2048 bitów, SHA-1 lub MD5)."
+msgstr ""
+"Certyfikat tej sieci VPN używa klucza lub podpisu, które polityka "
+"kryptograficzna systemu odrzuca (RSA krótszy niż 2048 bitów, SHA-1 lub MD5)."
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:107
 msgid ""
@@ -975,10 +1443,14 @@ msgid ""
 "SHA-256). As a temporary workaround on Fedora or RHEL, an administrator can "
 "relax the policy, e.g. `update-crypto-policies --set DEFAULT:SHA1`; this "
 "weakens the whole system."
-msgstr "Należy poprosić administratora VPN o nowe certyfikaty (RSA 2048 bitów lub więcej, SHA-256). Tymczasowo w Fedorze lub RHEL administrator może złagodzić politykę, np. `update-crypto-policies --set DEFAULT:SHA1`; osłabia to cały system."
+msgstr ""
+"Należy poprosić administratora VPN o nowe certyfikaty (RSA 2048 bitów lub "
+"więcej, SHA-256). Tymczasowo w Fedorze lub RHEL administrator może złagodzić "
+"politykę, np. `update-crypto-policies --set DEFAULT:SHA1`; osłabia to cały "
+"system."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:115
 #
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:115
 msgid "Certificate dates"
 msgstr "Daty certyfikatu"
 
@@ -986,16 +1458,21 @@ msgstr "Daty certyfikatu"
 msgid ""
 "A certificate of this VPN (the server's, its authority's or yours) has "
 "expired or is not valid yet, or the clock of this computer is wrong."
-msgstr "Certyfikat tej sieci VPN (serwera, jego urzędu certyfikacji lub własny) wygasł lub jeszcze nie jest ważny albo zegar tego komputera jest nieprawidłowy."
+msgstr ""
+"Certyfikat tej sieci VPN (serwera, jego urzędu certyfikacji lub własny) "
+"wygasł lub jeszcze nie jest ważny albo zegar tego komputera jest "
+"nieprawidłowy."
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:121
 msgid ""
 "Check the date and time of this computer. If they are right, ask the VPN "
 "administrator to renew the certificate."
-msgstr "Należy sprawdzić datę i godzinę tego komputera. Jeśli są poprawne, należy poprosić administratora VPN o odnowienie certyfikatu."
+msgstr ""
+"Należy sprawdzić datę i godzinę tego komputera. Jeśli są poprawne, należy "
+"poprosić administratora VPN o odnowienie certyfikatu."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:127
 #
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:127
 msgid "Certificate file"
 msgstr "Plik certyfikatu"
 
@@ -1003,60 +1480,64 @@ msgstr "Plik certyfikatu"
 msgid ""
 "The PKCS#12 (.p12) file could not be opened: either its password is wrong, "
 "or it uses an old encryption (RC2, 3DES) that OpenSSL 3 no longer reads."
-msgstr "Nie można otworzyć pliku PKCS#12 (.p12): albo hasło jest nieprawidłowe, albo plik używa starego szyfrowania (RC2, 3DES), którego OpenSSL 3 już nie odczytuje."
+msgstr ""
+"Nie można otworzyć pliku PKCS#12 (.p12): albo hasło jest nieprawidłowe, albo "
+"plik używa starego szyfrowania (RC2, 3DES), którego OpenSSL 3 już nie "
+"odczytuje."
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:133
 msgid ""
 "Check its password. If it is right, re-encrypt the file: `openssl pkcs12 "
 "-legacy -in old.p12 -out tmp.pem`, then `openssl pkcs12 -export -in tmp.pem "
 "-out new.p12`, and delete tmp.pem."
-msgstr "Należy sprawdzić hasło. Jeśli jest poprawne, należy ponownie zaszyfrować plik: `openssl pkcs12 -legacy -in old.p12 -out tmp.pem`, następnie `openssl pkcs12 -export -in tmp.pem -out new.p12`, i usunąć tmp.pem."
-
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:140
-#
-msgid "TLS version"
-msgstr "Wersja TLS"
+msgstr ""
+"Należy sprawdzić hasło. Jeśli jest poprawne, należy ponownie zaszyfrować "
+"plik: `openssl pkcs12 -legacy -in old.p12 -out tmp.pem`, następnie `openssl "
+"pkcs12 -export -in tmp.pem -out new.p12`, i usunąć tmp.pem."
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:142
 msgid ""
 "The VPN server and this computer have no TLS version in common: the server "
 "probably only offers TLS 1.0 or 1.1, which the system refuses."
-msgstr "Serwer VPN i ten komputer nie mają wspólnej wersji TLS: serwer prawdopodobnie oferuje tylko TLS 1.0 lub 1.1, które system odrzuca."
+msgstr ""
+"Serwer VPN i ten komputer nie mają wspólnej wersji TLS: serwer "
+"prawdopodobnie oferuje tylko TLS 1.0 lub 1.1, które system odrzuca."
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:146
 msgid ""
 "Ask the VPN administrator to enable TLS 1.2 or newer. Also check the minimum "
 "TLS version in the advanced settings of the connection."
-msgstr "Należy poprosić administratora VPN o włączenie TLS 1.2 lub nowszego. Należy też sprawdzić minimalną wersję TLS w zaawansowanych ustawieniach połączenia."
-
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:153
-#
-msgid "TLS key"
-msgstr "Klucz TLS"
+msgstr ""
+"Należy poprosić administratora VPN o włączenie TLS 1.2 lub nowszego. Należy "
+"też sprawdzić minimalną wersję TLS w zaawansowanych ustawieniach połączenia."
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:155
 msgid ""
 "The packets of the VPN server fail the extra TLS key check (tls-auth or tls-"
 "crypt): this computer and the server do not use the same key, or the same "
 "key direction."
-msgstr "Pakiety serwera VPN nie przechodzą dodatkowej weryfikacji kluczem TLS (tls-auth lub tls-crypt): ten komputer i serwer nie używają tego samego klucza lub tego samego kierunku klucza."
+msgstr ""
+"Pakiety serwera VPN nie przechodzą dodatkowej weryfikacji kluczem TLS (tls-"
+"auth lub tls-crypt): ten komputer i serwer nie używają tego samego klucza "
+"lub tego samego kierunku klucza."
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:160
 msgid ""
 "Import the configuration file from the VPN administrator again, or check the "
 "TLS authentication key and its direction (0 or 1) in the advanced settings "
 "of the connection."
-msgstr "Należy ponownie zaimportować plik konfiguracyjny od administratora VPN lub sprawdzić klucz uwierzytelniania TLS i jego kierunek (0 lub 1) w zaawansowanych ustawieniach połączenia."
-
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:167
-msgid "Data cipher"
-msgstr "Szyfrowanie danych"
+msgstr ""
+"Należy ponownie zaimportować plik konfiguracyjny od administratora VPN lub "
+"sprawdzić klucz uwierzytelniania TLS i jego kierunek (0 lub 1) w "
+"zaawansowanych ustawieniach połączenia."
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:169
 msgid ""
 "This computer and the VPN server have no data encryption algorithm in "
 "common. Recent OpenVPN versions no longer accept old ciphers such as BF-CBC."
-msgstr "Ten komputer i serwer VPN nie mają wspólnego algorytmu szyfrowania danych. Nowe wersje OpenVPN nie akceptują już starych szyfrów, takich jak BF-CBC."
+msgstr ""
+"Ten komputer i serwer VPN nie mają wspólnego algorytmu szyfrowania danych. "
+"Nowe wersje OpenVPN nie akceptują już starych szyfrów, takich jak BF-CBC."
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:173
 msgid ""
@@ -1064,23 +1545,28 @@ msgid ""
 "the server. Until then, the server's cipher can be added to the data ciphers "
 "in the advanced settings of the connection, if your security policy allows "
 "it."
-msgstr "Należy poprosić administratora VPN o włączenie na serwerze nowoczesnego szyfru, takiego jak AES-256-GCM. Do tego czasu szyfr serwera można dodać do szyfrów danych w zaawansowanych ustawieniach połączenia, jeśli pozwala na to polityka bezpieczeństwa."
-
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:181
-msgid "Compression"
-msgstr "Kompresja"
+msgstr ""
+"Należy poprosić administratora VPN o włączenie na serwerze nowoczesnego "
+"szyfru, takiego jak AES-256-GCM. Do tego czasu szyfr serwera można dodać do "
+"szyfrów danych w zaawansowanych ustawieniach połączenia, jeśli pozwala na to "
+"polityka bezpieczeństwa."
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:183
 msgid ""
 "The VPN server asks for compression, which recent OpenVPN versions refuse "
 "because compressing encrypted traffic can leak its content (VORACLE)."
-msgstr "Serwer VPN żąda kompresji, którą nowe wersje OpenVPN odrzucają, ponieważ kompresja zaszyfrowanego ruchu może ujawnić jego treść (VORACLE)."
+msgstr ""
+"Serwer VPN żąda kompresji, którą nowe wersje OpenVPN odrzucają, ponieważ "
+"kompresja zaszyfrowanego ruchu może ujawnić jego treść (VORACLE)."
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:187
 msgid ""
 "Ask the VPN administrator to disable compression on the server (comp-lzo, "
 "compress). Allowing it on this computer is a security risk."
-msgstr "Należy poprosić administratora VPN o wyłączenie kompresji na serwerze (comp-lzo, compress). Zezwolenie na nią na tym komputerze stanowi zagrożenie bezpieczeństwa."
+msgstr ""
+"Należy poprosić administratora VPN o wyłączenie kompresji na serwerze (comp-"
+"lzo, compress). Zezwolenie na nią na tym komputerze stanowi zagrożenie "
+"bezpieczeństwa."
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:194
 msgid "Server certificate"

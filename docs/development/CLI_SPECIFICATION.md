@@ -14,6 +14,7 @@ vpn-doctor connect [--profile NAME] [--dry-run] [--wait] [--timeout SECONDS]
 vpn-doctor disconnect [--profile NAME]
 vpn-doctor conflicts
 vpn-doctor rdp HOST [--port PORT] [--log FILE|-]
+vpn-doctor check-ovpn FILE
 vpn-doctor gateways
 vpn-doctor approve-gateway [--profile NAME]
 vpn-doctor revoke-gateway HOST:PORT
@@ -29,8 +30,8 @@ Preferences, or on the first one.
 | Code | Meaning |
 | --- | --- |
 | `0` | success; for `connect --wait`, the tunnel is connected |
-| `1` | a check failed, a conflict exists, or an action failed |
-| `2` | bad argument: unknown profile, malformed `HOST:PORT`, unreadable log |
+| `1` | a check failed, a conflict exists, or an action failed; for `check-ovpn`, the file has at least one error (warnings alone exit with `0`) |
+| `2` | bad argument: unknown profile, malformed `HOST:PORT`, unreadable log or file |
 
 ## JSON output
 
@@ -100,6 +101,7 @@ a question the backend waits for (e.g. a one-time code).
 | `diagnose` | `{"profile", "report": Report}` |
 | `conflicts` | `{"report": Report}` (no item: no conflict) |
 | `rdp` | `{"host", "port", "probe": Report, "log_analysis": Report or null}` |
+| `check-ovpn` | `{"file", "report": Report}` |
 | `connect --dry-run` | `{"profile", "command": [...]}` |
 | `connect --wait` | `{"profile", "status": Status, "logs": [...]}` |
 | `connect` | `{"profile", "started": true, "logs": [...]}` |
@@ -108,6 +110,10 @@ a question the backend waits for (e.g. a one-time code).
 | `approve-gateway`, `revoke-gateway` | `{"success", "message"}` |
 | `forget-secrets` | `{"success", "message", "profile"}` |
 | any error | `{"error"}`, plus `logs` when `connect` failed to start |
+
+`check-ovpn` items have the severity `error` (the imported connection will
+fail), `warning` (it will work differently from the file, or less safely) or
+`info` (a note). The file is only read: nothing is imported.
 
 In `profiles`, `managed_by` is `networkmanager` or `vpn-doctor` (direct
 openfortivpn profile); `vpn_type` is the NetworkManager VPN type (`openvpn`,

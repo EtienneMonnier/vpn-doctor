@@ -193,6 +193,13 @@
   `tls-crypt` key mismatch, failed data cipher negotiation and compression
   pushed by the server. Each one comes before the generic explanation it
   refines. Translated in all seven languages.
+- `vpn-doctor check-ovpn FILE` (and `--json`): checks an OpenVPN file before
+  importing it into NetworkManager. Reports options NetworkManager silently
+  drops (measured on NetworkManager-openvpn 1.12), options OpenVPN 2.7 refuses,
+  ciphers OpenSSL 3 no longer provides, compression, missing server
+  verification, missing files, passwords stored in the file, damaged files,
+  and expired, weak or soon expiring certificates (inline or referenced).
+  Validated on the 52 providers of a public collection of OpenVPN configs.
 
 ## 0.2.0 - 2026-11-10
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vpn-doctor 0.2.0\n"
 "Report-Msgid-Bugs-To: https://github.com/EtienneMonnier/vpn-doctor/issues\n"
-"POT-Creation-Date: 2026-11-10 09:30+0100\n"
+"POT-Creation-Date: 2026-11-10 10:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,7 +74,7 @@ msgid "Asking NetworkManager"
 msgstr ""
 
 #: src/vpn_doctor/backend/networkmanager.py:292
-#: src/vpn_doctor/core/controller.py:607 src/vpn_doctor/ui/main_window.py:184
+#: src/vpn_doctor/core/controller.py:649 src/vpn_doctor/ui/main_window.py:184
 #: src/vpn_doctor/ui/main_window.py:451 src/vpn_doctor/ui/view_models.py:81
 msgid "Disconnected"
 msgstr ""
@@ -176,164 +176,187 @@ msgstr ""
 msgid "The backend process does not accept input"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:94
+#: src/vpn_doctor/core/controller.py:96
 #, python-brace-format
 msgid "Unknown profile: {name}"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:198
+#: src/vpn_doctor/core/controller.py:200
 msgid "Gateway latency"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:203
+#: src/vpn_doctor/core/controller.py:205
 msgid "Tunnel latency"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:314
+#: src/vpn_doctor/core/controller.py:316
 msgid "Print one JSON object instead of text (for scripts and agents)"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:316
+#: src/vpn_doctor/core/controller.py:318
 msgid "Show VPN Doctor version"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:329
+#: src/vpn_doctor/core/controller.py:331
 msgid "Profile or NetworkManager connection name (default: the first one)"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:332
+#: src/vpn_doctor/core/controller.py:334
 msgid "Run basic diagnostics"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:333
+#: src/vpn_doctor/core/controller.py:335
 msgid "List VPN connections and profiles"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:334
+#: src/vpn_doctor/core/controller.py:336
 msgid "Show connection status"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:335
+#: src/vpn_doctor/core/controller.py:337
 msgid "Launch the experimental GTK UI"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:339
+#: src/vpn_doctor/core/controller.py:341
 msgid "Connect a profile"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:345
+#: src/vpn_doctor/core/controller.py:347
 msgid "Print the backend command without starting a VPN process"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:350
+#: src/vpn_doctor/core/controller.py:352
 msgid "Wait until the backend reports connected, failed or timeout"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:356
+#: src/vpn_doctor/core/controller.py:358
 msgid "Maximum wait time in seconds when --wait is used"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:361
+#: src/vpn_doctor/core/controller.py:363
 msgid "Disconnect the active VPN session"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:367
+#: src/vpn_doctor/core/controller.py:369
 msgid "List the gateways approved on this computer"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:372
+#: src/vpn_doctor/core/controller.py:374
 msgid "Approve the gateway of a profile (administrator password)"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:377
+#: src/vpn_doctor/core/controller.py:379
 msgid "Revoke an approved gateway (administrator password)"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:384
+#: src/vpn_doctor/core/controller.py:386
 msgid ""
 "Detect route and DNS conflicts between active VPNs and the local network"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:390
+#: src/vpn_doctor/core/controller.py:392
 msgid "Remove the secrets remembered in the keyring for a profile"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:396
+#: src/vpn_doctor/core/controller.py:398
 msgid "Diagnose a Remote Desktop server reached through the VPN"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:399
+#: src/vpn_doctor/core/controller.py:401
 msgid "RDP server name or address"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:405
+#: src/vpn_doctor/core/controller.py:407
 msgid ""
 "FreeRDP/Remmina log to explain, '-' for stdin (e.g. journalctl --user -b -o "
 "cat | vpn-doctor rdp HOST --log -)"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:451
-msgid "Expected HOST:PORT"
+#: src/vpn_doctor/core/controller.py:414
+msgid "Check an OpenVPN file (.ovpn) before importing it into NetworkManager"
+msgstr ""
+
+#: src/vpn_doctor/core/controller.py:417
+msgid "OpenVPN configuration file"
 msgstr ""
 
 #: src/vpn_doctor/core/controller.py:460
+msgid "Expected HOST:PORT"
+msgstr ""
+
+#: src/vpn_doctor/core/controller.py:469
 msgid "The keyring is not reachable: install PyGObject and libsecret."
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:462
+#: src/vpn_doctor/core/controller.py:471
 #, python-brace-format
 msgid "Secrets forgotten for {name}"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:483 src/vpn_doctor/ui/main_window.py:906
+#: src/vpn_doctor/core/controller.py:495 src/vpn_doctor/ui/main_window.py:906
 msgid "Network conflicts"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:487
+#: src/vpn_doctor/core/controller.py:499
 msgid "No conflict between active VPNs and the local network."
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:503
+#: src/vpn_doctor/core/controller.py:515 src/vpn_doctor/core/controller.py:541
 #, python-brace-format
 msgid "Cannot read {path}: {error}"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:504
+#: src/vpn_doctor/core/controller.py:516
 msgid "RDP client log analysis"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:532
+#: src/vpn_doctor/core/controller.py:543
+msgid "OpenVPN file check"
+msgstr ""
+
+#: src/vpn_doctor/core/controller.py:555
+#: src/vpn_doctor/diagnostics/ovpn_check.py:228
+msgid "Import"
+msgstr ""
+
+#: src/vpn_doctor/core/controller.py:558 src/vpn_doctor/core/controller.py:682
+#: src/vpn_doctor/core/controller.py:690 src/vpn_doctor/ui/main_window.py:330
+#: src/vpn_doctor/ui/main_window.py:467
+#, python-brace-format
+msgid "Suggestion: {text}"
+msgstr ""
+
+#: src/vpn_doctor/core/controller.py:561
+#, python-brace-format
+msgid "Import it with: nmcli connection import type openvpn file {file}"
+msgstr ""
+
+#: src/vpn_doctor/core/controller.py:574
 #, python-brace-format
 msgid "- {name} ({vpn_type} via NetworkManager)"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:562
+#: src/vpn_doctor/core/controller.py:604
 msgid "The privileged helper is not installed: gateways need no approval."
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:564 src/vpn_doctor/ui/main_window.py:401
+#: src/vpn_doctor/core/controller.py:606 src/vpn_doctor/ui/main_window.py:401
 #: src/vpn_doctor/ui/main_window.py:736
 msgid "system CA"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:565
+#: src/vpn_doctor/core/controller.py:607
 #, python-brace-format
 msgid "- {gateway} (certificate: {pin})"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:589
+#: src/vpn_doctor/core/controller.py:631
 #, python-brace-format
 msgid "Backend process error: {error}"
 msgstr ""
 
-#: src/vpn_doctor/core/controller.py:602
+#: src/vpn_doctor/core/controller.py:644
 msgid "Connection started"
-msgstr ""
-
-#: src/vpn_doctor/core/controller.py:640 src/vpn_doctor/core/controller.py:648
-#: src/vpn_doctor/ui/main_window.py:330 src/vpn_doctor/ui/main_window.py:467
-#, python-brace-format
-msgid "Suggestion: {text}"
 msgstr ""
 
 #: src/vpn_doctor/diagnostics/conflicts.py:127
@@ -461,6 +484,435 @@ msgstr ""
 msgid ""
 "Slow or unstable path to the gateway: check your own Internet connection (Wi-"
 "Fi, mobile data) before blaming the VPN."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:211
+msgid "File"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:211
+msgid "This file is too large to be an OpenVPN configuration."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:230
+msgid "Nothing in this file should prevent NetworkManager from using it."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:242
+#: src/vpn_doctor/diagnostics/ovpn_check.py:252
+msgid "Damaged file"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:244
+#, python-brace-format
+msgid "The <{tag}> block is never closed: everything after it is ignored."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:246
+#, python-brace-format
+msgid "Add the missing </{tag}> line, or ask for the file again."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:254
+#, python-brace-format
+msgid ""
+"Lines {lines} cannot belong to an OpenVPN file (merge conflict markers, "
+"stray closing tags or file names). They are ignored."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:257
+msgid ""
+"Check these lines: part of the configuration may be missing or mixed up."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:261
+msgid "Server"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:262
+msgid ""
+"The file has no `remote` line: it does not say which server to connect to."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:263
+msgid "Ask the VPN provider for the client configuration file."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:267
+msgid "Static key"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:269
+msgid ""
+"The file uses a static key (`secret`) instead of certificates. OpenVPN 2.7 "
+"deprecates this mode and refuses its weak ciphers."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:272
+msgid ""
+"Ask the VPN administrator for a configuration with certificates (TLS mode)."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:281
+msgid "Removed option"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:283
+msgid ""
+"`tls-remote` was removed from OpenVPN 2.4. NetworkManager imports it, but "
+"OpenVPN refuses to start with it."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:287
+msgid ""
+"Replace it with `verify-x509-name <server name> name`, or set the server "
+"name in the TLS authentication settings of the connection after import."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:293
+msgid "Deprecated option"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:294
+msgid ""
+"`ns-cert-type` is deprecated and checks an obsolete certificate extension."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:295
+msgid "Replace it with `remote-cert-tls server`."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:316
+#, python-brace-format
+msgid ""
+"{file} is next to the configuration: replace the path with just `{file}` in "
+"the `{option}` line before importing."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:321
+#, python-brace-format
+msgid ""
+"Put the file next to the .ovpn file and use just its name in the `{option}` "
+"line, or ask the VPN provider for a configuration with inline certificates."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:326
+msgid "Missing file"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:328
+#, python-brace-format
+msgid ""
+"`{option}` points to {file}, which does not exist. NetworkManager imports "
+"the path anyway and the connection will fail."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:347
+#: src/vpn_doctor/diagnostics/ovpn_check.py:359
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:167
+msgid "Data cipher"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:349
+#, python-brace-format
+msgid ""
+"The file asks for {ciphers}, which OpenVPN can no longer use with OpenSSL 3: "
+"these old 64-bit block ciphers are only in its legacy provider."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:353
+msgid ""
+"Ask the VPN provider to enable AES-256-GCM on the server and remove the old "
+"cipher from the file."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:361
+#, python-brace-format
+msgid ""
+"The file asks for {ciphers}: triple DES still works but is deprecated (64-"
+"bit blocks, vulnerable to SWEET32 on long sessions)."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:364
+msgid "Ask the VPN provider to enable AES-256-GCM on the server."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:369
+msgid "Packet authentication"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:370
+#, python-brace-format
+msgid "The file authenticates packets with {digest}, which is weak."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:373
+msgid ""
+"Ask the VPN provider to use SHA256 or an AEAD cipher such as AES-256-GCM."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:387
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:181
+msgid "Compression"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:389
+msgid ""
+"The file turns compression on. Recent OpenVPN versions refuse it by default "
+"because compressing encrypted traffic can leak its content (VORACLE); if the "
+"server insists, the connection fails."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:394
+msgid ""
+"Ask the VPN provider to disable compression. Removing `comp-lzo` / "
+"`compress` from the file only works if the server does not require it."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:407
+msgid "Server identity"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:409
+msgid ""
+"The file never checks that the server certificate is a server certificate "
+"(`remote-cert-tls server`): another client of the same VPN could impersonate "
+"the server."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:413
+msgid "Add `remote-cert-tls server` to the file before importing it."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:424
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:153
+msgid "TLS key"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:426
+msgid ""
+"The file uses a `tls-auth` key without a key direction. Most servers expect "
+"1 on clients; with the wrong direction, the server never answers."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:429
+msgid "Add `key-direction 1` to the file, unless the provider says otherwise."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:434
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:140
+msgid "TLS version"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:436
+#, python-brace-format
+msgid "The file limits TLS to version {version}, which the system refuses."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:438
+msgid ""
+"Remove `tls-version-max` and ask the provider to enable TLS 1.2 or newer."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:448
+msgid ""
+"`redirect-gateway` is ignored by NetworkManager: unless the server pushes "
+"it, only the VPN's own networks go through the tunnel, not all traffic."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:452
+msgid ""
+"After import, check that \"Use this connection only for resources on its "
+"network\" is off in the IPv4 and IPv6 settings, then verify your public "
+"address once connected."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:459
+msgid ""
+"`route-nopull` is ignored by NetworkManager: the routes pushed by the server "
+"are applied anyway."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:463
+msgid ""
+"After import, turn on \"Ignore automatically obtained routes\" in the IPv4 "
+"routes settings of the connection."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:469
+msgid ""
+"`pull-filter` is ignored by NetworkManager: settings the file wanted to "
+"refuse from the server (routes, DNS...) are applied anyway."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:473
+msgid ""
+"After import, ignore automatic routes or DNS in the IPv4 and IPv6 settings "
+"if that was the goal."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:479
+msgid ""
+"`dhcp-option` in the file is ignored by NetworkManager: only the DNS servers "
+"pushed by the VPN server are used."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:482
+msgid ""
+"After import, add the DNS servers in the IPv4 settings of the connection."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:486
+msgid ""
+"`ncp-ciphers` is the old name of `data-ciphers` (renamed in OpenVPN 2.5) and "
+"NetworkManager ignores it: the default data ciphers are used instead."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:489
+msgid "Rename `ncp-ciphers` to `data-ciphers` in the file before importing."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:493
+msgid ""
+"`route-ipv6` is ignored by NetworkManager: these IPv6 routes are not added."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:495
+msgid ""
+"After import, add the IPv6 routes in the IPv6 settings of the connection."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:499
+msgid ""
+"`remote-cert-eku` is ignored by NetworkManager: this check of the server "
+"certificate is lost."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:503
+msgid ""
+"Make sure `remote-cert-tls server` or `verify-x509-name` is also in the "
+"file, so the server is still verified."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:511
+#: src/vpn_doctor/diagnostics/ovpn_check.py:521
+msgid "Ignored by NetworkManager"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:524
+#, python-brace-format
+msgid ""
+"NetworkManager does not import these options: {options}. Check that none of "
+"them matters for this VPN."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:531
+msgid "Password in the file"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:533
+msgid ""
+"The file contains a user name and a password in clear text. NetworkManager "
+"does not import them, but anyone who can read this file can."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:537
+msgid ""
+"Enter the password when NetworkManager asks for it, then delete this copy of "
+"the file or remove the <auth-user-pass> block from it."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:543
+msgid "Password"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:546
+msgid ""
+"The password file named by `auth-user-pass` is not imported: NetworkManager "
+"asks for the password and keeps it in the keyring."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:582
+msgid "Old certificates"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:585
+#, python-brace-format
+msgid ""
+"`{option}` also contains expired or weak certificates next to valid ones. "
+"OpenVPN uses the valid ones, so this is harmless."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:600
+#, python-brace-format
+msgid "`{option}` certificate {subject}"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:603
+msgid "Expired certificate"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:604
+#, python-brace-format
+msgid "{label} expired on {date}."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:605
+msgid "Ask the VPN provider for an up-to-date configuration."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:609
+msgid "Certificate not valid yet"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:610
+#, python-brace-format
+msgid "{label} is only valid from {date}."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:613
+msgid "Check the date and time of this computer."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:617
+msgid "Certificate expires soon"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:618
+#, python-brace-format
+msgid "{label} expires on {date}."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:619
+msgid "Ask the VPN provider when it will be renewed."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:623
+#: src/vpn_doctor/diagnostics/ovpn_check.py:634
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:101
+msgid "Weak certificate"
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:625
+#, python-brace-format
+msgid ""
+"{label} uses a {bits}-bit {type} key, which the system's cryptographic "
+"policy refuses (2048 bits minimum)."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:628
+msgid "Ask the VPN provider for new certificates (RSA 2048 bits or more)."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:636
+#, python-brace-format
+msgid ""
+"{label} is signed with {algorithm}, which the system's cryptographic policy "
+"refuses."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:639
+msgid "Ask the VPN provider for certificates signed with SHA-256."
 msgstr ""
 
 #: src/vpn_doctor/diagnostics/rdp.py:40
@@ -851,10 +1303,6 @@ msgstr ""
 msgid "Enter the private key password again in the connection settings."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:101
-msgid "Weak certificate"
-msgstr ""
-
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:103
 msgid ""
 "A certificate of this VPN uses a key or a signature that the system's "
@@ -902,10 +1350,6 @@ msgid ""
 "-out new.p12`, and delete tmp.pem."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:140
-msgid "TLS version"
-msgstr ""
-
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:142
 msgid ""
 "The VPN server and this computer have no TLS version in common: the server "
@@ -916,10 +1360,6 @@ msgstr ""
 msgid ""
 "Ask the VPN administrator to enable TLS 1.2 or newer. Also check the minimum "
 "TLS version in the advanced settings of the connection."
-msgstr ""
-
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:153
-msgid "TLS key"
 msgstr ""
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:155
@@ -936,10 +1376,6 @@ msgid ""
 "of the connection."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:167
-msgid "Data cipher"
-msgstr ""
-
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:169
 msgid ""
 "This computer and the VPN server have no data encryption algorithm in "
@@ -952,10 +1388,6 @@ msgid ""
 "the server. Until then, the server's cipher can be added to the data ciphers "
 "in the advanced settings of the connection, if your security policy allows "
 "it."
-msgstr ""
-
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:181
-msgid "Compression"
 msgstr ""
 
 #: src/vpn_doctor/diagnostics/vpn_plugins.py:183
