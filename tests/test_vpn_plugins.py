@@ -46,6 +46,8 @@ NM = "nm-openvpn[4242]: "
             "OpenSSL: error:0A000102:SSL routines::unsupported protocol",
             "TLS version",
         ),
+        ("VERIFY EKU ERROR", "Server identity"),
+        ("VERIFY X509NAME ERROR: CN=other.example.com, must be vpn.example.com", "Server identity"),
         (
             "TLS Error: tls-crypt unwrapping failed from [AF_INET]192.0.2.10:1194",
             "TLS key",

@@ -148,6 +148,20 @@ PLUGIN_RULES = (
         ),
     ),
     LogRule(
+        ("VERIFY EKU ERROR", "VERIFY KU ERROR", "VERIFY X509NAME ERROR"),
+        N_("Server identity"),
+        N_(
+            "The server certificate is valid, but it is not the one the connection expects: "
+            "it lacks the \"server\" usage (`remote-cert-tls server`) or has another name "
+            "(`verify-x509-name`)."
+        ),
+        N_(
+            "If the server is the right one, its certificate was made without the server "
+            "usage: ask the VPN administrator to reissue it. Meanwhile, removing the check "
+            "from the connection settings makes it connect, but less safely."
+        ),
+    ),
+    LogRule(
         ("tls-crypt unwrapping failed", "tls-crypt unwrap error",
          "incoming packet authentication failed", "packet authentication failed"),
         N_("TLS key"),

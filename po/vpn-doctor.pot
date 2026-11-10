@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vpn-doctor 0.2.0\n"
+"Project-Id-Version: vpn-doctor 0.3.0\n"
 "Report-Msgid-Bugs-To: https://github.com/EtienneMonnier/vpn-doctor/issues\n"
-"POT-Creation-Date: 2026-11-10 10:00+0100\n"
+"POT-Creation-Date: 2026-11-10 11:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -609,7 +609,7 @@ msgstr ""
 
 #: src/vpn_doctor/diagnostics/ovpn_check.py:347
 #: src/vpn_doctor/diagnostics/ovpn_check.py:359
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:167
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:181
 msgid "Data cipher"
 msgstr ""
 
@@ -652,7 +652,7 @@ msgid ""
 msgstr ""
 
 #: src/vpn_doctor/diagnostics/ovpn_check.py:387
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:181
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:195
 msgid "Compression"
 msgstr ""
 
@@ -670,6 +670,7 @@ msgid ""
 msgstr ""
 
 #: src/vpn_doctor/diagnostics/ovpn_check.py:407
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:152
 msgid "Server identity"
 msgstr ""
 
@@ -685,7 +686,7 @@ msgid "Add `remote-cert-tls server` to the file before importing it."
 msgstr ""
 
 #: src/vpn_doctor/diagnostics/ovpn_check.py:424
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:153
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:167
 msgid "TLS key"
 msgstr ""
 
@@ -1137,7 +1138,7 @@ msgid ""
 msgstr ""
 
 #: src/vpn_doctor/diagnostics/rdp.py:280
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:212
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:226
 msgid "Server name"
 msgstr ""
 
@@ -1362,27 +1363,41 @@ msgid ""
 "TLS version in the advanced settings of the connection."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:155
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:154
+msgid ""
+"The server certificate is valid, but it is not the one the connection "
+"expects: it lacks the \"server\" usage (`remote-cert-tls server`) or has "
+"another name (`verify-x509-name`)."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:159
+msgid ""
+"If the server is the right one, its certificate was made without the server "
+"usage: ask the VPN administrator to reissue it. Meanwhile, removing the "
+"check from the connection settings makes it connect, but less safely."
+msgstr ""
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:169
 msgid ""
 "The packets of the VPN server fail the extra TLS key check (tls-auth or tls-"
 "crypt): this computer and the server do not use the same key, or the same "
 "key direction."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:160
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:174
 msgid ""
 "Import the configuration file from the VPN administrator again, or check the "
 "TLS authentication key and its direction (0 or 1) in the advanced settings "
 "of the connection."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:169
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:183
 msgid ""
 "This computer and the VPN server have no data encryption algorithm in "
 "common. Recent OpenVPN versions no longer accept old ciphers such as BF-CBC."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:173
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:187
 msgid ""
 "Ask the VPN administrator to enable a modern cipher such as AES-256-GCM on "
 "the server. Until then, the server's cipher can be added to the data ciphers "
@@ -1390,103 +1405,103 @@ msgid ""
 "it."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:183
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:197
 msgid ""
 "The VPN server asks for compression, which recent OpenVPN versions refuse "
 "because compressing encrypted traffic can leak its content (VORACLE)."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:187
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:201
 msgid ""
 "Ask the VPN administrator to disable compression on the server (comp-lzo, "
 "compress). Allowing it on this computer is a security risk."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:194
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:208
 msgid "Server certificate"
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:195
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:209
 msgid "The VPN server certificate is not trusted."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:197
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:211
 msgid ""
 "Verify the certificate with the VPN administrator, then set the right CA "
 "certificate or fingerprint in the connection settings."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:203
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:217
 msgid "No answer from the server"
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:204
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:218
 msgid "The VPN server did not complete the secure handshake."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:206
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:220
 msgid ""
 "The port or protocol may be blocked by the local network (OpenVPN often uses "
 "UDP). Try another network, or check the port and protocol in the settings."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:213
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:227
 msgid "The VPN server name could not be resolved."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:214
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:228
 msgid "Check the gateway name in the connection settings and your DNS."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:219
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:233
 msgid "Gateway unreachable"
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:220
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:234
 msgid "The VPN gateway could not be reached."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:221
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:235
 msgid ""
 "Check your Internet connection, the gateway address and port, and any "
 "firewall."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:225
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:239
 msgid "Session expired"
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:226
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:240
 msgid "The VPN server ended the session."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:227
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:241
 msgid ""
 "Connect again. If it happens often, ask the administrator about session "
 "limits."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:231
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:245
 msgid "Configuration file"
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:232
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:246
 msgid "The VPN configuration contains an option the VPN program rejects."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:233
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:247
 msgid "Import the configuration again, or remove the reported option."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:237
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:251
 msgid "Connection lost"
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:238
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:252
 msgid "The VPN server stopped answering keepalive messages."
 msgstr ""
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:239
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:253
 msgid "The network may be unstable, or the server dropped the session."
 msgstr ""
 

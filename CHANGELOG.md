@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- OpenVPN: `VERIFY EKU ERROR`, `VERIFY KU ERROR` and `VERIFY X509NAME ERROR`
+  are explained (the server certificate lacks the server usage or has another
+  name), with the trade-off of removing the check. Translated in all seven
+  languages.
+
 ## 0.3.0 - 2026-11-10
 
 ### Added
