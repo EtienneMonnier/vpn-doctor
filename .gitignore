@@ -45,3 +45,6 @@ htmlcov/
 # Local generated files
 *.bak
 *.orig
+
+# Local artwork that must not be published (see packaging/rpm/build.sh)
+assets/icons/vpn-doctor-terminal.png

@@ -37,8 +37,9 @@ where = ["src"]
 vpn_doctor = [
   "ui/themes/*.css",
   "ui/assets/*.svg",
+  "ui/assets/*.png",
   "ui/assets/status/*.svg",
-  "ui/assets/icons/hicolor/scalable/apps/*.svg",
+  "ui/assets/icons/hicolor/*/apps/*.png",
 ]
 
 [tool.ruff]

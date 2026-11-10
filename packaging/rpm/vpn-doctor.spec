@@ -1,11 +1,19 @@
+# rpmbuild --with wasteland: Wasteland Terminal skin by default and a terminal
+# app icon, built from a local image that is not part of the repository
+# (packaging/rpm/build.sh --wasteland).
+%bcond wasteland 0
+
 Name:           vpn-doctor
 Version:        0.2.0
-Release:        1%{?dist}
+Release:        1%{?with_wasteland:.wasteland}%{?dist}
 Summary:        Linux VPN troubleshooting and connection assistant
 
 License:        MIT
 URL:            https://github.com/EtienneMonnier/vpn-doctor
 Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
+%if %{with wasteland}
+Source1:        %{name}-wasteland-art.tar.gz
+%endif
 
 BuildArch:      noarch
 BuildRequires:  python3-devel
@@ -34,6 +42,12 @@ custom skins.
 
 %prep
 %autosetup -n %{name}-%{version}
+%if %{with wasteland}
+# Terminal app icon and logo, then the Wasteland skin by default.
+tar -xzf %{SOURCE1} -C src/vpn_doctor/ui/assets
+sed -i 's/^DEFAULT_SKIN = .*/DEFAULT_SKIN = "wasteland"/' src/vpn_doctor/branding.py
+sed -i 's/@logo: logo-wasteland.svg/@logo: logo-terminal.png/' src/vpn_doctor/ui/themes/wasteland.css
+%endif
 
 %generate_buildrequires
 %pyproject_buildrequires
@@ -60,8 +74,11 @@ install -Dpm 0644 data/io.github.vpndoctor.VPNDoctor.desktop \
     %{buildroot}%{_datadir}/applications/io.github.vpndoctor.VPNDoctor.desktop
 install -Dpm 0644 data/io.github.vpndoctor.VPNDoctor.metainfo.xml \
     %{buildroot}%{_metainfodir}/io.github.vpndoctor.VPNDoctor.metainfo.xml
-install -Dpm 0644 src/vpn_doctor/ui/assets/icons/hicolor/scalable/apps/io.github.vpndoctor.VPNDoctor.svg \
-    %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/io.github.vpndoctor.VPNDoctor.svg
+for size in 16 24 32 48 64 128 256 512; do
+    install -Dpm 0644 \
+        src/vpn_doctor/ui/assets/icons/hicolor/${size}x${size}/apps/io.github.vpndoctor.VPNDoctor.png \
+        %{buildroot}%{_datadir}/icons/hicolor/${size}x${size}/apps/io.github.vpndoctor.VPNDoctor.png
+done
 
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/io.github.vpndoctor.VPNDoctor.desktop
@@ -80,10 +97,11 @@ appstreamcli validate --no-net %{buildroot}%{_metainfodir}/io.github.vpndoctor.V
 %ghost %config(noreplace) %{_sysconfdir}/vpn-doctor/gateways.json
 %{_datadir}/applications/io.github.vpndoctor.VPNDoctor.desktop
 %{_metainfodir}/io.github.vpndoctor.VPNDoctor.metainfo.xml
-%{_datadir}/icons/hicolor/scalable/apps/io.github.vpndoctor.VPNDoctor.svg
+%{_datadir}/icons/hicolor/*/apps/io.github.vpndoctor.VPNDoctor.png
 
 %changelog
 * Tue Nov 10 2026 Etienne Monnier <128474711+EtienneMonnier@users.noreply.github.com> - 0.2.0-1
+- New shield logo and app icon; optional Wasteland build (--with wasteland).
 - Translations in seven languages, --json on every CLI command, one tab per
   connection, latency checks, explanation of gateway login refusals.
 

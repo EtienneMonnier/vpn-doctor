@@ -1,6 +1,6 @@
 # VPN Doctor
 
-<img src="assets/logo/vpn-doctor.svg" alt="VPN Doctor logo" width="96" align="right">
+<p align="center"><img src="assets/images/vpn-doctor-title-ban.png" alt="VPN Doctor" width="480"></p>
 
 **Diagnose. Connect. Protect.**
 

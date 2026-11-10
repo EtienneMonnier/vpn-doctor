@@ -185,6 +185,22 @@
 
 ## 0.2.0 - 2026-11-10
 
+### Changed
+
+- New logo: a shield with a caduceus over a globe. App icon in PNG from 16 to
+  512 px, new in-app logo for the default skin, banner in the README.
+
+### Added
+
+- Optional Wasteland build (`packaging/rpm/build.sh --wasteland`): Wasteland
+  Terminal skin by default and a terminal app icon made from a local image.
+- `vpn_doctor/branding.py`: the default skin a package may set.
+
+### Fixed
+
+- Tests used the privileged helper of an installed package instead of their
+  fake openfortivpn.
+
 Includes Sprint 7.1 and 7.2 above.
 
 ### Changed

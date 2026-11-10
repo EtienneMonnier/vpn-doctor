@@ -22,10 +22,12 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from vpn_doctor.branding import DEFAULT_SKIN
+
 BUILTIN_THEME_DIR = Path(__file__).resolve().parent.parent / "ui" / "themes"
 BUILTIN_ASSET_DIR = Path(__file__).resolve().parent.parent / "ui" / "assets"
 DEFAULT_THEME = "default"
-DEFAULT_LOGO = BUILTIN_ASSET_DIR / "logo-default.svg"
+DEFAULT_LOGO = BUILTIN_ASSET_DIR / "logo-default.png"
 
 _METADATA = re.compile(r"@([a-z-]+)\s*:\s*(.+?)\s*(?:\*/)?\s*$", re.MULTILINE)
 
@@ -80,9 +82,15 @@ def parse_theme(path: Path, builtin: bool) -> Theme:
 class ThemeService:
     """List and resolve skins."""
 
-    def __init__(self, user_dir: Path | None = None, builtin_dir: Path = BUILTIN_THEME_DIR) -> None:
+    def __init__(
+        self,
+        user_dir: Path | None = None,
+        builtin_dir: Path = BUILTIN_THEME_DIR,
+        default_skin: str = DEFAULT_SKIN,
+    ) -> None:
         self.user_dir = user_dir or Path.home() / ".config" / "vpn-doctor" / "themes"
         self.builtin_dir = builtin_dir
+        self.default_skin = default_skin
 
     def themes(self) -> list[Theme]:
         found: dict[str, Theme] = {}
@@ -97,4 +105,8 @@ class ThemeService:
     def get(self, theme_id: str | None) -> Theme:
         """Return the requested skin, falling back to the default one."""
         themes = {theme.id: theme for theme in self.themes()}
-        return themes.get(theme_id or DEFAULT_THEME) or themes[DEFAULT_THEME]
+        return (
+            themes.get(theme_id or self.default_skin)
+            or themes.get(self.default_skin)
+            or themes[DEFAULT_THEME]
+        )

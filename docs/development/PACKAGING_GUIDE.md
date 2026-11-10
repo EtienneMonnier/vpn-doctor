@@ -19,7 +19,7 @@
 | `/etc/vpn-doctor/` | approved gateways, written by the helper |
 | `/usr/share/applications/io.github.vpndoctor.VPNDoctor.desktop` | launcher |
 | `/usr/share/metainfo/io.github.vpndoctor.VPNDoctor.metainfo.xml` | AppStream (GNOME Software) |
-| `/usr/share/icons/hicolor/scalable/apps/io.github.vpndoctor.VPNDoctor.svg` | icon |
+| `/usr/share/icons/hicolor/<size>/apps/io.github.vpndoctor.VPNDoctor.png` | icon, 16 to 512 px |
 | `/usr/share/locale/<lang>/LC_MESSAGES/vpn-doctor.mo` | translations, compiled from `po/` |
 
 The helper and the policy must be installed together: the policy's
@@ -39,7 +39,38 @@ commit first):
 
 ```bash
 packaging/rpm/build.sh            # RPMs in build/rpm/RPMS and build/rpm/SRPMS
-sudo dnf install ./build/rpm/RPMS/noarch/vpn-doctor-0.1.0-1.*.noarch.rpm
+sudo dnf install ./build/rpm/RPMS/noarch/vpn-doctor-0.2.0-1.*.noarch.rpm
+```
+
+### Wasteland build
+
+```bash
+packaging/rpm/build.sh --wasteland   # vpn-doctor-0.2.0-1.wasteland.*.noarch.rpm
+```
+
+`rpmbuild --with wasteland` makes Wasteland Terminal the default skin
+(`vpn_doctor/branding.py`) and replaces the app icon and the skin logo with a
+terminal image. That image (`assets/icons/vpn-doctor-terminal.png`) stays
+local: it is ignored by git and must not be published, since it resembles a
+game's trade dress. The build script turns it into icons with ImageMagick.
+
+Both builds are the same package name: installing one replaces the other
+(going back from the Wasteland build needs `dnf reinstall` or `dnf downgrade`
+because its release sorts higher). A skin the user already chose in
+Preferences wins over the packaged default.
+
+### Icons
+
+The app icon and the default logo are made from `assets/icons/vpn-doctor.png`:
+
+```bash
+magick assets/icons/vpn-doctor.png -trim +repage -resize 1024x1024 -gravity center \
+    -background none -extent 1024x1024 /tmp/square.png
+for size in 16 24 32 48 64 128 256 512; do
+    magick /tmp/square.png -filter Lanczos -resize ${size}x${size} -strip \
+        src/vpn_doctor/ui/assets/icons/hicolor/${size}x${size}/apps/io.github.vpndoctor.VPNDoctor.png
+done
+magick /tmp/square.png -resize 440x440 -strip src/vpn_doctor/ui/assets/logo-default.png
 ```
 
 `%check` validates the launcher and the AppStream file and imports the

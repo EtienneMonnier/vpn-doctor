@@ -39,6 +39,24 @@ def test_unknown_skin_falls_back_to_default(tmp_path):
     assert ThemeService(user_dir=tmp_path).get("does-not-exist").id == "default"
 
 
+def test_packaged_default_skin(tmp_path):
+    service = ThemeService(user_dir=tmp_path, default_skin="wasteland")
+
+    assert service.get(None).id == "wasteland"
+    assert service.get("does-not-exist").id == "wasteland"
+    assert service.get("default").id == "default"
+
+
+def test_missing_packaged_default_skin_falls_back(tmp_path):
+    assert ThemeService(user_dir=tmp_path, default_skin="gone").get(None).id == "default"
+
+
+def test_default_logo_is_shipped():
+    from vpn_doctor.services.theme_service import DEFAULT_LOGO
+
+    assert DEFAULT_LOGO.is_file()
+
+
 def test_skin_choice_is_persisted(tmp_path):
     settings = SettingsService(settings_path=tmp_path / "settings.json")
 
