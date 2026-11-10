@@ -1,50 +1,224 @@
 # VPN Doctor
 
+<p align="center"><img src="assets/images/vpn-doctor-title-ban.png" alt="VPN Doctor" width="480"></p>
+
 **Diagnose. Connect. Protect.**
 
-VPN Doctor is a Linux VPN troubleshooting and connection assistant.
+VPN Doctor is a Linux VPN troubleshooting and connection assistant. It is not intended
+to replace NetworkManager, WireGuard, OpenVPN, OpenConnect or OpenFortiVPN. Its role is
+to help users and administrators understand what happens when a VPN works, partially
+works, or fails.
 
-It is not designed to replace NetworkManager. Its goal is to help users understand why a VPN connection fails, choose the best available backend, and apply safe fixes when possible.
+VPN Doctor should eventually be able to:
 
-## Project goals
+- connect through supported VPN backends;
+- compare backend behaviour;
+- explain common VPN failures;
+- produce readable diagnostic reports;
+- suggest safe fixes;
+- integrate cleanly with the Linux desktop.
 
-- Provide a modern Linux desktop experience.
-- Diagnose common VPN failures.
-- Explain problems in plain language.
-- Support multiple VPN backends over time.
-- Start with OpenFortiVPN because it solves a real-world tested case.
-- Integrate with GNOME Keyring / Secret Service for secrets.
-- Use gettext for translations from the beginning.
+## Current status
 
-## First MVP
+VPN Doctor is in early development.
 
-The first version focuses on one working backend:
+| Area | Status |
+| --- | --- |
+| Project foundation | Done |
+| Core Python structure | Done |
+| OpenFortiVPN backend skeleton | Done |
+| Sprint 2 backend design | Done |
+| Real OpenFortiVPN process lifecycle | Experimental |
+| GTK4 / Libadwaita UI | Experimental |
+| Diagnostics engine | Started (RDP) |
+| Packaging | RPM done, DEB planned |
 
-- OpenFortiVPN profile support
-- Connect / disconnect
-- Connection timer
-- Live log viewer
-- Basic diagnostics
-- GNOME notifications
-- Secure password handling
+## First backend
 
-## Long-term vision
+The first target backend is **OpenFortiVPN**.
 
-VPN Doctor should become a backend-independent Linux VPN assistant supporting OpenFortiVPN, WireGuard, OpenVPN, OpenConnect, and StrongSwan.
+This choice comes from a real-world FortiGate case where:
 
-## Branding
+- `openfortivpn` connected successfully;
+- `NetworkManager-fortisslvpn` established a PPP tunnel but did not pass useful traffic;
+- certificate trust, split tunnel, DNS and routing required manual investigation.
 
-Name: **VPN Doctor**
+That case became the first case study for the project.
 
-Tagline: **Diagnose. Connect. Protect.**
+## Design philosophy
 
-Visual direction: blue shield + stethoscope.
+VPN Doctor should not merely say "VPN failed".
 
-## Documentation
+It should say things like:
+
+- "The gateway is reachable, but the certificate is not trusted."
+- "The tunnel is up, but no replies return through PPP."
+- "DNS was pushed by the VPN, but the search domain is missing."
+- "NetworkManager failed, but OpenFortiVPN works with the same gateway."
+
+## Install (Fedora)
+
+```bash
+packaging/rpm/build.sh
+sudo dnf install ./build/rpm/RPMS/noarch/vpn-doctor-*.noarch.rpm
+```
+
+VPN Doctor then appears in the GNOME application menu. See the
+[packaging guide](docs/development/PACKAGING_GUIDE.md).
+
+## Run from the source tree
+
+```bash
+./launch.sh              # GUI
+./launch.sh profiles     # any CLI command
+```
+
+## Quick development test
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ".[dev]"
+vpn-doctor --version
+vpn-doctor profiles
+vpn-doctor diagnose
+pytest
+```
+
+The default profile is intentionally a safe placeholder and does not contain real VPN
+data.
+
+## Documentation map
 
 Start here:
 
-1. [`ARCHITECTURE.md`](ARCHITECTURE.md)
-2. [`ROADMAP.md`](ROADMAP.md)
-3. [`AGENTS.md`](AGENTS.md)
-4. [`docs/INDEX.md`](docs/INDEX.md)
+- [Architecture](ARCHITECTURE.md)
+- [Roadmap](ROADMAP.md)
+- [Documentation index](docs/INDEX.md)
+- [Master architecture guide](docs/development/MASTER_ARCHITECTURE.md)
+- [Sprint 2 specification](docs/development/SPRINT2_SPECIFICATION.md)
+- [OpenFortiVPN backend specification](docs/development/OPENFORTIVPN_BACKEND_SPEC.md)
+- [Diagnostics engine specification](docs/development/DIAGNOSTICS_ENGINE_SPEC.md)
+
+## Security stance
+
+VPN Doctor must never commit or expose real customer VPN data. Passwords, tokens and
+private certificates must not be stored in source code, profile files, examples or logs.
+
+Future secret storage will use the Linux Secret Service API through GNOME Keyring or a
+compatible backend.
+
+
+## NetworkManager connections
+
+VPN Doctor is a companion to NetworkManager, not a replacement. It lists the
+VPN and WireGuard connections you already created in GNOME Settings, connects
+them, shows the plugin log live and explains failures that GNOME only reports
+as "activation failed". Passwords stay with the GNOME keyring. For OpenVPN it
+recognizes the usual causes on a current Linux system: certificates too weak
+for the system's crypto policy, expired certificates or a wrong clock, legacy
+`.p12` files OpenSSL 3 cannot read, old TLS versions, mismatched `tls-auth` /
+`tls-crypt` keys, no common data cipher (BF-CBC) and compression pushed by the
+server.
+
+Before importing an OpenVPN file, `vpn-doctor check-ovpn client.ovpn` tells
+what NetworkManager will silently drop (`redirect-gateway`, `route-nopull`,
+`dhcp-option`...), what OpenVPN 2.7 and OpenSSL 3 will refuse (BF-CBC,
+`tls-remote`, compression, weak or expired certificates) and which referenced
+files are missing.
+
+```bash
+vpn-doctor profiles
+vpn-doctor connect --profile "Office VPN" --wait
+vpn-doctor conflicts
+```
+
+Several VPNs can run at once, each in its own tab. VPN Doctor warns when they
+conflict: two full tunnels, overlapping networks, a VPN hiding your local
+network, or several VPNs claiming every DNS name.
+
+## Direct openfortivpn profiles
+
+For gateways where NetworkManager-fortisslvpn fails, VPN Doctor can also run
+`openfortivpn` itself. It reads these profiles from `~/.config/vpn-doctor/profiles.json`. Without
+that file it shows a safe demo profile. Passwords are never stored there.
+
+```json
+{
+  "profiles": [
+    {
+      "name": "Office",
+      "backend": "openfortivpn",
+      "host": "vpn.example.com",
+      "port": 443,
+      "username": "demo-user",
+      "trusted_cert": "abcdef...",
+      "user_cert": "/etc/openfortivpn/demo-cert.pem",
+      "user_key": "/etc/openfortivpn/demo-key.pem"
+    }
+  ]
+}
+```
+
+`user_cert` and `user_key` are optional paths to a client certificate and its
+key. Keep these files readable by root only.
+
+## Remote Desktop behind the VPN
+
+When the tunnel is up but a Windows server refuses the session:
+
+```bash
+journalctl --user -b -o cat | vpn-doctor rdp 192.0.2.41 --log -
+```
+
+VPN Doctor tests the port, the RDP negotiation and TLS without sending any
+credentials, then explains FreeRDP/Remmina errors such as expired licensing,
+expired passwords or missing Remote Desktop permissions. See the
+[case study](docs/case-studies/rdp-licensing-behind-wireguard.md).
+
+## Scripts and AI agents
+
+Every command except `gui` accepts `--json` and then prints one JSON object,
+with the same exit codes:
+
+```bash
+vpn-doctor status --profile "Office VPN" --json
+vpn-doctor diagnose --json
+```
+
+The schema is documented in the
+[CLI specification](docs/development/CLI_SPECIFICATION.md). It never contains
+secrets, user names or certificate paths.
+
+## Languages
+
+VPN Doctor speaks English, French, German, Spanish, Italian, Dutch, Portuguese
+and Polish, following your desktop language. Translations live in `po/`; see
+the [internationalization guide](docs/development/I18N_GUIDE.md) to improve
+one or add a language.
+
+## Experimental GUI
+
+The window shows one tab per connection, with its status and timer, live logs
+and a Diagnose button; open more tabs with `+`. Change its look in ☰ > Preferences, or write your own skin in CSS: see
+[Skins](docs/development/THEMES.md). A short startup animation runs real
+checks (NetworkManager, keyring, connections); turn it off in Preferences.
+
+Run:
+
+```bash
+vpn-doctor gui
+```
+
+or:
+
+```bash
+vpn-doctor-gui
+```
+
+For direct openfortivpn profiles, Connect asks for the VPN password, which is
+passed to `openfortivpn` through stdin and never stored.
+
+`openfortivpn` needs root privileges. VPN Doctor stays unprivileged and starts
+it through `pkexec`, so polkit asks for administrator authentication (see
+[ADR-0010](docs/adr/0010-pkexec-privilege-escalation.md)).

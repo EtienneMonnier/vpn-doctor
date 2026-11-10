@@ -1,154 +1,108 @@
 # AGENTS.md
 
-This file is the development constitution for VPN Doctor.
+Canonical development guide for VPN Doctor.
 
-It is intended for AI coding agents and human contributors.
+Every AI assistant and contributor must follow this document before modifying the
+project.
 
-## Mandatory reading order
+## Mission
 
-Before making changes, read:
+VPN Doctor is not another VPN client.
+
+It is a Linux VPN troubleshooting and connection assistant whose motto is:
+
+**Diagnose. Connect. Protect.**
+
+## Read order
+
+Before coding, read:
 
 1. `README.md`
 2. `ARCHITECTURE.md`
 3. `ROADMAP.md`
 4. `docs/INDEX.md`
-5. Relevant files under `docs/development/`
-6. Relevant ADRs under `docs/adr/`
-
-## Project identity
-
-Name:
-
-```text
-VPN Doctor
-```
-
-Tagline:
-
-```text
-Diagnose. Connect. Protect.
-```
-
-Mission:
-
-```text
-VPN Doctor helps Linux users diagnose, understand, and fix VPN problems.
-```
-
-VPN Doctor is not a NetworkManager replacement. It complements existing Linux VPN tools.
+5. `docs/development/MASTER_ARCHITECTURE.md`
+6. this file
 
 ## Non-negotiable rules
 
-- The GUI must never call VPN binaries directly.
-- User-facing strings must use gettext.
-- Passwords must never be committed, logged, or stored in plain text.
-- Backends must use a common interface.
-- Diagnostics must return structured results.
-- Documentation must be updated when architecture changes.
-- Prefer clear code over clever code.
+- GUI must never execute VPN binaries directly.
+- Never store VPN passwords in source code or profile files.
+- Never commit customer VPN addresses, usernames, fingerprints or logs unless sanitized.
+- All user-visible strings must be prepared for gettext.
+- Use Python logging instead of `print()` for internal logs.
+- Keep backends independent from GTK.
+- Keep models free from side effects.
+- Prefer readable, boring code.
 
 ## Architecture rule
 
 Use this flow:
 
 ```text
-UI
- ↓
-Controller
- ↓
-Service
- ↓
-Backend / Diagnostics
- ↓
-Operating System
+UI / CLI
+  -> Controller
+  -> Services
+  -> Diagnostics / Backend Manager
+  -> Backend
+  -> Linux OS
 ```
 
-## Coding style
+## AI-specific rules
 
-- Python 3.12+ target.
-- Type hints are required for new code.
-- Use dataclasses for plain data structures.
-- Use Python logging, not `print()`, except for temporary CLI smoke tests.
-- Keep files focused.
-- Keep functions small.
-- Keep classes cohesive.
+When working as an AI agent:
 
-## Internationalization
+1. Inspect the current repository before generating code.
+2. Do not assume missing files are intentionally absent.
+3. Update documentation when changing architecture.
+4. Add tests for non-trivial logic.
+5. Do not introduce new dependencies unless justified.
+6. Never hide uncertainty.
+7. Avoid rewriting unrelated files.
+8. Preserve the project philosophy: diagnosis before raw connection.
 
-English is the source language.
+## Sprint discipline
 
-All user-visible strings:
+Each sprint should include:
 
-```python
-_("Connected")
-```
+- specification;
+- implementation plan;
+- tests;
+- documentation updates;
+- changelog entry;
+- review notes in `docs/sprints/`.
 
-Never:
+## Commit style
 
-```python
-"Connected"
-```
+Use conventional commits:
+
+- `feat:`
+- `fix:`
+- `docs:`
+- `test:`
+- `refactor:`
+- `chore:`
+- `ci:`
 
 ## Security
 
-Never store:
+Never include:
 
-- VPN passwords
-- MFA tokens
-- private keys
-- private certificates
-- customer-specific production data
+- real passwords;
+- live customer VPN endpoints;
+- private keys;
+- unredacted logs;
+- certificate fingerprints tied to a real customer unless explicitly sanitized.
 
-Use:
+Use placeholders such as:
 
-- GNOME Keyring / Secret Service
-- masked logs
-- sanitized examples
+- `vpn.example.com`;
+- `demo-user`;
+- `abcdef...`;
+- `192.0.2.0/24`.
 
-## Documentation rules
+## Long-term goal
 
-Every feature should have one of:
-
-- README section
-- development guide update
-- ADR if architectural
-- user guide if user-visible
-
-## Git rules
-
-Branches:
-
-```text
-main
-dev
-feature/<name>
-bugfix/<name>
-hotfix/<name>
-```
-
-Commit examples:
-
-```text
-feat: add OpenFortiVPN backend
-fix: detect untrusted FortiGate certificate
-docs: expand diagnostics guide
-refactor: split profile service
-test: add route parser tests
-```
-
-## AI-specific instructions
-
-When using Codex or any other coding agent:
-
-1. Ask it to read `AGENTS.md`.
-2. Ask it to inspect the current tree before editing.
-3. Ask it to produce small commits.
-4. Ask it not to introduce new dependencies without justification.
-5. Ask it to update docs when behavior changes.
-6. Ask it to avoid storing secrets in examples.
-
-## Current priority
-
-Sprint 0 and Sprint 1.
-
-Do not implement WireGuard, OpenVPN or OpenConnect until the OpenFortiVPN MVP is clean.
+VPN Doctor should become the Linux VPN troubleshooting assistant: backend-independent,
+distribution-friendly, safe by default and useful for both beginners and system
+administrators.

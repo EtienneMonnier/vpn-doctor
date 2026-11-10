@@ -1,88 +1,43 @@
 # Diagnostics Guide
 
-## Purpose
+Diagnostics are the core of VPN Doctor.
 
-Diagnostics are the main differentiator of VPN Doctor.
+## Diagnostic philosophy
 
-VPN Doctor should explain problems that normal VPN clients hide.
+A diagnostic must not only say "failed". It must explain what was checked and what
+the user can do.
 
-## Diagnostic result model
+Each check should produce:
 
-Each result should include:
+- name;
+- success flag;
+- message;
+- suggestion;
+- severity later.
 
-- check id
-- title
-- status
-- severity
-- explanation
-- technical details
-- suggested fix
-- whether the fix is automatic
-- whether the fix is safe
+## Initial checks
 
-## Severity
+- VPN binary installed.
+- Gateway reachable.
+- Certificate fingerprint available.
+- Tunnel interface exists.
+- Routes installed.
+- DNS servers received.
+- Corporate host reachable.
+- Internet still reachable if split tunnel is expected.
 
-Suggested severities:
+## Fortinet-specific checks
 
-- `ok`
-- `info`
-- `warning`
-- `error`
-- `critical`
+- Custom port present.
+- Self-signed certificate detected.
+- `trusted-cert` missing.
+- NetworkManager profile differs from openfortivpn behavior.
+- Tunnel up but no replies received.
 
-## Pre-connection checks
+## Report output
 
-- Backend installed
-- Gateway format valid
-- Gateway reachable
-- Port reachable
-- Certificate readable
-- Certificate fingerprint known
-- Profile has required fields
+Reports should eventually be exportable as:
 
-## Connection checks
-
-- Process started
-- Gateway connected
-- Authentication accepted
-- MFA/SAML detected
-- VPN address allocated
-- Interface created
-- Tunnel up
-
-## Post-connection checks
-
-- VPN interface present
-- IP address assigned
-- Routes installed
-- DNS servers installed
-- Internal host reachable
-- Internet reachable
-- Split/full tunnel detected
-- Existing default route preserved if requested
-
-## Example diagnosis
-
-```text
-Problem:
-Tunnel is up, but internal server is unreachable.
-
-Evidence:
-ICMP requests leave ppp0, but no replies return.
-
-Possible cause:
-Backend-specific tunnel issue or remote firewall/policy issue.
-
-Suggested fix:
-Try the OpenFortiVPN backend instead of NetworkManager FortiSSLVPN.
-```
-
-## Report export
-
-VPN Doctor should eventually export diagnostic reports in:
-
-- Markdown
-- HTML
-- JSON
-
-Reports must redact secrets.
+- Markdown;
+- JSON;
+- HTML.

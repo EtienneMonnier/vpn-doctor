@@ -1,0 +1,2174 @@
+# Dutch translations for vpn-doctor package.
+# Copyright (C) 2026 THE vpn-doctor'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the vpn-doctor package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: vpn-doctor 0.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/EtienneMonnier/vpn-doctor/issues\n"
+"POT-Creation-Date: 2026-11-10 10:00+0100\n"
+"PO-Revision-Date: 2026-10-30 12:28+0100\n"
+"Last-Translator: Claude (AI-assisted)\n"
+"Language-Team: Dutch\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/vpn_doctor/backend/log_parser.py:67
+msgid ""
+"The gateway refused the login. Check the password, the username and the "
+"realm. If they are correct, ask the administrator whether tunnel mode is "
+"allowed for this account."
+msgstr ""
+"De gateway heeft de aanmelding geweigerd. Controleer het wachtwoord, de "
+"gebruikersnaam en de realm. Als deze kloppen, vraag de beheerder dan of "
+"tunnelmodus voor dit account is toegestaan."
+
+#: src/vpn_doctor/backend/log_parser.py:72
+msgid ""
+"The gateway was reached and the client key, if any, was loaded: it is the "
+"gateway that refused the login. The password may be wrong or expired, or the "
+"account locked. Check the password, the username and the realm, but do not "
+"retry too often: repeated failures can lock the account. If they are "
+"correct, ask the administrator to check the account (locked, expired "
+"password, revoked certificate, tunnel mode allowed)."
+msgstr ""
+"De gateway is bereikt en de clientsleutel, indien aanwezig, is geladen: de "
+"gateway zelf heeft de aanmelding geweigerd. Het wachtwoord is mogelijk "
+"onjuist of verlopen, of het account is vergrendeld. Controleer het "
+"wachtwoord, de gebruikersnaam en de realm, maar probeer het niet te vaak: "
+"herhaalde mislukkingen kunnen het account vergrendelen. Als ze kloppen, "
+"vraag de beheerder dan het account te controleren (vergrendeld, wachtwoord "
+"verlopen, certificaat ingetrokken, tunnelmodus toegestaan)."
+
+#: src/vpn_doctor/backend/log_parser.py:80
+msgid ""
+"The gateway certificate is not trusted. Verify its fingerprint with your "
+"administrator, then add it to the profile as trusted_cert."
+msgstr ""
+"Het certificaat van de gateway wordt niet vertrouwd. Controleer de "
+"vingerafdruk met uw beheerder en voeg deze daarna als trusted_cert aan het "
+"profiel toe."
+
+#: src/vpn_doctor/backend/log_parser.py:84
+msgid ""
+"The gateway cannot be reached. Check the host name, the port, your Internet "
+"connection and any firewall in between."
+msgstr ""
+"De gateway is niet bereikbaar. Controleer de hostnaam, de poort, uw "
+"internetverbinding en eventuele firewalls daartussen."
+
+#: src/vpn_doctor/backend/log_parser.py:88
+msgid ""
+"This gateway, or its certificate, is not approved on this computer. Approve "
+"it once with an administrator password (Connect asks for it, or run vpn-"
+"doctor approve-gateway)."
+msgstr ""
+"Deze gateway, of het certificaat ervan, is niet goedgekeurd op deze "
+"computer. Keur deze eenmalig goed met een beheerderswachtwoord (Verbinden "
+"vraagt erom, of voer vpn-doctor approve-gateway uit)."
+
+#: src/vpn_doctor/backend/log_parser.py:93
+msgid ""
+"The client private key could not be loaded: the PEM pass phrase is wrong or "
+"the user_key file is unreadable. If the pass phrase was remembered, forget "
+"the saved secrets and enter it again."
+msgstr ""
+"De persoonlijke sleutel van de cliënt kon niet worden geladen: de PEM-"
+"wachtwoordzin is onjuist of het user_key-bestand is onleesbaar. Als de "
+"wachtwoordzin werd onthouden, vergeet dan de opgeslagen geheimen en voer "
+"deze opnieuw in."
+
+#: src/vpn_doctor/backend/log_parser.py:98
+msgid ""
+"openfortivpn needs administrator privileges to create the PPP interface and "
+"routes. Accept the administrator authentication prompt, or run it through "
+"pkexec or sudo."
+msgstr ""
+"openfortivpn heeft beheerdersrechten nodig om de PPP-interface en de routes "
+"aan te maken. Accepteer het verzoek om beheerdersauthenticatie, of voer het "
+"uit via pkexec of sudo."
+
+#: src/vpn_doctor/backend/networkmanager.py:259
+#: src/vpn_doctor/backend/networkmanager.py:279
+msgid "Asking NetworkManager"
+msgstr "NetworkManager raadplegen"
+
+#: src/vpn_doctor/backend/networkmanager.py:292
+#: src/vpn_doctor/core/controller.py:649 src/vpn_doctor/ui/main_window.py:184
+#: src/vpn_doctor/ui/main_window.py:451 src/vpn_doctor/ui/view_models.py:81
+msgid "Disconnected"
+msgstr "Verbinding verbroken"
+
+#: src/vpn_doctor/backend/networkmanager.py:379
+msgid "NetworkManager diagnostics"
+msgstr "NetworkManager-diagnose"
+
+#: src/vpn_doctor/backend/networkmanager.py:442
+#: src/vpn_doctor/backend/openfortivpn_process.py:198
+msgid "Connection timeout"
+msgstr "Time-out bij verbinden"
+
+#: src/vpn_doctor/backend/networkmanager.py:482
+msgid "NetworkManager is running"
+msgstr "NetworkManager draait"
+
+#: src/vpn_doctor/backend/networkmanager.py:486
+msgid "NetworkManager is not reachable through nmcli"
+msgstr "NetworkManager is niet bereikbaar via nmcli"
+
+#: src/vpn_doctor/backend/networkmanager.py:487
+#, python-brace-format
+msgid "Check that NetworkManager is installed and running: {command}"
+msgstr "Controleer of NetworkManager geïnstalleerd is en draait: {command}"
+
+#: src/vpn_doctor/backend/networkmanager.py:501
+#: src/vpn_doctor/backend/networkmanager.py:506
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:46
+msgid "VPN plugin"
+msgstr "VPN-plug-in"
+
+#: src/vpn_doctor/backend/networkmanager.py:503
+#, python-brace-format
+msgid "The {vpn_type} plugin is installed"
+msgstr "De {vpn_type}-plug-in is geïnstalleerd"
+
+#: src/vpn_doctor/backend/networkmanager.py:508
+#, python-brace-format
+msgid "The NetworkManager {vpn_type} plugin is missing"
+msgstr "De NetworkManager-plug-in voor {vpn_type} ontbreekt"
+
+#: src/vpn_doctor/backend/networkmanager.py:509
+#, python-brace-format
+msgid "Install it, for example: {command}"
+msgstr "Installeer deze, bijvoorbeeld: {command}"
+
+#: src/vpn_doctor/backend/openfortivpn.py:77
+msgid "openfortivpn binary"
+msgstr "openfortivpn-programma"
+
+#: src/vpn_doctor/backend/openfortivpn.py:79
+msgid "openfortivpn is installed"
+msgstr "openfortivpn is geïnstalleerd"
+
+#: src/vpn_doctor/backend/openfortivpn.py:81
+msgid "openfortivpn is missing"
+msgstr "openfortivpn ontbreekt"
+
+#: src/vpn_doctor/backend/openfortivpn.py:84
+msgid "Install openfortivpn using your distribution package manager"
+msgstr "Installeer openfortivpn met de pakketbeheerder van uw distributie"
+
+#: src/vpn_doctor/backend/openfortivpn.py:91
+msgid "gateway reachability"
+msgstr "bereikbaarheid van de gateway"
+
+#: src/vpn_doctor/backend/openfortivpn.py:94
+#, python-brace-format
+msgid "{gateway} is reachable"
+msgstr "{gateway} is bereikbaar"
+
+#: src/vpn_doctor/backend/openfortivpn.py:94
+#, python-brace-format
+msgid "{gateway} is unreachable"
+msgstr "{gateway} is onbereikbaar"
+
+#: src/vpn_doctor/backend/openfortivpn.py:98
+msgid "Check hostname, port, firewall or network connectivity"
+msgstr "Controleer hostnaam, poort, firewall of netwerkverbinding"
+
+#: src/vpn_doctor/backend/openfortivpn.py:102
+msgid "OpenFortiVPN basic diagnostics"
+msgstr "Basisdiagnose OpenFortiVPN"
+
+#: src/vpn_doctor/backend/openfortivpn_process.py:115
+msgid "Starting openfortivpn"
+msgstr "openfortivpn wordt gestart"
+
+#: src/vpn_doctor/backend/openfortivpn_process.py:181
+msgid "Stopping openfortivpn"
+msgstr "openfortivpn wordt gestopt"
+
+#: src/vpn_doctor/backend/process_runner.py:55
+msgid "A backend process is already running"
+msgstr "Er draait al een backendproces"
+
+#: src/vpn_doctor/backend/process_runner.py:86
+msgid "The backend process does not accept input"
+msgstr "Het backendproces accepteert geen invoer"
+
+#: src/vpn_doctor/core/controller.py:96
+#, python-brace-format
+msgid "Unknown profile: {name}"
+msgstr "Onbekend profiel: {name}"
+
+#: src/vpn_doctor/core/controller.py:200
+msgid "Gateway latency"
+msgstr "Latentie van de gateway"
+
+#: src/vpn_doctor/core/controller.py:205
+msgid "Tunnel latency"
+msgstr "Latentie van de tunnel"
+
+#: src/vpn_doctor/core/controller.py:316
+msgid "Print one JSON object instead of text (for scripts and agents)"
+msgstr "Eén JSON-object afdrukken in plaats van tekst (voor scripts en agents)"
+
+#: src/vpn_doctor/core/controller.py:318
+msgid "Show VPN Doctor version"
+msgstr "Versie van VPN Doctor tonen"
+
+#: src/vpn_doctor/core/controller.py:331
+msgid "Profile or NetworkManager connection name (default: the first one)"
+msgstr "Naam van profiel of NetworkManager-verbinding (standaard: de eerste)"
+
+#: src/vpn_doctor/core/controller.py:334
+msgid "Run basic diagnostics"
+msgstr "Basisdiagnose uitvoeren"
+
+#: src/vpn_doctor/core/controller.py:335
+msgid "List VPN connections and profiles"
+msgstr "VPN-verbindingen en profielen tonen"
+
+#: src/vpn_doctor/core/controller.py:336
+msgid "Show connection status"
+msgstr "Verbindingsstatus tonen"
+
+#: src/vpn_doctor/core/controller.py:337
+msgid "Launch the experimental GTK UI"
+msgstr "De experimentele GTK-interface starten"
+
+#: src/vpn_doctor/core/controller.py:341
+msgid "Connect a profile"
+msgstr "Een profiel verbinden"
+
+#: src/vpn_doctor/core/controller.py:347
+msgid "Print the backend command without starting a VPN process"
+msgstr "De backendopdracht afdrukken zonder een VPN-proces te starten"
+
+#: src/vpn_doctor/core/controller.py:352
+msgid "Wait until the backend reports connected, failed or timeout"
+msgstr "Wachten tot de backend verbonden, mislukt of time-out meldt"
+
+#: src/vpn_doctor/core/controller.py:358
+msgid "Maximum wait time in seconds when --wait is used"
+msgstr "Maximale wachttijd in seconden bij gebruik van --wait"
+
+#: src/vpn_doctor/core/controller.py:363
+msgid "Disconnect the active VPN session"
+msgstr "De actieve VPN-sessie verbreken"
+
+#: src/vpn_doctor/core/controller.py:369
+msgid "List the gateways approved on this computer"
+msgstr "De op deze computer goedgekeurde gateways tonen"
+
+#: src/vpn_doctor/core/controller.py:374
+msgid "Approve the gateway of a profile (administrator password)"
+msgstr "De gateway van een profiel goedkeuren (beheerderswachtwoord)"
+
+#: src/vpn_doctor/core/controller.py:379
+msgid "Revoke an approved gateway (administrator password)"
+msgstr "Een goedgekeurde gateway intrekken (beheerderswachtwoord)"
+
+#: src/vpn_doctor/core/controller.py:386
+msgid ""
+"Detect route and DNS conflicts between active VPNs and the local network"
+msgstr ""
+"Route- en DNS-conflicten tussen actieve VPN's en het lokale netwerk opsporen"
+
+#: src/vpn_doctor/core/controller.py:392
+msgid "Remove the secrets remembered in the keyring for a profile"
+msgstr "De in de sleutelbos onthouden geheimen van een profiel verwijderen"
+
+#: src/vpn_doctor/core/controller.py:398
+msgid "Diagnose a Remote Desktop server reached through the VPN"
+msgstr ""
+"Een Extern bureaublad-server diagnosticeren die via de VPN bereikt wordt"
+
+#: src/vpn_doctor/core/controller.py:401
+msgid "RDP server name or address"
+msgstr "Naam of adres van de RDP-server"
+
+#: src/vpn_doctor/core/controller.py:407
+msgid ""
+"FreeRDP/Remmina log to explain, '-' for stdin (e.g. journalctl --user -b -o "
+"cat | vpn-doctor rdp HOST --log -)"
+msgstr ""
+"FreeRDP/Remmina-logboek om te verklaren, '-' voor stdin (bijv. journalctl --"
+"user -b -o cat | vpn-doctor rdp HOST --log -)"
+
+#: src/vpn_doctor/core/controller.py:414
+msgid "Check an OpenVPN file (.ovpn) before importing it into NetworkManager"
+msgstr "Controleer een OpenVPN-bestand (.ovpn) voordat u het in NetworkManager importeert"
+
+#: src/vpn_doctor/core/controller.py:417
+#
+msgid "OpenVPN configuration file"
+msgstr "OpenVPN-configuratiebestand"
+
+#: src/vpn_doctor/core/controller.py:460
+msgid "Expected HOST:PORT"
+msgstr "Verwacht HOST:PORT"
+
+#: src/vpn_doctor/core/controller.py:469
+msgid "The keyring is not reachable: install PyGObject and libsecret."
+msgstr "De sleutelbos is niet bereikbaar: installeer PyGObject en libsecret."
+
+#: src/vpn_doctor/core/controller.py:471
+#, python-brace-format
+msgid "Secrets forgotten for {name}"
+msgstr "Geheimen vergeten voor {name}"
+
+#: src/vpn_doctor/core/controller.py:495 src/vpn_doctor/ui/main_window.py:906
+msgid "Network conflicts"
+msgstr "Netwerkconflicten"
+
+#: src/vpn_doctor/core/controller.py:499
+msgid "No conflict between active VPNs and the local network."
+msgstr "Geen conflict tussen actieve VPN's en het lokale netwerk."
+
+#: src/vpn_doctor/core/controller.py:515 src/vpn_doctor/core/controller.py:541
+#, python-brace-format
+msgid "Cannot read {path}: {error}"
+msgstr "Kan {path} niet lezen: {error}"
+
+#: src/vpn_doctor/core/controller.py:516
+msgid "RDP client log analysis"
+msgstr "Analyse van het RDP-cliëntlogboek"
+
+#: src/vpn_doctor/core/controller.py:543
+msgid "OpenVPN file check"
+msgstr "Controle van OpenVPN-bestand"
+
+#: src/vpn_doctor/core/controller.py:555
+#: src/vpn_doctor/diagnostics/ovpn_check.py:228
+msgid "Import"
+msgstr "Importeren"
+
+#: src/vpn_doctor/core/controller.py:558 src/vpn_doctor/core/controller.py:682
+#: src/vpn_doctor/core/controller.py:690 src/vpn_doctor/ui/main_window.py:330
+#: src/vpn_doctor/ui/main_window.py:467
+#, python-brace-format
+msgid "Suggestion: {text}"
+msgstr "Suggestie: {text}"
+
+#: src/vpn_doctor/core/controller.py:561
+#, python-brace-format
+msgid "Import it with: nmcli connection import type openvpn file {file}"
+msgstr "Importeer het met: nmcli connection import type openvpn file {file}"
+
+#: src/vpn_doctor/core/controller.py:574
+#, python-brace-format
+msgid "- {name} ({vpn_type} via NetworkManager)"
+msgstr "- {name} ({vpn_type} via NetworkManager)"
+
+#: src/vpn_doctor/core/controller.py:604
+msgid "The privileged helper is not installed: gateways need no approval."
+msgstr ""
+"De bevoorrechte hulpdienst is niet geïnstalleerd: gateways hoeven niet "
+"goedgekeurd te worden."
+
+#: src/vpn_doctor/core/controller.py:606 src/vpn_doctor/ui/main_window.py:401
+#: src/vpn_doctor/ui/main_window.py:736
+msgid "system CA"
+msgstr "systeem-CA"
+
+#: src/vpn_doctor/core/controller.py:607
+#, python-brace-format
+msgid "- {gateway} (certificate: {pin})"
+msgstr "- {gateway} (certificaat: {pin})"
+
+#: src/vpn_doctor/core/controller.py:631
+#, python-brace-format
+msgid "Backend process error: {error}"
+msgstr "Fout in backendproces: {error}"
+
+#: src/vpn_doctor/core/controller.py:644
+msgid "Connection started"
+msgstr "Verbinding gestart"
+
+#: src/vpn_doctor/diagnostics/conflicts.py:127
+msgid "Two full tunnels"
+msgstr "Twee volledige tunnels"
+
+#: src/vpn_doctor/diagnostics/conflicts.py:129
+#, python-brace-format
+msgid ""
+"{names} both want to carry all your traffic. Only one of them really does."
+msgstr ""
+"{names} willen allebei al uw verkeer afhandelen. Slechts één ervan doet dat "
+"echt."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:132
+msgid "Keep one full-tunnel VPN, or ask for split tunneling on the other one."
+msgstr ""
+"Houd één VPN met volledige tunnel, of vraag om split tunneling voor de "
+"andere."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:152
+msgid "Overlapping VPN networks"
+msgstr "Overlappende VPN-netwerken"
+
+#: src/vpn_doctor/diagnostics/conflicts.py:155
+#, python-brace-format
+msgid ""
+"{first} routes {first_network} and {second} routes {second_network}. Traffic "
+"for the overlap goes to {winner} only."
+msgstr ""
+"{first} routeert {first_network} en {second} routeert {second_network}. "
+"Verkeer voor de overlap gaat alleen naar {winner}."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:165
+msgid ""
+"Disconnect one of these VPNs to reach hosts of the other one, or ask an "
+"administrator to use distinct address ranges."
+msgstr ""
+"Verbreek een van deze VPN's om hosts van de andere te bereiken, of vraag een "
+"beheerder om verschillende adresbereiken te gebruiken."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:187
+msgid "VPN overlaps your local network"
+msgstr "VPN overlapt uw lokale netwerk"
+
+#: src/vpn_doctor/diagnostics/conflicts.py:190
+#, python-brace-format
+msgid ""
+"{vpn} routes {network}, which overlaps your local network {lan_network} on "
+"{device}."
+msgstr ""
+"{vpn} routeert {network}, dat overlapt met uw lokale netwerk {lan_network} "
+"op {device}."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:199
+msgid ""
+"Devices of your local network (router, printer, NAS) or remote hosts may "
+"become unreachable. Renumbering the local network avoids it, e.g. "
+"192.168.77.0/24 instead of 192.168.1.0/24."
+msgstr ""
+"Apparaten in uw lokale netwerk (router, printer, NAS) of externe hosts "
+"kunnen onbereikbaar worden. Het lokale netwerk hernummeren voorkomt dit, "
+"bijv. 192.168.77.0/24 in plaats van 192.168.1.0/24."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:216
+msgid "DNS claimed by several VPNs"
+msgstr "DNS opgeëist door meerdere VPN's"
+
+#: src/vpn_doctor/diagnostics/conflicts.py:219
+#, python-brace-format
+msgid ""
+"{names} both ask to resolve every name. Answers may come from either VPN, so "
+"internal names can fail at random."
+msgstr ""
+"{names} willen allebei elke naam omzetten. Antwoorden kunnen van beide VPN's "
+"komen, waardoor interne namen willekeurig kunnen mislukken."
+
+#: src/vpn_doctor/diagnostics/conflicts.py:223
+msgid ""
+"Configure routing-only DNS domains (e.g. ~corp.example.com) on one of them "
+"in the connection settings, under IPv4 > DNS search domains."
+msgstr ""
+"Stel op een van beide in de verbindingsinstellingen DNS-domeinen voor alleen "
+"routering in (bijv. ~corp.example.com), onder IPv4 > DNS search domains."
+
+#. TRANSLATORS: separator between VPN connection names, as in "Office and Lab".
+#: src/vpn_doctor/diagnostics/conflicts.py:233
+msgid " and "
+msgstr " en "
+
+#: src/vpn_doctor/diagnostics/latency.py:99
+msgid "good"
+msgstr "goed"
+
+#: src/vpn_doctor/diagnostics/latency.py:100
+msgid "fair"
+msgstr "matig"
+
+#: src/vpn_doctor/diagnostics/latency.py:101
+msgid "poor"
+msgstr "slecht"
+
+#: src/vpn_doctor/diagnostics/latency.py:112
+#, python-brace-format
+msgid "{target} does not answer through the tunnel"
+msgstr "{target} antwoordt niet via de tunnel"
+
+#: src/vpn_doctor/diagnostics/latency.py:116
+msgid ""
+"The tunnel is up but traffic does not flow: check the routes, or the "
+"firewall on the other side."
+msgstr ""
+"De tunnel is actief maar er gaat geen verkeer door: controleer de routes of "
+"de firewall aan de andere kant."
+
+#: src/vpn_doctor/diagnostics/latency.py:124
+#, python-brace-format
+msgid "{target} does not answer ping and no TCP port to measure"
+msgstr "{target} antwoordt niet op ping en er is geen TCP-poort om te meten"
+
+#: src/vpn_doctor/diagnostics/latency.py:127
+msgid "Many gateways block ping: this is not an error by itself."
+msgstr "Veel gateways blokkeren ping: dat is op zich geen fout."
+
+#: src/vpn_doctor/diagnostics/latency.py:132
+#, python-brace-format
+msgid "{quality}: {average:.0f} ms to {target} (TCP connection)"
+msgstr "{quality}: {average:.0f} ms naar {target} (TCP-verbinding)"
+
+#: src/vpn_doctor/diagnostics/latency.py:137
+#, python-brace-format
+msgid ""
+"{quality}: {average:.0f} ms to {target}, jitter {jitter:.0f} ms, {loss:.0f}% "
+"loss"
+msgstr ""
+"{quality}: {average:.0f} ms naar {target}, jitter {jitter:.0f} ms, {loss:.0f}"
+"% verlies"
+
+#: src/vpn_doctor/diagnostics/latency.py:150
+msgid ""
+"Slow or unstable tunnel: remote desktop and calls will lag. Compare with the "
+"gateway latency: if the gateway is fast, the slowness is behind the VPN."
+msgstr ""
+"Trage of instabiele tunnel: extern bureaublad en gesprekken zullen haperen. "
+"Vergelijk met de latentie van de gateway: is de gateway snel, dan zit de "
+"traagheid achter de VPN."
+
+#: src/vpn_doctor/diagnostics/latency.py:155
+msgid ""
+"Slow or unstable path to the gateway: check your own Internet connection (Wi-"
+"Fi, mobile data) before blaming the VPN."
+msgstr ""
+"Trage of instabiele weg naar de gateway: controleer eerst uw eigen "
+"internetverbinding (wifi, mobiele data) voordat u de VPN de schuld geeft."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:211
+msgid "File"
+msgstr "Bestand"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:211
+msgid "This file is too large to be an OpenVPN configuration."
+msgstr "Dit bestand is te groot om een OpenVPN-configuratie te zijn."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:230
+msgid "Nothing in this file should prevent NetworkManager from using it."
+msgstr "Niets in dit bestand zou moeten verhinderen dat NetworkManager het gebruikt."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:242
+#: src/vpn_doctor/diagnostics/ovpn_check.py:252
+msgid "Damaged file"
+msgstr "Beschadigd bestand"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:244
+#, python-brace-format
+msgid "The <{tag}> block is never closed: everything after it is ignored."
+msgstr "Het blok <{tag}> wordt nooit afgesloten: alles daarna wordt genegeerd."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:246
+#, python-brace-format
+msgid "Add the missing </{tag}> line, or ask for the file again."
+msgstr "Voeg de ontbrekende regel </{tag}> toe, of vraag het bestand opnieuw op."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:254
+#, python-brace-format
+msgid ""
+"Lines {lines} cannot belong to an OpenVPN file (merge conflict markers, "
+"stray closing tags or file names). They are ignored."
+msgstr "Regels {lines} kunnen niet bij een OpenVPN-bestand horen (markeringen van samenvoegconflicten, losse afsluitende tags of bestandsnamen). Ze worden genegeerd."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:257
+msgid ""
+"Check these lines: part of the configuration may be missing or mixed up."
+msgstr "Controleer deze regels: een deel van de configuratie kan ontbreken of door elkaar staan."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:261
+#
+msgid "Server"
+msgstr "Server"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:262
+msgid ""
+"The file has no `remote` line: it does not say which server to connect to."
+msgstr "Het bestand heeft geen `remote`-regel: het vermeldt niet met welke server verbonden moet worden."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:263
+msgid "Ask the VPN provider for the client configuration file."
+msgstr "Vraag de VPN-aanbieder om het configuratiebestand voor de client."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:267
+msgid "Static key"
+msgstr "Statische sleutel"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:269
+msgid ""
+"The file uses a static key (`secret`) instead of certificates. OpenVPN 2.7 "
+"deprecates this mode and refuses its weak ciphers."
+msgstr "Het bestand gebruikt een statische sleutel (`secret`) in plaats van certificaten. OpenVPN 2.7 markeert deze modus als verouderd en weigert de zwakke versleutelingen ervan."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:272
+msgid ""
+"Ask the VPN administrator for a configuration with certificates (TLS mode)."
+msgstr "Vraag de VPN-beheerder om een configuratie met certificaten (TLS-modus)."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:281
+#
+msgid "Removed option"
+msgstr "Verwijderde optie"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:283
+msgid ""
+"`tls-remote` was removed from OpenVPN 2.4. NetworkManager imports it, but "
+"OpenVPN refuses to start with it."
+msgstr "`tls-remote` is verwijderd uit OpenVPN 2.4. NetworkManager importeert het wel, maar OpenVPN weigert ermee te starten."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:287
+msgid ""
+"Replace it with `verify-x509-name <server name> name`, or set the server "
+"name in the TLS authentication settings of the connection after import."
+msgstr "Vervang het door `verify-x509-name <server name> name`, of stel na het importeren de servernaam in bij de TLS-authenticatie-instellingen van de verbinding."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:293
+msgid "Deprecated option"
+msgstr "Verouderde optie"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:294
+msgid ""
+"`ns-cert-type` is deprecated and checks an obsolete certificate extension."
+msgstr "`ns-cert-type` is verouderd en controleert een achterhaalde certificaatextensie."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:295
+msgid "Replace it with `remote-cert-tls server`."
+msgstr "Vervang het door `remote-cert-tls server`."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:316
+#, python-brace-format
+msgid ""
+"{file} is next to the configuration: replace the path with just `{file}` in "
+"the `{option}` line before importing."
+msgstr "{file} staat naast de configuratie: vervang vóór het importeren het pad door alleen `{file}` in de `{option}`-regel."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:321
+#, python-brace-format
+msgid ""
+"Put the file next to the .ovpn file and use just its name in the `{option}` "
+"line, or ask the VPN provider for a configuration with inline certificates."
+msgstr "Zet het bestand naast het .ovpn-bestand en gebruik alleen de naam ervan in de `{option}`-regel, of vraag de VPN-aanbieder om een configuratie met ingesloten certificaten."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:326
+msgid "Missing file"
+msgstr "Ontbrekend bestand"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:328
+#, python-brace-format
+msgid ""
+"`{option}` points to {file}, which does not exist. NetworkManager imports "
+"the path anyway and the connection will fail."
+msgstr "`{option}` verwijst naar {file}, dat niet bestaat. NetworkManager importeert het pad toch en de verbinding zal mislukken."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:347
+#: src/vpn_doctor/diagnostics/ovpn_check.py:359
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:167
+msgid "Data cipher"
+msgstr "Gegevensversleuteling"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:349
+#, python-brace-format
+msgid ""
+"The file asks for {ciphers}, which OpenVPN can no longer use with OpenSSL 3: "
+"these old 64-bit block ciphers are only in its legacy provider."
+msgstr "Het bestand vraagt om {ciphers}, die OpenVPN met OpenSSL 3 niet meer kan gebruiken: deze oude 64-bits blokversleutelingen zitten alleen nog in de legacy-provider."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:353
+msgid ""
+"Ask the VPN provider to enable AES-256-GCM on the server and remove the old "
+"cipher from the file."
+msgstr "Vraag de VPN-aanbieder om AES-256-GCM op de server in te schakelen en de oude versleuteling uit het bestand te verwijderen."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:361
+#, python-brace-format
+msgid ""
+"The file asks for {ciphers}: triple DES still works but is deprecated (64-"
+"bit blocks, vulnerable to SWEET32 on long sessions)."
+msgstr "Het bestand vraagt om {ciphers}: triple DES werkt nog, maar is verouderd (64-bits blokken, kwetsbaar voor SWEET32 bij lange sessies)."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:364
+msgid "Ask the VPN provider to enable AES-256-GCM on the server."
+msgstr "Vraag de VPN-aanbieder om AES-256-GCM op de server in te schakelen."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:369
+#
+msgid "Packet authentication"
+msgstr "Pakketauthenticatie"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:370
+#, python-brace-format
+msgid "The file authenticates packets with {digest}, which is weak."
+msgstr "Het bestand authenticeert pakketten met {digest}, wat zwak is."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:373
+msgid ""
+"Ask the VPN provider to use SHA256 or an AEAD cipher such as AES-256-GCM."
+msgstr "Vraag de VPN-aanbieder om SHA256 of een AEAD-versleuteling zoals AES-256-GCM te gebruiken."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:387
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:181
+msgid "Compression"
+msgstr "Compressie"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:389
+#
+msgid ""
+"The file turns compression on. Recent OpenVPN versions refuse it by default "
+"because compressing encrypted traffic can leak its content (VORACLE); if the "
+"server insists, the connection fails."
+msgstr "Het bestand schakelt compressie in. Recente OpenVPN-versies weigeren dit standaard, omdat het comprimeren van versleuteld verkeer de inhoud kan prijsgeven (VORACLE); als de server erop staat, mislukt de verbinding."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:394
+#
+msgid ""
+"Ask the VPN provider to disable compression. Removing `comp-lzo` / "
+"`compress` from the file only works if the server does not require it."
+msgstr "Vraag de VPN-aanbieder om compressie uit te schakelen. `comp-lzo` / `compress` uit het bestand verwijderen werkt alleen als de server het niet vereist."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:407
+#
+msgid "Server identity"
+msgstr "Serveridentiteit"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:409
+msgid ""
+"The file never checks that the server certificate is a server certificate "
+"(`remote-cert-tls server`): another client of the same VPN could impersonate "
+"the server."
+msgstr "Het bestand controleert nooit of het servercertificaat wel een servercertificaat is (`remote-cert-tls server`): een andere client van dezelfde VPN zou zich als de server kunnen voordoen."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:413
+msgid "Add `remote-cert-tls server` to the file before importing it."
+msgstr "Voeg `remote-cert-tls server` aan het bestand toe voordat u het importeert."
+
+#
+#: src/vpn_doctor/diagnostics/ovpn_check.py:424
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:153
+msgid "TLS key"
+msgstr "TLS-sleutel"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:426
+msgid ""
+"The file uses a `tls-auth` key without a key direction. Most servers expect "
+"1 on clients; with the wrong direction, the server never answers."
+msgstr "Het bestand gebruikt een `tls-auth`-sleutel zonder sleutelrichting. De meeste servers verwachten 1 bij clients; met de verkeerde richting antwoordt de server nooit."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:429
+msgid "Add `key-direction 1` to the file, unless the provider says otherwise."
+msgstr "Voeg `key-direction 1` aan het bestand toe, tenzij de aanbieder iets anders aangeeft."
+
+#
+#: src/vpn_doctor/diagnostics/ovpn_check.py:434
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:140
+msgid "TLS version"
+msgstr "TLS-versie"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:436
+#, python-brace-format
+msgid "The file limits TLS to version {version}, which the system refuses."
+msgstr "Het bestand beperkt TLS tot versie {version}, die het systeem weigert."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:438
+msgid ""
+"Remove `tls-version-max` and ask the provider to enable TLS 1.2 or newer."
+msgstr "Verwijder `tls-version-max` en vraag de aanbieder om TLS 1.2 of nieuwer in te schakelen."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:448
+msgid ""
+"`redirect-gateway` is ignored by NetworkManager: unless the server pushes "
+"it, only the VPN's own networks go through the tunnel, not all traffic."
+msgstr "`redirect-gateway` wordt door NetworkManager genegeerd: tenzij de server het doorgeeft, gaan alleen de eigen netwerken van de VPN door de tunnel, niet al het verkeer."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:452
+msgid ""
+"After import, check that \"Use this connection only for resources on its "
+"network\" is off in the IPv4 and IPv6 settings, then verify your public "
+"address once connected."
+msgstr "Controleer na het importeren of \"Deze verbinding alleen gebruiken voor bronnen op hun netwerk\" uit staat in de IPv4- en IPv6-instellingen, en controleer daarna uw publieke adres zodra u verbonden bent."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:459
+msgid ""
+"`route-nopull` is ignored by NetworkManager: the routes pushed by the server "
+"are applied anyway."
+msgstr "`route-nopull` wordt door NetworkManager genegeerd: de door de server doorgegeven routes worden toch toegepast."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:463
+msgid ""
+"After import, turn on \"Ignore automatically obtained routes\" in the IPv4 "
+"routes settings of the connection."
+msgstr "Schakel na het importeren \"Automatisch verkregen routes negeren\" in bij de IPv4-route-instellingen van de verbinding."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:469
+msgid ""
+"`pull-filter` is ignored by NetworkManager: settings the file wanted to "
+"refuse from the server (routes, DNS...) are applied anyway."
+msgstr "`pull-filter` wordt door NetworkManager genegeerd: instellingen die het bestand van de server wilde weigeren (routes, DNS...) worden toch toegepast."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:473
+msgid ""
+"After import, ignore automatic routes or DNS in the IPv4 and IPv6 settings "
+"if that was the goal."
+msgstr "Negeer na het importeren automatische routes of DNS in de IPv4- en IPv6-instellingen als dat de bedoeling was."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:479
+msgid ""
+"`dhcp-option` in the file is ignored by NetworkManager: only the DNS servers "
+"pushed by the VPN server are used."
+msgstr "`dhcp-option` in het bestand wordt door NetworkManager genegeerd: alleen de DNS-servers die de VPN-server doorgeeft, worden gebruikt."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:482
+msgid ""
+"After import, add the DNS servers in the IPv4 settings of the connection."
+msgstr "Voeg na het importeren de DNS-servers toe in de IPv4-instellingen van de verbinding."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:486
+msgid ""
+"`ncp-ciphers` is the old name of `data-ciphers` (renamed in OpenVPN 2.5) and "
+"NetworkManager ignores it: the default data ciphers are used instead."
+msgstr "`ncp-ciphers` is de oude naam van `data-ciphers` (hernoemd in OpenVPN 2.5) en NetworkManager negeert het: in plaats daarvan worden de standaard-dataversleutelingen gebruikt."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:489
+msgid "Rename `ncp-ciphers` to `data-ciphers` in the file before importing."
+msgstr "Hernoem `ncp-ciphers` naar `data-ciphers` in het bestand voordat u het importeert."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:493
+msgid ""
+"`route-ipv6` is ignored by NetworkManager: these IPv6 routes are not added."
+msgstr "`route-ipv6` wordt door NetworkManager genegeerd: deze IPv6-routes worden niet toegevoegd."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:495
+msgid ""
+"After import, add the IPv6 routes in the IPv6 settings of the connection."
+msgstr "Voeg na het importeren de IPv6-routes toe in de IPv6-instellingen van de verbinding."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:499
+msgid ""
+"`remote-cert-eku` is ignored by NetworkManager: this check of the server "
+"certificate is lost."
+msgstr "`remote-cert-eku` wordt door NetworkManager genegeerd: deze controle van het servercertificaat gaat verloren."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:503
+msgid ""
+"Make sure `remote-cert-tls server` or `verify-x509-name` is also in the "
+"file, so the server is still verified."
+msgstr "Zorg dat `remote-cert-tls server` of `verify-x509-name` ook in het bestand staat, zodat de server nog steeds gecontroleerd wordt."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:511
+#: src/vpn_doctor/diagnostics/ovpn_check.py:521
+#
+msgid "Ignored by NetworkManager"
+msgstr "Genegeerd door NetworkManager"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:524
+#, python-brace-format
+msgid ""
+"NetworkManager does not import these options: {options}. Check that none of "
+"them matters for this VPN."
+msgstr "NetworkManager importeert deze opties niet: {options}. Controleer of geen ervan van belang is voor deze VPN."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:531
+msgid "Password in the file"
+msgstr "Wachtwoord in het bestand"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:533
+msgid ""
+"The file contains a user name and a password in clear text. NetworkManager "
+"does not import them, but anyone who can read this file can."
+msgstr "Het bestand bevat een gebruikersnaam en een wachtwoord in leesbare tekst. NetworkManager importeert ze niet, maar iedereen die dit bestand kan lezen, kan dat wel."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:537
+msgid ""
+"Enter the password when NetworkManager asks for it, then delete this copy of "
+"the file or remove the <auth-user-pass> block from it."
+msgstr "Voer het wachtwoord in wanneer NetworkManager erom vraagt, verwijder daarna deze kopie van het bestand of haal het blok <auth-user-pass> eruit."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:543
+#
+msgid "Password"
+msgstr "Wachtwoord"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:546
+msgid ""
+"The password file named by `auth-user-pass` is not imported: NetworkManager "
+"asks for the password and keeps it in the keyring."
+msgstr "Het wachtwoordbestand dat door `auth-user-pass` wordt genoemd, wordt niet geïmporteerd: NetworkManager vraagt om het wachtwoord en bewaart het in de sleutelbos."
+
+#
+#: src/vpn_doctor/diagnostics/ovpn_check.py:582
+#
+msgid "Old certificates"
+msgstr "Oude certificaten"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:585
+#, python-brace-format
+msgid ""
+"`{option}` also contains expired or weak certificates next to valid ones. "
+"OpenVPN uses the valid ones, so this is harmless."
+msgstr "`{option}` bevat naast geldige certificaten ook verlopen of zwakke. OpenVPN gebruikt de geldige, dus dit is onschadelijk."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:600
+#, python-brace-format
+msgid "`{option}` certificate {subject}"
+msgstr "`{option}`-certificaat {subject}"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:603
+#
+msgid "Expired certificate"
+msgstr "Verlopen certificaat"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:604
+#, python-brace-format
+msgid "{label} expired on {date}."
+msgstr "{label} is verlopen op {date}."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:605
+msgid "Ask the VPN provider for an up-to-date configuration."
+msgstr "Vraag de VPN-aanbieder om een actuele configuratie."
+
+#
+#: src/vpn_doctor/diagnostics/ovpn_check.py:609
+#
+msgid "Certificate not valid yet"
+msgstr "Certificaat nog niet geldig"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:610
+#, python-brace-format
+msgid "{label} is only valid from {date}."
+msgstr "{label} is pas geldig vanaf {date}."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:613
+#
+msgid "Check the date and time of this computer."
+msgstr "Controleer de datum en tijd van deze computer."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:617
+#
+msgid "Certificate expires soon"
+msgstr "Certificaat verloopt binnenkort"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:618
+#, python-brace-format
+msgid "{label} expires on {date}."
+msgstr "{label} verloopt op {date}."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:619
+msgid "Ask the VPN provider when it will be renewed."
+msgstr "Vraag de VPN-aanbieder wanneer het vernieuwd wordt."
+
+#
+#: src/vpn_doctor/diagnostics/ovpn_check.py:623
+#: src/vpn_doctor/diagnostics/ovpn_check.py:634
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:101
+msgid "Weak certificate"
+msgstr "Zwak certificaat"
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:625
+#, python-brace-format
+msgid ""
+"{label} uses a {bits}-bit {type} key, which the system's cryptographic "
+"policy refuses (2048 bits minimum)."
+msgstr "{label} gebruikt een {bits}-bits {type}-sleutel, die het cryptografische beleid van het systeem weigert (minimaal 2048 bits)."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:628
+msgid "Ask the VPN provider for new certificates (RSA 2048 bits or more)."
+msgstr "Vraag de VPN-aanbieder om nieuwe certificaten (RSA 2048 bits of meer)."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:636
+#, python-brace-format
+msgid ""
+"{label} is signed with {algorithm}, which the system's cryptographic policy "
+"refuses."
+msgstr "{label} is ondertekend met {algorithm}, dat het cryptografische beleid van het systeem weigert."
+
+#: src/vpn_doctor/diagnostics/ovpn_check.py:639
+msgid "Ask the VPN provider for certificates signed with SHA-256."
+msgstr "Vraag de VPN-aanbieder om certificaten die met SHA-256 zijn ondertekend."
+
+#: src/vpn_doctor/diagnostics/rdp.py:40
+msgid "standard RDP security"
+msgstr "standaard RDP-beveiliging"
+
+#: src/vpn_doctor/diagnostics/rdp.py:44
+msgid "NLA (CredSSP with early user authorization)"
+msgstr "NLA (CredSSP met vroege gebruikersautorisatie)"
+
+#: src/vpn_doctor/diagnostics/rdp.py:45
+msgid "RDS AAD authentication"
+msgstr "RDS AAD-authenticatie"
+
+#: src/vpn_doctor/diagnostics/rdp.py:49
+msgid "the server requires TLS"
+msgstr "de server vereist TLS"
+
+#: src/vpn_doctor/diagnostics/rdp.py:50
+msgid "the server does not allow TLS"
+msgstr "de server staat TLS niet toe"
+
+#: src/vpn_doctor/diagnostics/rdp.py:51
+msgid "the server has no TLS certificate"
+msgstr "de server heeft geen TLS-certificaat"
+
+#: src/vpn_doctor/diagnostics/rdp.py:52
+msgid "the client request was inconsistent"
+msgstr "het verzoek van de cliënt was inconsistent"
+
+#: src/vpn_doctor/diagnostics/rdp.py:53
+msgid "the server requires NLA (CredSSP)"
+msgstr "de server vereist NLA (CredSSP)"
+
+#: src/vpn_doctor/diagnostics/rdp.py:54
+msgid "the server requires TLS with user authentication"
+msgstr "de server vereist TLS met gebruikersauthenticatie"
+
+#: src/vpn_doctor/diagnostics/rdp.py:74
+#, python-brace-format
+msgid "protocol 0x{code:x}"
+msgstr "protocol 0x{code:x}"
+
+#: src/vpn_doctor/diagnostics/rdp.py:77
+#, python-brace-format
+msgid "failure code 0x{code:x}"
+msgstr "foutcode 0x{code:x}"
+
+#: src/vpn_doctor/diagnostics/rdp.py:110
+msgid "RDP diagnostics"
+msgstr "RDP-diagnose"
+
+#: src/vpn_doctor/diagnostics/rdp.py:118 src/vpn_doctor/diagnostics/rdp.py:133
+msgid "RDP port"
+msgstr "RDP-poort"
+
+#: src/vpn_doctor/diagnostics/rdp.py:119
+#, python-brace-format
+msgid "{target} is not reachable ({error})."
+msgstr "{target} is niet bereikbaar ({error})."
+
+#: src/vpn_doctor/diagnostics/rdp.py:123
+msgid ""
+"Check that the VPN routes this address, that Remote Desktop is enabled on "
+"the server and that no firewall blocks the port."
+msgstr ""
+"Controleer of de VPN dit adres routeert, of Extern bureaublad op de server "
+"is ingeschakeld en of geen firewall de poort blokkeert."
+
+#: src/vpn_doctor/diagnostics/rdp.py:133
+#, python-brace-format
+msgid "{target} accepts TCP connections."
+msgstr "{target} accepteert TCP-verbindingen."
+
+#: src/vpn_doctor/diagnostics/rdp.py:143 src/vpn_doctor/diagnostics/rdp.py:155
+#: src/vpn_doctor/diagnostics/rdp.py:169
+msgid "RDP negotiation"
+msgstr "RDP-onderhandeling"
+
+#: src/vpn_doctor/diagnostics/rdp.py:144
+#, python-brace-format
+msgid "The service on {target} did not answer like an RDP server ({error})."
+msgstr "De dienst op {target} antwoordde niet als een RDP-server ({error})."
+
+#: src/vpn_doctor/diagnostics/rdp.py:147
+msgid "Check the port number: another service may be listening on it."
+msgstr "Controleer het poortnummer: mogelijk luistert er een andere dienst op."
+
+#: src/vpn_doctor/diagnostics/rdp.py:156
+#, python-brace-format
+msgid "The server refused the security negotiation: {reason}."
+msgstr "De server weigerde de beveiligingsonderhandeling: {reason}."
+
+#: src/vpn_doctor/diagnostics/rdp.py:160
+msgid ""
+"Align the security setting of the client (Remmina: Advanced > Security "
+"protocol negotiation) with what the server requires."
+msgstr ""
+"Stem de beveiligingsinstelling van de cliënt (Remmina: Advanced > Security "
+"protocol negotiation) af op wat de server vereist."
+
+#: src/vpn_doctor/diagnostics/rdp.py:171
+#, python-brace-format
+msgid "The server selected {protocol}."
+msgstr "De server koos {protocol}."
+
+#: src/vpn_doctor/diagnostics/rdp.py:180
+msgid "Beyond this probe"
+msgstr "Buiten deze test"
+
+#: src/vpn_doctor/diagnostics/rdp.py:183
+msgid ""
+"Authentication, licensing and session start need credentials and are not "
+"tested here. If the client still fails, analyse its log with --log."
+msgstr ""
+"Authenticatie, licentieverlening en het starten van de sessie vereisen "
+"aanmeldgegevens en worden hier niet getest. Als de cliënt nog steeds faalt, "
+"analyseer dan het logboek ervan met --log."
+
+#: src/vpn_doctor/diagnostics/rdp.py:201 src/vpn_doctor/diagnostics/rdp.py:205
+msgid "TLS handshake"
+msgstr "TLS-handshake"
+
+#: src/vpn_doctor/diagnostics/rdp.py:201
+#, python-brace-format
+msgid "TLS works ({version})."
+msgstr "TLS werkt ({version})."
+
+#: src/vpn_doctor/diagnostics/rdp.py:206
+#, python-brace-format
+msgid "The TLS handshake failed ({error})."
+msgstr "De TLS-handshake is mislukt ({error})."
+
+#: src/vpn_doctor/diagnostics/rdp.py:208
+msgid ""
+"Old Windows servers only offer TLS 1.0/1.1. Lower the client TLS security "
+"level (Remmina: Advanced > TLS Security Level = 0) or update the server."
+msgstr ""
+"Oude Windows-servers bieden alleen TLS 1.0/1.1 aan. Verlaag het TLS-"
+"beveiligingsniveau van de cliënt (Remmina: Advanced > TLS Security Level = "
+"0) of werk de server bij."
+
+#: src/vpn_doctor/diagnostics/rdp.py:219
+msgid "Remote Desktop licensing"
+msgstr "Licenties voor Extern bureaublad"
+
+#: src/vpn_doctor/diagnostics/rdp.py:221
+msgid ""
+"Your credentials were accepted, then the server closed the connection during "
+"the Remote Desktop licensing phase. This is a server-side problem, not a VPN "
+"or password problem."
+msgstr ""
+"Uw aanmeldgegevens werden geaccepteerd, waarna de server de verbinding sloot "
+"tijdens de licentiefase van Extern bureaublad. Dit is een probleem aan de "
+"serverkant, geen VPN- of wachtwoordprobleem."
+
+#: src/vpn_doctor/diagnostics/rdp.py:226
+msgid ""
+"The RDS licensing grace period has probably expired or the license server is "
+"unreachable. To confirm, connect in console mode, which bypasses licensing "
+"(Remmina: Advanced > Attach to console, xfreerdp: /admin). The server "
+"administrator should check RD Licensing and the TerminalServices-Licensing "
+"event log."
+msgstr ""
+"De respijtperiode voor RDS-licenties is waarschijnlijk verlopen of de "
+"licentieserver is onbereikbaar. Maak ter bevestiging verbinding in "
+"consolemodus, die de licentieverlening omzeilt (Remmina: Advanced > Attach "
+"to console, xfreerdp: /admin). De serverbeheerder moet RD Licensing en het "
+"gebeurtenislogboek TerminalServices-Licensing controleren."
+
+#: src/vpn_doctor/diagnostics/rdp.py:236
+msgid "Expired password"
+msgstr "Verlopen wachtwoord"
+
+#: src/vpn_doctor/diagnostics/rdp.py:237
+msgid "The Windows password has expired or must be changed."
+msgstr "Het Windows-wachtwoord is verlopen of moet worden gewijzigd."
+
+#: src/vpn_doctor/diagnostics/rdp.py:239
+msgid ""
+"NLA cannot change a password during login. Change it from another Windows "
+"session or ask the administrator to reset it."
+msgstr ""
+"NLA kan geen wachtwoord wijzigen tijdens het aanmelden. Wijzig het vanuit "
+"een andere Windows-sessie of vraag de beheerder het opnieuw in te stellen."
+
+#: src/vpn_doctor/diagnostics/rdp.py:246
+msgid "Windows account"
+msgstr "Windows-account"
+
+#: src/vpn_doctor/diagnostics/rdp.py:247
+msgid "The Windows account is locked, disabled, expired or restricted."
+msgstr ""
+"Het Windows-account is vergrendeld, uitgeschakeld, verlopen of beperkt."
+
+#: src/vpn_doctor/diagnostics/rdp.py:249
+msgid ""
+"Ask the server administrator to check the account in Active Directory or in "
+"the local users of the server."
+msgstr ""
+"Vraag de serverbeheerder het account te controleren in Active Directory of "
+"bij de lokale gebruikers van de server."
+
+#: src/vpn_doctor/diagnostics/rdp.py:255
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:25
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:83
+msgid "Credentials"
+msgstr "Aanmeldgegevens"
+
+#: src/vpn_doctor/diagnostics/rdp.py:256
+msgid "The server rejected the username or the password."
+msgstr "De server weigerde de gebruikersnaam of het wachtwoord."
+
+#: src/vpn_doctor/diagnostics/rdp.py:258
+msgid ""
+"Check the password, the username and the domain. A domain account is often "
+"written DOMAIN\\user."
+msgstr ""
+"Controleer het wachtwoord, de gebruikersnaam en het domein. Een "
+"domeinaccount wordt vaak geschreven als DOMAIN\\user."
+
+#: src/vpn_doctor/diagnostics/rdp.py:265
+msgid "Remote Desktop permission"
+msgstr "Toestemming voor Extern bureaublad"
+
+#: src/vpn_doctor/diagnostics/rdp.py:266
+msgid "The account is valid but not allowed to open a Remote Desktop session."
+msgstr "Het account is geldig maar mag geen Extern bureaublad-sessie openen."
+
+#: src/vpn_doctor/diagnostics/rdp.py:267
+msgid ""
+"Ask the administrator to add the account to the Remote Desktop Users group."
+msgstr ""
+"Vraag de beheerder het account toe te voegen aan de groep Remote Desktop "
+"Users."
+
+#: src/vpn_doctor/diagnostics/rdp.py:271
+msgid "TLS"
+msgstr "TLS"
+
+#: src/vpn_doctor/diagnostics/rdp.py:272
+msgid "The client could not establish TLS with the server."
+msgstr "De cliënt kon geen TLS-verbinding met de server opzetten."
+
+#: src/vpn_doctor/diagnostics/rdp.py:274
+msgid ""
+"Lower the client TLS security level (Remmina: Advanced > TLS Security Level "
+"= 0) for old servers."
+msgstr ""
+"Verlaag het TLS-beveiligingsniveau van de cliënt (Remmina: Advanced > TLS "
+"Security Level = 0) voor oude servers."
+
+#: src/vpn_doctor/diagnostics/rdp.py:280
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:212
+msgid "Server name"
+msgstr "Servernaam"
+
+#: src/vpn_doctor/diagnostics/rdp.py:281
+msgid "The client could not resolve the server name."
+msgstr "De cliënt kon de servernaam niet omzetten."
+
+#: src/vpn_doctor/diagnostics/rdp.py:282
+msgid "Check the name, or the DNS servers pushed by the VPN."
+msgstr "Controleer de naam, of de DNS-servers die de VPN doorgeeft."
+
+#: src/vpn_doctor/diagnostics/rdp.py:286
+msgid "Network"
+msgstr "Netwerk"
+
+#: src/vpn_doctor/diagnostics/rdp.py:287
+msgid "The client could not reach the server."
+msgstr "De cliënt kon de server niet bereiken."
+
+#: src/vpn_doctor/diagnostics/rdp.py:288
+msgid ""
+"Run `vpn-doctor rdp HOST` to test the route, the port and the negotiation."
+msgstr ""
+"Voer `vpn-doctor rdp HOST` uit om de route, de poort en de onderhandeling te "
+"testen."
+
+#: src/vpn_doctor/diagnostics/rdp.py:292
+msgid "Kerberos warnings"
+msgstr "Kerberos-waarschuwingen"
+
+#: src/vpn_doctor/diagnostics/rdp.py:294
+msgid ""
+"FreeRDP tried Kerberos first, found no realm and fell back to NTLM. These "
+"errors are harmless."
+msgstr ""
+"FreeRDP probeerde eerst Kerberos, vond geen realm en viel terug op NTLM. "
+"Deze fouten zijn onschuldig."
+
+#: src/vpn_doctor/diagnostics/rdp.py:311
+msgid "Client log"
+msgstr "Cliëntlogboek"
+
+#: src/vpn_doctor/diagnostics/rdp.py:311
+msgid "No known FreeRDP error was found."
+msgstr "Er is geen bekende FreeRDP-fout gevonden."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:26
+msgid "NetworkManager reports that the VPN refused the credentials."
+msgstr "NetworkManager meldt dat de VPN de aanmeldgegevens heeft geweigerd."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:27
+msgid ""
+"Check the username and the password in the connection settings, then try "
+"again."
+msgstr ""
+"Controleer de gebruikersnaam en het wachtwoord in de verbindingsinstellingen "
+"en probeer het opnieuw."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:31
+msgid "WireGuard key"
+msgstr "WireGuard-sleutel"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:32
+msgid "The WireGuard private key is missing from the connection."
+msgstr "De persoonlijke WireGuard-sleutel ontbreekt in de verbinding."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:33
+msgid ""
+"Import the configuration again, or set the private key in the connection "
+"settings."
+msgstr ""
+"Importeer de configuratie opnieuw, of stel de persoonlijke sleutel in bij de "
+"verbindingsinstellingen."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:37
+msgid "Password prompt"
+msgstr "Wachtwoordvraag"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:38
+msgid "The VPN needed a password, but none was entered."
+msgstr "De VPN had een wachtwoord nodig, maar er werd er geen ingevoerd."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:40
+msgid ""
+"Enter the password when GNOME asks for it. Without a desktop session, "
+"connect with `nmcli --ask connection up <name>`."
+msgstr ""
+"Voer het wachtwoord in wanneer GNOME erom vraagt. Zonder bureaubladsessie "
+"verbindt u met `nmcli --ask connection up <name>`."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:47
+msgid "NetworkManager could not start the VPN plugin for this connection type."
+msgstr ""
+"NetworkManager kon de VPN-plug-in voor dit verbindingstype niet starten."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:49
+msgid ""
+"Check that the matching plugin package is installed (for example "
+"NetworkManager-openvpn), then restart NetworkManager."
+msgstr ""
+"Controleer of het bijbehorende plug-inpakket is geïnstalleerd (bijvoorbeeld "
+"NetworkManager-openvpn) en herstart daarna NetworkManager."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:55
+msgid "Server configuration"
+msgstr "Serverconfiguratie"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:56
+msgid "The VPN server sent settings that NetworkManager could not apply."
+msgstr ""
+"De VPN-server stuurde instellingen die NetworkManager niet kon toepassen."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:57
+msgid ""
+"Ask the VPN administrator to check the addresses and routes pushed to "
+"clients."
+msgstr ""
+"Vraag de VPN-beheerder de adressen en routes te controleren die naar "
+"cliënten worden gestuurd."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:61
+msgid "IP address"
+msgstr "IP-adres"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:62
+msgid "The tunnel started but no IP address could be configured."
+msgstr "De tunnel is gestart, maar er kon geen IP-adres worden ingesteld."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:63
+msgid ""
+"The VPN server may have no free address left. Contact the VPN administrator."
+msgstr ""
+"De VPN-server heeft mogelijk geen vrij adres meer. Neem contact op met de "
+"VPN-beheerder."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:67
+msgid "Timeout"
+msgstr "Time-out"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:68
+msgid "The connection did not complete in time."
+msgstr "De verbinding werd niet op tijd voltooid."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:69
+msgid ""
+"Check that the gateway is reachable, and answer any two-factor prompt "
+"quickly."
+msgstr ""
+"Controleer of de gateway bereikbaar is en beantwoord een eventuele "
+"tweestapsverificatie snel."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:73
+msgid "VPN program"
+msgstr "VPN-programma"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:74
+msgid "The VPN program started, then stopped. Its own log explains why."
+msgstr ""
+"Het VPN-programma startte en stopte daarna. Het eigen logboek ervan "
+"verklaart waarom."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:75
+msgid "Look at the plugin log lines just before the failure."
+msgstr "Bekijk de logboekregels van de plug-in vlak voor de fout."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:84
+msgid "The VPN server refused the login."
+msgstr "De VPN-server weigerde de aanmelding."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:86
+msgid ""
+"Check the username, the password and, for FortiGate, the realm. If they are "
+"correct, the account may be locked or not allowed to use the VPN."
+msgstr ""
+"Controleer de gebruikersnaam, het wachtwoord en, voor FortiGate, de realm. "
+"Als deze kloppen, is het account mogelijk vergrendeld of mag het de VPN niet "
+"gebruiken."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:92
+msgid "Private key"
+msgstr "Persoonlijke sleutel"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:93
+msgid "The password protecting the client private key is wrong."
+msgstr ""
+"Het wachtwoord dat de persoonlijke sleutel van de cliënt beschermt is "
+"onjuist."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:94
+msgid "Enter the private key password again in the connection settings."
+msgstr ""
+"Voer het wachtwoord van de persoonlijke sleutel opnieuw in bij de "
+"verbindingsinstellingen."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:103
+msgid ""
+"A certificate of this VPN uses a key or a signature that the system's "
+"cryptographic policy refuses (RSA shorter than 2048 bits, SHA-1 or MD5)."
+msgstr ""
+"Een certificaat van deze VPN gebruikt een sleutel of handtekening die het "
+"cryptografische beleid van het systeem weigert (RSA korter dan 2048 bits, "
+"SHA-1 of MD5)."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:107
+msgid ""
+"Ask the VPN administrator for new certificates (RSA 2048 bits or more, "
+"SHA-256). As a temporary workaround on Fedora or RHEL, an administrator can "
+"relax the policy, e.g. `update-crypto-policies --set DEFAULT:SHA1`; this "
+"weakens the whole system."
+msgstr ""
+"Vraag de VPN-beheerder om nieuwe certificaten (RSA 2048 bits of meer, "
+"SHA-256). Als tijdelijke oplossing op Fedora of RHEL kan een beheerder het "
+"beleid versoepelen, bijv. `update-crypto-policies --set DEFAULT:SHA1`; dit "
+"verzwakt het hele systeem."
+
+#
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:115
+msgid "Certificate dates"
+msgstr "Geldigheid van het certificaat"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:117
+msgid ""
+"A certificate of this VPN (the server's, its authority's or yours) has "
+"expired or is not valid yet, or the clock of this computer is wrong."
+msgstr ""
+"Een certificaat van deze VPN (dat van de server, van de "
+"certificaatautoriteit of het uwe) is verlopen of nog niet geldig, of de klok "
+"van deze computer staat verkeerd."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:121
+msgid ""
+"Check the date and time of this computer. If they are right, ask the VPN "
+"administrator to renew the certificate."
+msgstr ""
+"Controleer de datum en tijd van deze computer. Als die kloppen, vraag de VPN-"
+"beheerder het certificaat te vernieuwen."
+
+#
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:127
+msgid "Certificate file"
+msgstr "Certificaatbestand"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:129
+msgid ""
+"The PKCS#12 (.p12) file could not be opened: either its password is wrong, "
+"or it uses an old encryption (RC2, 3DES) that OpenSSL 3 no longer reads."
+msgstr ""
+"Het PKCS#12-bestand (.p12) kon niet worden geopend: het wachtwoord is "
+"onjuist, of het gebruikt een oude versleuteling (RC2, 3DES) die OpenSSL 3 "
+"niet meer leest."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:133
+msgid ""
+"Check its password. If it is right, re-encrypt the file: `openssl pkcs12 "
+"-legacy -in old.p12 -out tmp.pem`, then `openssl pkcs12 -export -in tmp.pem "
+"-out new.p12`, and delete tmp.pem."
+msgstr ""
+"Controleer het wachtwoord. Als het klopt, versleutel het bestand opnieuw: "
+"`openssl pkcs12 -legacy -in old.p12 -out tmp.pem`, daarna `openssl pkcs12 "
+"-export -in tmp.pem -out new.p12`, en verwijder tmp.pem."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:142
+msgid ""
+"The VPN server and this computer have no TLS version in common: the server "
+"probably only offers TLS 1.0 or 1.1, which the system refuses."
+msgstr ""
+"De VPN-server en deze computer hebben geen gemeenschappelijke TLS-versie: de "
+"server biedt waarschijnlijk alleen TLS 1.0 of 1.1 aan, die het systeem "
+"weigert."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:146
+msgid ""
+"Ask the VPN administrator to enable TLS 1.2 or newer. Also check the minimum "
+"TLS version in the advanced settings of the connection."
+msgstr ""
+"Vraag de VPN-beheerder TLS 1.2 of nieuwer in te schakelen. Controleer ook de "
+"minimale TLS-versie in de geavanceerde verbindingsinstellingen."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:155
+msgid ""
+"The packets of the VPN server fail the extra TLS key check (tls-auth or tls-"
+"crypt): this computer and the server do not use the same key, or the same "
+"key direction."
+msgstr ""
+"De pakketten van de VPN-server doorstaan de extra TLS-sleutelcontrole (tls-"
+"auth of tls-crypt) niet: deze computer en de server gebruiken niet dezelfde "
+"sleutel, of niet dezelfde sleutelrichting."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:160
+msgid ""
+"Import the configuration file from the VPN administrator again, or check the "
+"TLS authentication key and its direction (0 or 1) in the advanced settings "
+"of the connection."
+msgstr ""
+"Importeer het configuratiebestand van de VPN-beheerder opnieuw, of "
+"controleer de TLS-authenticatiesleutel en de richting ervan (0 of 1) in de "
+"geavanceerde verbindingsinstellingen."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:169
+msgid ""
+"This computer and the VPN server have no data encryption algorithm in "
+"common. Recent OpenVPN versions no longer accept old ciphers such as BF-CBC."
+msgstr ""
+"Deze computer en de VPN-server hebben geen gemeenschappelijk algoritme voor "
+"gegevensversleuteling. Recente OpenVPN-versies accepteren geen oude "
+"versleutelingen zoals BF-CBC meer."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:173
+msgid ""
+"Ask the VPN administrator to enable a modern cipher such as AES-256-GCM on "
+"the server. Until then, the server's cipher can be added to the data ciphers "
+"in the advanced settings of the connection, if your security policy allows "
+"it."
+msgstr ""
+"Vraag de VPN-beheerder een moderne versleuteling zoals AES-256-GCM op de "
+"server in te schakelen. Tot dan kan de versleuteling van de server worden "
+"toegevoegd aan de gegevensversleutelingen in de geavanceerde "
+"verbindingsinstellingen, als uw beveiligingsbeleid dat toestaat."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:183
+msgid ""
+"The VPN server asks for compression, which recent OpenVPN versions refuse "
+"because compressing encrypted traffic can leak its content (VORACLE)."
+msgstr ""
+"De VPN-server vraagt om compressie, die recente OpenVPN-versies weigeren "
+"omdat het comprimeren van versleuteld verkeer de inhoud kan prijsgeven "
+"(VORACLE)."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:187
+msgid ""
+"Ask the VPN administrator to disable compression on the server (comp-lzo, "
+"compress). Allowing it on this computer is a security risk."
+msgstr ""
+"Vraag de VPN-beheerder compressie op de server uit te schakelen (comp-lzo, "
+"compress). Compressie op deze computer toestaan is een beveiligingsrisico."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:194
+msgid "Server certificate"
+msgstr "Servercertificaat"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:195
+msgid "The VPN server certificate is not trusted."
+msgstr "Het certificaat van de VPN-server wordt niet vertrouwd."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:197
+msgid ""
+"Verify the certificate with the VPN administrator, then set the right CA "
+"certificate or fingerprint in the connection settings."
+msgstr ""
+"Controleer het certificaat met de VPN-beheerder en stel daarna het juiste CA-"
+"certificaat of de juiste vingerafdruk in bij de verbindingsinstellingen."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:203
+msgid "No answer from the server"
+msgstr "Geen antwoord van de server"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:204
+msgid "The VPN server did not complete the secure handshake."
+msgstr "De VPN-server heeft de beveiligde handshake niet voltooid."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:206
+msgid ""
+"The port or protocol may be blocked by the local network (OpenVPN often uses "
+"UDP). Try another network, or check the port and protocol in the settings."
+msgstr ""
+"De poort of het protocol wordt mogelijk geblokkeerd door het lokale netwerk "
+"(OpenVPN gebruikt vaak UDP). Probeer een ander netwerk, of controleer de "
+"poort en het protocol in de instellingen."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:213
+msgid "The VPN server name could not be resolved."
+msgstr "De naam van de VPN-server kon niet worden omgezet."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:214
+msgid "Check the gateway name in the connection settings and your DNS."
+msgstr "Controleer de gatewaynaam in de verbindingsinstellingen en uw DNS."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:219
+msgid "Gateway unreachable"
+msgstr "Gateway onbereikbaar"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:220
+msgid "The VPN gateway could not be reached."
+msgstr "De VPN-gateway kon niet worden bereikt."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:221
+msgid ""
+"Check your Internet connection, the gateway address and port, and any "
+"firewall."
+msgstr ""
+"Controleer uw internetverbinding, het adres en de poort van de gateway, en "
+"eventuele firewalls."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:225
+msgid "Session expired"
+msgstr "Sessie verlopen"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:226
+msgid "The VPN server ended the session."
+msgstr "De VPN-server heeft de sessie beëindigd."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:227
+msgid ""
+"Connect again. If it happens often, ask the administrator about session "
+"limits."
+msgstr ""
+"Maak opnieuw verbinding. Als dit vaak gebeurt, vraag de beheerder dan naar "
+"sessielimieten."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:231
+msgid "Configuration file"
+msgstr "Configuratiebestand"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:232
+msgid "The VPN configuration contains an option the VPN program rejects."
+msgstr "De VPN-configuratie bevat een optie die het VPN-programma weigert."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:233
+msgid "Import the configuration again, or remove the reported option."
+msgstr "Importeer de configuratie opnieuw, of verwijder de gemelde optie."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:237
+msgid "Connection lost"
+msgstr "Verbinding verloren"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:238
+msgid "The VPN server stopped answering keepalive messages."
+msgstr "De VPN-server reageert niet meer op keepalive-berichten."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:239
+msgid "The network may be unstable, or the server dropped the session."
+msgstr ""
+"Het netwerk is mogelijk instabiel, of de server heeft de sessie beëindigd."
+
+#: src/vpn_doctor/services/gateway_service.py:81
+msgid "The VPN Doctor helper is not installed"
+msgstr "De hulpdienst van VPN Doctor is niet geïnstalleerd"
+
+#: src/vpn_doctor/services/settings_service.py:62
+#, python-brace-format
+msgid ""
+"Profile \"{name}\" contains a secret. Passwords must not be stored in "
+"profile files."
+msgstr ""
+"Profiel \"{name}\" bevat een geheim. Wachtwoorden mogen niet in "
+"profielbestanden worden opgeslagen."
+
+#: src/vpn_doctor/ui/main_window.py:46
+msgid "Diagnose. Connect. Protect."
+msgstr "Diagnosticeren. Verbinden. Beschermen."
+
+#: src/vpn_doctor/ui/main_window.py:125
+msgid "Remember in the keyring"
+msgstr "Onthouden in de sleutelbos"
+
+#: src/vpn_doctor/ui/main_window.py:131 src/vpn_doctor/ui/main_window.py:410
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: src/vpn_doctor/ui/main_window.py:176
+msgid "■ STATUS"
+msgstr "■ STATUS"
+
+#: src/vpn_doctor/ui/main_window.py:200
+msgid "■ CONNECTION"
+msgstr "■ VERBINDING"
+
+#: src/vpn_doctor/ui/main_window.py:206
+msgid "Settings…"
+msgstr "Instellingen…"
+
+#: src/vpn_doctor/ui/main_window.py:209
+msgid "Edit this connection in NetworkManager"
+msgstr "Deze verbinding bewerken in NetworkManager"
+
+#: src/vpn_doctor/ui/main_window.py:217
+msgid "TYPE"
+msgstr "TYPE"
+
+#: src/vpn_doctor/ui/main_window.py:218
+msgid "GATEWAY"
+msgstr "GATEWAY"
+
+#: src/vpn_doctor/ui/main_window.py:219
+msgid "MANAGED BY"
+msgstr "BEHEERD DOOR"
+
+#: src/vpn_doctor/ui/main_window.py:231 src/vpn_doctor/ui/main_window.py:393
+msgid "Connect"
+msgstr "Verbinden"
+
+#: src/vpn_doctor/ui/main_window.py:236
+msgid "Disconnect"
+msgstr "Verbreken"
+
+#: src/vpn_doctor/ui/main_window.py:240
+msgid "Diagnose"
+msgstr "Diagnosticeren"
+
+#: src/vpn_doctor/ui/main_window.py:252
+msgid "■ LOG"
+msgstr "■ LOG"
+
+#: src/vpn_doctor/ui/main_window.py:291
+#, python-brace-format
+msgid "{name} was already connected before VPN Doctor started"
+msgstr "{name} was al verbonden voordat VPN Doctor startte"
+
+#: src/vpn_doctor/ui/main_window.py:321
+msgid "Measuring latency…"
+msgstr "Latentie meten…"
+
+#: src/vpn_doctor/ui/main_window.py:325
+#, python-brace-format
+msgid "Latency measure failed: {error}"
+msgstr "Latentiemeting mislukt: {error}"
+
+#: src/vpn_doctor/ui/main_window.py:357
+#, python-brace-format
+msgid "Could not send the answer: {error}"
+msgstr "Kon het antwoord niet versturen: {error}"
+
+#: src/vpn_doctor/ui/main_window.py:362
+#, python-brace-format
+msgid "{name} asks for more information"
+msgstr "{name} vraagt om meer informatie"
+
+#: src/vpn_doctor/ui/main_window.py:364
+msgid "Send"
+msgstr "Versturen"
+
+#: src/vpn_doctor/ui/main_window.py:381
+msgid "Using the password remembered in the keyring"
+msgstr "Het in de sleutelbos onthouden wachtwoord wordt gebruikt"
+
+#: src/vpn_doctor/ui/main_window.py:391
+#, python-brace-format
+msgid "VPN password for {name}"
+msgstr "VPN-wachtwoord voor {name}"
+
+#: src/vpn_doctor/ui/main_window.py:392
+msgid ""
+"The password is sent to openfortivpn through stdin, never written to a file."
+msgstr ""
+"Het wachtwoord wordt via stdin naar openfortivpn gestuurd en nooit naar een "
+"bestand geschreven."
+
+#: src/vpn_doctor/ui/main_window.py:403
+msgid "Approve this VPN gateway?"
+msgstr "Deze VPN-gateway goedkeuren?"
+
+#: src/vpn_doctor/ui/main_window.py:405
+#, python-brace-format
+msgid ""
+"{gateway}\n"
+"Certificate: {pin}\n"
+"\n"
+"An administrator approves a gateway once. Then users of this computer "
+"connect to it without an administrator password, and VPN Doctor refuses any "
+"other gateway or certificate."
+msgstr ""
+"{gateway}\n"
+"Certificaat: {pin}\n"
+"\n"
+"Een beheerder keurt een gateway eenmalig goed. Daarna maken gebruikers van "
+"deze computer er verbinding mee zonder beheerderswachtwoord, en weigert VPN "
+"Doctor elke andere gateway of elk ander certificaat."
+
+#: src/vpn_doctor/ui/main_window.py:411
+msgid "Approve"
+msgstr "Goedkeuren"
+
+#: src/vpn_doctor/ui/main_window.py:418
+#, python-brace-format
+msgid "Approving {gateway}…"
+msgstr "{gateway} wordt goedgekeurd…"
+
+#: src/vpn_doctor/ui/main_window.py:432
+#, python-brace-format
+msgid "Connecting {name}…"
+msgstr "Verbinden met {name}…"
+
+#: src/vpn_doctor/ui/main_window.py:441
+#, python-brace-format
+msgid "Could not start the VPN backend: {error}"
+msgstr "Kon de VPN-backend niet starten: {error}"
+
+#: src/vpn_doctor/ui/main_window.py:445
+msgid "Stopping connection…"
+msgstr "Verbinding wordt verbroken…"
+
+#: src/vpn_doctor/ui/main_window.py:449
+#, python-brace-format
+msgid "Disconnect failed: {error}"
+msgstr "Verbreken mislukt: {error}"
+
+#: src/vpn_doctor/ui/main_window.py:456
+msgid "Running diagnostics…"
+msgstr "Diagnose wordt uitgevoerd…"
+
+#: src/vpn_doctor/ui/main_window.py:460
+#, python-brace-format
+msgid "Diagnostics failed: {error}"
+msgstr "Diagnose mislukt: {error}"
+
+#: src/vpn_doctor/ui/main_window.py:515
+msgid "Show"
+msgstr "Tonen"
+
+#: src/vpn_doctor/ui/main_window.py:528
+msgid "New or reload connections"
+msgstr "Nieuwe verbinding of herladen"
+
+#: src/vpn_doctor/ui/main_window.py:565
+msgid "Click or press a key to skip"
+msgstr "Klik of druk op een toets om over te slaan"
+
+#: src/vpn_doctor/ui/main_window.py:613
+msgid "Connecting automatically (Preferences)"
+msgstr "Automatisch verbinden (Voorkeuren)"
+
+#: src/vpn_doctor/ui/main_window.py:624
+msgid "No NetworkManager connection editor is installed"
+msgstr "Er is geen verbindingseditor voor NetworkManager geïnstalleerd"
+
+#: src/vpn_doctor/ui/main_window.py:636
+#, python-brace-format
+msgid "Cannot open the connection editor: {error}"
+msgstr "Kan de verbindingseditor niet openen: {error}"
+
+#: src/vpn_doctor/ui/main_window.py:644
+msgid "General"
+msgstr "Algemeen"
+
+#: src/vpn_doctor/ui/main_window.py:647
+msgid "Appearance"
+msgstr "Uiterlijk"
+
+#: src/vpn_doctor/ui/main_window.py:653
+msgid " (custom)"
+msgstr " (aangepast)"
+
+#: src/vpn_doctor/ui/main_window.py:654
+msgid "Skin"
+msgstr "Thema"
+
+#: src/vpn_doctor/ui/main_window.py:666
+msgid "Custom skins"
+msgstr "Aangepaste thema's"
+
+#: src/vpn_doctor/ui/main_window.py:667
+#, python-brace-format
+msgid "Drop CSS files in {path}"
+msgstr "Plaats CSS-bestanden in {path}"
+
+#: src/vpn_doctor/ui/main_window.py:669
+msgid "Open folder"
+msgstr "Map openen"
+
+#: src/vpn_doctor/ui/main_window.py:669
+msgid "Reload"
+msgstr "Herladen"
+
+#: src/vpn_doctor/ui/main_window.py:676
+msgid "Startup animation"
+msgstr "Opstartanimatie"
+
+#: src/vpn_doctor/ui/main_window.py:677
+msgid "Logo and boot checks when VPN Doctor starts"
+msgstr "Logo en opstartcontroles wanneer VPN Doctor start"
+
+#: src/vpn_doctor/ui/main_window.py:686
+msgid "Startup"
+msgstr "Opstarten"
+
+#: src/vpn_doctor/ui/main_window.py:688
+msgid ""
+"To connect when the computer starts, without VPN Doctor, use the \"Connect "
+"automatically\" option of the connection in NetworkManager."
+msgstr ""
+"Gebruik de optie \"Connect automatically\" van de verbinding in "
+"NetworkManager om bij het opstarten van de computer verbinding te maken, "
+"zonder VPN Doctor."
+
+#: src/vpn_doctor/ui/main_window.py:696
+msgid "First connection"
+msgstr "Eerste verbinding"
+
+#: src/vpn_doctor/ui/main_window.py:699
+msgid "Default connection"
+msgstr "Standaardverbinding"
+
+#: src/vpn_doctor/ui/main_window.py:705
+msgid "Connect automatically"
+msgstr "Automatisch verbinden"
+
+#: src/vpn_doctor/ui/main_window.py:706
+msgid "Connect the default connection when VPN Doctor starts"
+msgstr "De standaardverbinding verbinden wanneer VPN Doctor start"
+
+#: src/vpn_doctor/ui/main_window.py:725
+msgid "Approved gateways"
+msgstr "Goedgekeurde gateways"
+
+#: src/vpn_doctor/ui/main_window.py:727
+msgid ""
+"openfortivpn gateways users of this computer may connect to without an "
+"administrator password. Revoking one asks for that password."
+msgstr ""
+"openfortivpn-gateways waarmee gebruikers van deze computer verbinding mogen "
+"maken zonder beheerderswachtwoord. Intrekken vraagt om dat wachtwoord."
+
+#: src/vpn_doctor/ui/main_window.py:734
+msgid "No approved gateway yet"
+msgstr "Nog geen goedgekeurde gateway"
+
+#: src/vpn_doctor/ui/main_window.py:737
+#, python-brace-format
+msgid "Certificate: {pin}"
+msgstr "Certificaat: {pin}"
+
+#: src/vpn_doctor/ui/main_window.py:738 src/vpn_doctor/ui/main_window.py:746
+msgid "Revoke"
+msgstr "Intrekken"
+
+#: src/vpn_doctor/ui/main_window.py:746
+msgid "Revoked"
+msgstr "Ingetrokken"
+
+#: src/vpn_doctor/ui/main_window.py:756
+msgid "Saved secrets"
+msgstr "Opgeslagen geheimen"
+
+#: src/vpn_doctor/ui/main_window.py:758
+msgid ""
+"Passwords and PEM pass phrases of openfortivpn profiles, kept in the desktop "
+"keyring. NetworkManager connections keep theirs in GNOME Settings."
+msgstr ""
+"Wachtwoorden en PEM-wachtwoordzinnen van openfortivpn-profielen, bewaard in "
+"de sleutelbos van het bureaublad. NetworkManager-verbindingen bewaren die "
+"van hen in GNOME Instellingen."
+
+#: src/vpn_doctor/ui/main_window.py:765
+msgid "Forget"
+msgstr "Vergeten"
+
+#: src/vpn_doctor/ui/main_window.py:770
+msgid "Forgotten"
+msgstr "Gewist"
+
+#: src/vpn_doctor/ui/main_window.py:785
+msgid ""
+"Linux VPN troubleshooting assistant.\n"
+"Diagnose. Connect. Protect."
+msgstr ""
+"Assistent voor het oplossen van VPN-problemen onder Linux.\n"
+"Diagnosticeren. Verbinden. Beschermen."
+
+#: src/vpn_doctor/ui/main_window.py:873
+msgid "New VPN connection…"
+msgstr "Nieuwe VPN-verbinding…"
+
+#: src/vpn_doctor/ui/main_window.py:874
+msgid "Reload connections"
+msgstr "Verbindingen herladen"
+
+#: src/vpn_doctor/ui/main_window.py:890
+#, python-brace-format
+msgid "⚠ {count} network conflict: {first}"
+msgid_plural "⚠ {count} network conflicts: {first}"
+msgstr[0] "⚠ {count} netwerkconflict: {first}"
+msgstr[1] "⚠ {count} netwerkconflicten: {first}"
+
+#: src/vpn_doctor/ui/main_window.py:907
+msgid "Close"
+msgstr "Sluiten"
+
+#: src/vpn_doctor/ui/main_window.py:930
+msgid "Main menu"
+msgstr "Hoofdmenu"
+
+#: src/vpn_doctor/ui/main_window.py:937
+msgid "Preferences"
+msgstr "Voorkeuren"
+
+#: src/vpn_doctor/ui/main_window.py:938
+msgid "Forget saved secrets of this connection"
+msgstr "Opgeslagen geheimen van deze verbinding vergeten"
+
+#: src/vpn_doctor/ui/main_window.py:941
+msgid "About VPN Doctor"
+msgstr "Over VPN Doctor"
+
+#: src/vpn_doctor/ui/main_window.py:960
+#, python-brace-format
+msgid ""
+"{name} is managed by NetworkManager: edit its secrets in GNOME Settings."
+msgstr ""
+"{name} wordt beheerd door NetworkManager: bewerk de geheimen ervan in GNOME "
+"Instellingen."
+
+#: src/vpn_doctor/ui/main_window.py:965
+#, python-brace-format
+msgid "Saved secrets forgotten for {name}"
+msgstr "Opgeslagen geheimen vergeten voor {name}"
+
+#: src/vpn_doctor/ui/main_window.py:967
+msgid "The keyring is not reachable"
+msgstr "De sleutelbos is niet bereikbaar"
+
+#: src/vpn_doctor/ui/main_window.py:1001
+#, python-brace-format
+msgid "Skin {name}, line {line}: {error}"
+msgstr "Thema {name}, regel {line}: {error}"
+
+#: src/vpn_doctor/ui/view_models.py:32
+msgid "Waiting for you"
+msgstr "Wacht op u"
+
+#: src/vpn_doctor/ui/view_models.py:37
+msgid "⌨ INPUT"
+msgstr "⌨ INVOER"
+
+#: src/vpn_doctor/ui/view_models.py:42
+msgid "Connected"
+msgstr "Verbonden"
+
+#: src/vpn_doctor/ui/view_models.py:43
+msgid "VPN tunnel is active"
+msgstr "VPN-tunnel is actief"
+
+#: src/vpn_doctor/ui/view_models.py:47
+msgid "● ONLINE"
+msgstr "● ONLINE"
+
+#: src/vpn_doctor/ui/view_models.py:52
+msgid "Connecting"
+msgstr "Verbinden"
+
+#: src/vpn_doctor/ui/view_models.py:53
+msgid "VPN connection is being established"
+msgstr "VPN-verbinding wordt opgezet"
+
+#: src/vpn_doctor/ui/view_models.py:57
+msgid "◐ LINKING"
+msgstr "◐ KOPPELEN"
+
+#: src/vpn_doctor/ui/view_models.py:62
+msgid "Disconnecting"
+msgstr "Verbreken"
+
+#: src/vpn_doctor/ui/view_models.py:63
+msgid "VPN connection is being stopped"
+msgstr "VPN-verbinding wordt gestopt"
+
+#: src/vpn_doctor/ui/view_models.py:67
+msgid "◑ CLOSING"
+msgstr "◑ SLUITEN"
+
+#: src/vpn_doctor/ui/view_models.py:72
+msgid "Failed"
+msgstr "Mislukt"
+
+#: src/vpn_doctor/ui/view_models.py:73
+msgid "VPN connection failed"
+msgstr "VPN-verbinding mislukt"
+
+#: src/vpn_doctor/ui/view_models.py:77
+msgid "✕ FAILURE"
+msgstr "✕ FOUT"
+
+#: src/vpn_doctor/ui/view_models.py:82
+msgid "VPN is not connected"
+msgstr "VPN is niet verbonden"
+
+#: src/vpn_doctor/ui/view_models.py:86
+msgid "○ OFFLINE"
+msgstr "○ OFFLINE"
+
+#: src/vpn_doctor/ui/view_models.py:128
+#, python-brace-format
+msgid "VPN DOCTOR {version}"
+msgstr "VPN DOCTOR {version}"
+
+#: src/vpn_doctor/ui/view_models.py:129
+msgid "Loading diagnostics engine… OK"
+msgstr "Diagnose-engine laden… OK"
+
+#: src/vpn_doctor/ui/view_models.py:130
+msgid "NOT FOUND"
+msgstr "NIET GEVONDEN"
+
+#: src/vpn_doctor/ui/view_models.py:130
+#, python-brace-format
+msgid "NetworkManager… {state}"
+msgstr "NetworkManager… {state}"
+
+#: src/vpn_doctor/ui/view_models.py:130
+msgid "ONLINE"
+msgstr "ONLINE"
+
+#: src/vpn_doctor/ui/view_models.py:131
+#, python-brace-format
+msgid "Keyring… {state}"
+msgstr "Sleutelbos… {state}"
+
+#: src/vpn_doctor/ui/view_models.py:131
+msgid "UNAVAILABLE"
+msgstr "NIET BESCHIKBAAR"
+
+#: src/vpn_doctor/ui/view_models.py:131
+msgid "UNLOCKED"
+msgstr "ONTGRENDELD"
+
+#: src/vpn_doctor/ui/view_models.py:133
+#, python-brace-format
+msgid "Scanning connections… {count} found"
+msgid_plural "Scanning connections… {count} found"
+msgstr[0] "Verbindingen scannen… {count} gevonden"
+msgstr[1] "Verbindingen scannen… {count} gevonden"
+
+#: src/vpn_doctor/ui/view_models.py:135
+msgid "Ready. Diagnose. Connect. Protect."
+msgstr "Gereed. Diagnosticeren. Verbinden. Beschermen."
+
+#~ msgid "Open a connection"
+#~ msgstr "Een verbinding openen"
+
+#~ msgid "Connections"
+#~ msgstr "Verbindingen"

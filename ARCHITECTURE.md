@@ -1,201 +1,142 @@
-# VPN Doctor Architecture
+# Architecture
 
-## Purpose
+VPN Doctor is designed as a diagnostics-first VPN assistant.
 
-This document defines the global architecture of VPN Doctor.
+The architecture must keep the GUI, the business logic, diagnostics and VPN backends
+separated. This is essential because VPN Doctor should eventually support multiple
+backends without rewriting the user interface.
 
-VPN Doctor must remain modular. The GUI must not know how OpenFortiVPN, WireGuard or OpenVPN work internally. The UI asks application services to perform actions, and services delegate to backends and diagnostics providers.
+## High-level architecture
 
-## High-level flow
+```mermaid
+graph TD
+    CLI[CLI]
+    GUI[GTK4 / Libadwaita GUI]
+    Controller[Application Controller]
+    Services[Services]
+    Settings[Settings Service]
+    Secrets[Secret Service]
+    Notifications[Notification Service]
+    Diagnostics[Diagnostics Engine]
+    BackendManager[Backend Manager]
+    Backend[VPN Backend Interface]
+    Forti[OpenFortiVPN Backend]
+    Wire[WireGuard Backend]
+    OpenVPN[OpenVPN Backend]
+    OpenConnect[OpenConnect Backend]
+    OS[Linux OS]
 
-```text
-User Interface
-     ↓
-Application Controller
-     ↓
-Services
-     ↓
-Diagnostics Engine
-     ↓
-Backend Interface
-     ↓
-Backend Implementations
-     ↓
-Linux System
+    CLI --> Controller
+    GUI --> Controller
+    Controller --> Services
+    Services --> Settings
+    Services --> Secrets
+    Services --> Notifications
+    Services --> Diagnostics
+    Services --> BackendManager
+    BackendManager --> Backend
+    Backend --> Forti
+    Backend --> Wire
+    Backend --> OpenVPN
+    Backend --> OpenConnect
+    Forti --> OS
+    Wire --> OS
+    OpenVPN --> OS
+    OpenConnect --> OS
+    Diagnostics --> OS
 ```
 
-## Main layers
+## Dependency direction
 
-### UI layer
-
-Location:
+Allowed:
 
 ```text
-src/vpn_doctor/ui/
+UI / CLI -> Controller -> Services -> Backends / Diagnostics -> OS
 ```
-
-Responsibilities:
-
-- Display profiles.
-- Display connection state.
-- Display logs.
-- Display diagnostics results.
-- Trigger user actions.
-- Show notifications and toasts.
 
 Forbidden:
 
-- Direct subprocess calls.
-- Direct calls to `openfortivpn`, `wg`, `openvpn`, `ip`, `nmcli`.
-- Direct password storage.
-- Direct route manipulation.
-
-### Controller layer
-
-Location:
-
 ```text
-src/vpn_doctor/core/
+Backend -> UI
+Diagnostics -> UI
+Models -> Services
+Models -> Backends
 ```
 
-Responsibilities:
+## Layer responsibilities
 
-- Coordinate user actions.
-- Call services.
-- Convert service state to UI-friendly state.
-- Keep UI logic thin.
+### CLI / UI
 
-### Services layer
+- Display information.
+- Trigger actions.
+- Render diagnostics.
+- Never execute VPN binaries directly.
+- Never parse backend logs directly.
 
-Location:
+### Controller
 
-```text
-src/vpn_doctor/services/
-```
+- Coordinates user actions.
+- Calls services.
+- Returns application-level results to CLI or GUI.
 
-Core services:
+### Services
 
-- `ProfileService`
-- `ConnectionService`
-- `DiagnosticsService`
-- `SecretService`
-- `NotificationService`
-- `SettingsService`
-- `LogService`
+Services own business behaviour that is not specific to one backend.
 
-### Backend layer
+Examples:
 
-Location:
+- settings loading;
+- notification sending;
+- secret retrieval;
+- profile management;
+- diagnostic orchestration.
 
-```text
-src/vpn_doctor/backend/
-```
+### Diagnostics
 
-Responsibilities:
+Diagnostics should be backend-aware but not backend-owned.
 
-- Implement VPN-specific logic.
-- Run the underlying tool safely.
-- Parse backend output.
-- Report status changes.
-- Never expose raw secrets.
+A backend may expose backend-specific checks, but global checks such as DNS, routes,
+MTU, process availability and interface status should live in diagnostics modules.
 
-Initial backend:
+### Backends
 
-- OpenFortiVPN
+A backend wraps one VPN engine.
 
-Future backends:
+Examples:
 
-- WireGuard
-- OpenVPN
-- OpenConnect
-- StrongSwan
+- `openfortivpn`;
+- `wg`;
+- `openvpn`;
+- `openconnect`.
 
-### Diagnostics layer
+A backend is responsible for:
 
-Location:
+- command construction;
+- process lifecycle;
+- backend-specific log parsing;
+- status normalization.
 
-```text
-src/vpn_doctor/diagnostics/
-```
+### Models
 
-Responsibilities:
+Models are data-only objects with no side effects.
 
-- Run diagnostic checks.
-- Produce structured results.
-- Suggest safe fixes.
-- Explain failures in human-readable language.
+Examples:
 
-### Models layer
+- `VPNProfile`;
+- `VPNStatus`;
+- `DiagnosticItem`;
+- `DiagnosticReport`.
 
-Location:
+## Current code status
 
-```text
-src/vpn_doctor/models/
-```
+The current code includes:
 
-Core models:
+- application bootstrap;
+- controller;
+- models;
+- OpenFortiVPN backend skeleton;
+- basic diagnostics;
+- tests for models and command construction.
 
-- `VPNProfile`
-- `BackendType`
-- `ConnectionStatus`
-- `DiagnosticResult`
-- `DiagnosticSeverity`
-- `CertificateFingerprint`
-- `RouteInfo`
-- `DnsInfo`
-
-## Dependency rules
-
-Allowed direction:
-
-```text
-ui -> core -> services -> backend/diagnostics/models/utils
-```
-
-Not allowed:
-
-```text
-backend -> ui
-diagnostics -> ui
-models -> services
-utils -> services
-```
-
-## Error handling
-
-Every technical error should be mapped to a user-facing explanation when possible.
-
-Bad:
-
-```text
-Process exited with code 1
-```
-
-Better:
-
-```text
-The VPN gateway certificate is not trusted.
-VPN Doctor can store this fingerprint if you trust this gateway.
-```
-
-## Internationalization
-
-All user-facing strings must go through gettext.
-
-See:
-
-```text
-docs/development/I18N_GUIDE.md
-```
-
-## Security
-
-Secrets must never be stored in profile files.
-
-Use Secret Service / GNOME Keyring.
-
-See:
-
-```text
-docs/development/SECURITY_GUIDE.md
-```
+The next step is Sprint 2: designing and implementing a safe OpenFortiVPN process
+lifecycle without leaking secrets and without coupling the backend to GTK.

@@ -1,39 +1,36 @@
 # Plugin System
 
-## Goal
+## Purpose
 
-VPN Doctor should support multiple VPN engines without turning the codebase into a collection of special cases.
+VPN Doctor should support multiple VPN engines without rewriting the application.
 
-## Plugin responsibilities
+## Backend interface
 
-A backend plugin should provide:
+Every backend should expose:
 
-- metadata
-- profile schema
-- connect/disconnect implementation
-- status parser
-- diagnostics checks
-- import/export helpers
+- `connect(profile)`
+- `disconnect()`
+- `status()`
+- `diagnose(profile)`
 
-## Metadata example
+Future additions:
 
-```python
-BackendMetadata(
-    id="openfortivpn",
-    name="OpenFortiVPN",
-    supports_password=True,
-    supports_certificate_fingerprint=True,
-)
+- `supports(profile)`
+- `import_profile(path)`
+- `export_profile(profile)`
+- `version()`
+
+## Backend discovery
+
+Early versions may register backends manually.
+
+Later versions may use Python entry points:
+
+```toml
+[project.entry-points."vpn_doctor.backends"]
+openfortivpn = "vpn_doctor.backend.openfortivpn:OpenFortiVPNBackend"
 ```
-
-## Future plugins
-
-- OpenFortiVPN
-- WireGuard
-- OpenVPN
-- OpenConnect
-- StrongSwan
 
 ## Rule
 
-The UI must not contain backend-specific branches unless strictly necessary for user-facing labels.
+A backend must not import GTK.

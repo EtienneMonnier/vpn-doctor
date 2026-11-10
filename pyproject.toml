@@ -1,6 +1,10 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "vpn-doctor"
-version = "0.0.1"
+version = "0.3.0"
 description = "A Linux VPN troubleshooting and connection assistant."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -10,17 +14,37 @@ authors = [
 ]
 dependencies = []
 
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: POSIX :: Linux",
+  "Topic :: System :: Networking",
+]
+
 [project.optional-dependencies]
 dev = [
-  "pytest",
-  "ruff",
+  "pytest>=8.0",
+  "ruff>=0.6",
 ]
 
 [project.scripts]
 vpn-doctor = "vpn_doctor.app:main"
+vpn-doctor-gui = "vpn_doctor.ui.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+vpn_doctor = [
+  "ui/themes/*.css",
+  "ui/assets/*.svg",
+  "ui/assets/*.png",
+  "ui/assets/status/*.svg",
+  "ui/assets/icons/hicolor/*/apps/*.png",
+]
 
 [tool.ruff]
 line-length = 100
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]

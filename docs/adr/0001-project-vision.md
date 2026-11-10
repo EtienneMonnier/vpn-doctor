@@ -1,19 +1,10 @@
-# ADR: Project vision
-
-## Status
-
-Accepted
-
-## Context
-
-VPN Doctor needs stable foundations before implementation.
+# ADR 0001 - Project Vision
 
 ## Decision
 
-VPN Doctor is a diagnostic assistant before being a VPN launcher.
+VPN Doctor is a diagnostic assistant first and a VPN launcher second.
 
-## Consequences
+## Rationale
 
-- The project remains easier to maintain.
-- AI agents receive clear boundaries.
-- Future contributors can understand why the choice was made.
+Linux already has multiple VPN clients and NetworkManager plugins. The missing piece is
+clear diagnosis and guided repair.

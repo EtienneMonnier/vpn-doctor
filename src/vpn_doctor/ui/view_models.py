@@ -1,0 +1,162 @@
+"""UI view models.
+
+These classes contain no GTK dependency. They make the UI testable and keep
+presentation state independent from backend implementation details.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+
+from vpn_doctor.i18n import _, ngettext
+from vpn_doctor.models.status import VPNConnectionState, VPNStatus
+
+
+@dataclass(frozen=True)
+class ConnectionStatusViewModel:
+    """Presentation model for the connection status area."""
+
+    title: str
+    subtitle: str
+    css_class: str
+    can_connect: bool
+    can_disconnect: bool
+    pill: str = ""
+
+    @classmethod
+    def from_status(cls, status: VPNStatus) -> ConnectionStatusViewModel:
+        state = status.state
+
+        if status.prompt:
+            return cls(
+                title=_("Waiting for you"),
+                subtitle=status.prompt,
+                css_class="warning",
+                can_connect=False,
+                can_disconnect=True,
+                pill=_("⌨ INPUT"),
+            )
+
+        if state == VPNConnectionState.CONNECTED:
+            return cls(
+                title=_("Connected"),
+                subtitle=status.message or _("VPN tunnel is active"),
+                css_class="success",
+                can_connect=False,
+                can_disconnect=True,
+                pill=_("● ONLINE"),
+            )
+
+        if state in {VPNConnectionState.CONNECTING, VPNConnectionState.AUTHENTICATING, VPNConnectionState.NEGOTIATING}:
+            return cls(
+                title=_("Connecting"),
+                subtitle=status.message or _("VPN connection is being established"),
+                css_class="warning",
+                can_connect=False,
+                can_disconnect=True,
+                pill=_("◐ LINKING"),
+            )
+
+        if state == VPNConnectionState.DISCONNECTING:
+            return cls(
+                title=_("Disconnecting"),
+                subtitle=status.message or _("VPN connection is being stopped"),
+                css_class="warning",
+                can_connect=False,
+                can_disconnect=False,
+                pill=_("◑ CLOSING"),
+            )
+
+        if state == VPNConnectionState.FAILED:
+            return cls(
+                title=_("Failed"),
+                subtitle=status.suggestion or status.message or _("VPN connection failed"),
+                css_class="error",
+                can_connect=True,
+                can_disconnect=False,
+                pill=_("✕ FAILURE"),
+            )
+
+        return cls(
+            title=_("Disconnected"),
+            subtitle=status.message or _("VPN is not connected"),
+            css_class="neutral",
+            can_connect=True,
+            can_disconnect=False,
+                pill=_("○ OFFLINE"),
+        )
+
+
+def format_elapsed(seconds: float) -> str:
+    """Format a duration as HH:MM:SS."""
+    total = max(0, int(seconds))
+    hours, remainder = divmod(total, 3600)
+    minutes, secs = divmod(remainder, 60)
+    return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+
+
+@dataclass
+class ConnectionTimer:
+    """Track how long the tunnel has been connected.
+
+    The caller passes the current monotonic time so the class stays
+    deterministic and easy to test.
+    """
+
+    _connected_since: float | None = field(default=None, init=False)
+
+    def update(self, state: VPNConnectionState, now: float) -> str | None:
+        """Return the elapsed connected time, or None when not connected."""
+        if state != VPNConnectionState.CONNECTED:
+            self._connected_since = None
+            return None
+
+        if self._connected_since is None:
+            self._connected_since = now
+
+        return format_elapsed(now - self._connected_since)
+
+
+def boot_lines(
+    version: str,
+    connections: int,
+    networkmanager: bool,
+    keyring: bool,
+) -> list[str]:
+    """Lines typed by the startup animation; they report real checks."""
+    return [
+        _("VPN DOCTOR {version}").format(version=version),
+        _("Loading diagnostics engine… OK"),
+        _("NetworkManager… {state}").format(state=_("ONLINE") if networkmanager else _("NOT FOUND")),
+        _("Keyring… {state}").format(state=_("UNLOCKED") if keyring else _("UNAVAILABLE")),
+        ngettext(
+            "Scanning connections… {count} found", "Scanning connections… {count} found", connections
+        ).format(count=connections),
+        _("Ready. Diagnose. Connect. Protect."),
+    ]
+
+
+def tab_changes(
+    profile_names: list[str], open_names: list[str], active_names: set[str]
+) -> tuple[list[str], list[str]]:
+    """Return the tabs to open and to close so that each connection has one tab.
+
+    A tab whose connection disappeared is kept while it is still active, so a
+    reload never hides a running VPN.
+    """
+    to_open = [name for name in profile_names if name not in open_names]
+    to_close = [
+        name for name in open_names if name not in profile_names and name not in active_names
+    ]
+    return to_open, to_close
+
+
+def editor_environment(dark: bool, environ) -> dict[str, str]:
+    """Environment overrides for the GTK3 NetworkManager connection editor.
+
+    GTK3 Adwaita ignores the GNOME dark preference, so the editor would open
+    light next to a dark VPN Doctor. A GTK_THEME chosen by the user wins.
+    """
+    if dark and "GTK_THEME" not in environ:
+        return {"GTK_THEME": "Adwaita:dark"}
+    return {}

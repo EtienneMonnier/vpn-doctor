@@ -34,3 +34,17 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Test/cache artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local generated files
+*.bak
+*.orig
+
+# Local artwork that must not be published (see packaging/rpm/build.sh)
+assets/icons/vpn-doctor-terminal.png

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=VPN Doctor
+GenericName=VPN Troubleshooting
+Comment=Diagnose, connect and protect your VPN connections
+Exec=vpn-doctor-gui
+Icon=io.github.vpndoctor.VPNDoctor
+Terminal=false
+Categories=Network;GTK;
+Keywords=VPN;NetworkManager;WireGuard;OpenVPN;OpenConnect;FortiGate;diagnostics;network;
+StartupNotify=true

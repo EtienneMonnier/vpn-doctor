@@ -10,42 +10,24 @@ Diagnose. Connect. Protect.
 
 ## Visual identity
 
-Chosen direction:
+Chosen concept:
 
-- Blue shield
-- White stethoscope
-- Clean typography
-- Security + healthcare metaphor
+- blue shield;
+- white stethoscope;
+- clean, trustworthy, professional look;
+- must work on light and dark themes.
 
-## Meaning
+## Asset guidance
 
-- Shield: protection and network security.
-- Stethoscope: diagnosis and troubleshooting.
-- Blue: trust, technology, calm.
-- Green: healthy connection.
-- Red: critical problem.
-- Orange: warning.
-
-## Logo usage
-
-Preferred:
+Recommended assets:
 
 ```text
-Shield icon above or left of "VPN Doctor"
-Tagline below:
-Diagnose. Connect. Protect.
+assets/logo/logo.svg
+assets/logo/logo.png
+assets/icons/vpn-doctor.svg
+assets/icons/vpn-doctor-512.png
+assets/icons/vpn-doctor-256.png
+assets/icons/vpn-doctor-128.png
 ```
 
-## Tone
-
-Clear, calm and practical.
-
-VPN Doctor should not scare users. It should explain what happened and what can be done.
-
-## UI visual direction
-
-- GNOME-inspired cards
-- Clear connection status
-- Diagnostics summary
-- Logs available but not overwhelming
-- Technical details hidden behind expanders
+Prefer SVG for scalable UI assets.

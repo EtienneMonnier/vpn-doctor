@@ -1,9 +1,7 @@
-# Fortinet SSL-VPN Case Study
+# Fortinet Case Study
 
-This file has moved to:
+See:
 
-```text
-docs/case-studies/fortinet-ssl-vpn-fedora.md
-```
+- [Sanitized case study](case-studies/fortinet-networkmanager-vs-openfortivpn.md)
 
-The public case study is sanitized and must not contain real production gateways, usernames, passwords, or internal addresses.
+This document is intentionally short to avoid duplicating content.

@@ -1,39 +1,37 @@
 # Git Workflow
 
-## Branches
+## Before the first public release
+
+The project is developed directly on `dev`, without feature branches or pull
+requests. Every commit on `dev` must still pass `ruff check src tests` and
+`pytest`.
+
+`main` only receives the first public release. The full flow below applies
+from then on.
+
+## After the first public release
+
+### Branches
 
 ```text
-main
-dev
-feature/<name>
-bugfix/<name>
-hotfix/<name>
+main      stable releases
+dev       integration
+feature/* features
+bugfix/*  bug fixes
+hotfix/*  urgent stable fixes
 ```
 
-## Rules
-
-- `main` must stay stable.
-- `dev` is integration.
-- Feature work happens on feature branches.
-- Merge to `main` only when stable.
-
-## Commit style
-
-Use conventional commits:
+### Flow
 
 ```text
-feat: add profile model
-fix: detect untrusted certificate
-docs: expand architecture guide
-test: add route parser tests
-ci: add Python workflow
+feature/* -> Pull Request -> dev -> Pull Request -> main -> tag
 ```
 
-## Pull requests
+## Commit examples
 
-Every PR should include:
-
-- summary
-- test notes
-- documentation impact
-- screenshots for UI changes
+```text
+feat: add OpenFortiVPN backend lifecycle
+docs: document OpenFortiVPN state machine
+test: add log parser tests
+fix: avoid leaking usernames in logs
+```

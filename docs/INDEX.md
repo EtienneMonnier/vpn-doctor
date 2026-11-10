@@ -1,34 +1,80 @@
 # Documentation Index
 
-## Main documents
+## Start here
 
-- [`README.md`](../README.md)
-- [`ARCHITECTURE.md`](../ARCHITECTURE.md)
-- [`ROADMAP.md`](../ROADMAP.md)
-- [`AGENTS.md`](../AGENTS.md)
+- [Project README](../README.md)
+- [Architecture](../ARCHITECTURE.md)
+- [Roadmap](../ROADMAP.md)
+- [AGENTS guide](../AGENTS.md)
 
-## Development guides
+## Development documentation
 
-- [`development/PROJECT_STRUCTURE.md`](development/PROJECT_STRUCTURE.md)
-- [`development/ARCHITECTURE_GUIDE.md`](development/ARCHITECTURE_GUIDE.md)
-- [`development/CODING_STANDARDS.md`](development/CODING_STANDARDS.md)
-- [`development/UI_GUIDELINES.md`](development/UI_GUIDELINES.md)
-- [`development/BACKEND_GUIDELINES.md`](development/BACKEND_GUIDELINES.md)
-- [`development/DIAGNOSTICS_GUIDE.md`](development/DIAGNOSTICS_GUIDE.md)
-- [`development/SECURITY_GUIDE.md`](development/SECURITY_GUIDE.md)
-- [`development/I18N_GUIDE.md`](development/I18N_GUIDE.md)
-- [`development/TESTING_GUIDE.md`](development/TESTING_GUIDE.md)
-- [`development/GIT_WORKFLOW.md`](development/GIT_WORKFLOW.md)
-- [`development/RELEASE_PROCESS.md`](development/RELEASE_PROCESS.md)
-- [`development/AI_GUIDELINES.md`](development/AI_GUIDELINES.md)
-- [`development/BRANDING_GUIDE.md`](development/BRANDING_GUIDE.md)
-- [`development/PLUGIN_SYSTEM.md`](development/PLUGIN_SYSTEM.md)
+- [Master Architecture](development/MASTER_ARCHITECTURE.md)
+- [Sprint 2 Specification](development/SPRINT2_SPECIFICATION.md)
+- [OpenFortiVPN Backend Specification](development/OPENFORTIVPN_BACKEND_SPEC.md)
+- [Diagnostics Engine Specification](development/DIAGNOSTICS_ENGINE_SPEC.md)
+- [Event System](development/EVENT_SYSTEM.md)
+- [State Machine](development/STATE_MACHINE.md)
+- [Plugin System](development/PLUGIN_SYSTEM.md)
+- [UML Diagrams](development/UML.md)
+- [Testing Strategy](development/TEST_STRATEGY.md)
+- [Security Guide](development/SECURITY_GUIDE.md)
+- [Secret Management](development/SECRET_MANAGEMENT.md)
+- [Profile Management](development/PROFILE_MANAGEMENT.md)
+- [Certificate Handling](development/CERTIFICATE_HANDLING.md)
+- [Network Diagnostics](development/NETWORK_DIAGNOSTICS.md)
+- [Logging Guide](development/LOGGING_GUIDE.md)
+- [Error Taxonomy](development/ERROR_TAXONOMY.md)
+- [CLI Specification](development/CLI_SPECIFICATION.md)
+- [GTK UI Specification](development/GTK_UI_SPECIFICATION.md)
+- [Skins](development/THEMES.md)
+- [Internationalization](development/I18N_GUIDE.md)
+- [Packaging Guide](development/PACKAGING_GUIDE.md)
+- [CI/CD](development/CI_CD.md)
+- [Code Review Guide](development/CODE_REVIEW_GUIDE.md)
+- [Development Environment](development/DEVELOPMENT_ENVIRONMENT.md)
+
+## Sprint reports
+
+Implementation notes, validation and review notes for each sprint.
+
+- [Sprint 2 review](sprints/SPRINT2_REVIEW_REPORT.md)
+- [Sprint 2.1](sprints/SPRINT2_1_IMPLEMENTATION_REPORT.md)
+- [Sprint 2.2](sprints/SPRINT2_2_IMPLEMENTATION_REPORT.md)
+- [Sprint 2.3](sprints/SPRINT2_3_IMPLEMENTATION_REPORT.md)
+- [Sprint 2.4](sprints/SPRINT2_4_IMPLEMENTATION_REPORT.md)
+- [Sprint 2.5](sprints/SPRINT2_5_IMPLEMENTATION_REPORT.md)
+- [Sprint 3.1](sprints/SPRINT3_1_IMPLEMENTATION_REPORT.md)
+- [Sprint 4.1](sprints/SPRINT4_1_IMPLEMENTATION_REPORT.md)
+- [Sprint 4.2](sprints/SPRINT4_2_IMPLEMENTATION_REPORT.md)
+- [Sprint 4.3](sprints/SPRINT4_3_IMPLEMENTATION_REPORT.md)
+- [Sprint 5.1](sprints/SPRINT5_1_IMPLEMENTATION_REPORT.md)
+- [Sprint 6](sprints/SPRINT6_IMPLEMENTATION_REPORT.md)
+- [Sprint 7.1](sprints/SPRINT7_1_IMPLEMENTATION_REPORT.md)
+- [Sprint 7.2](sprints/SPRINT7_2_IMPLEMENTATION_REPORT.md)
 
 ## Case studies
 
-- [`case-studies/fortinet-ssl-vpn-fedora.md`](case-studies/fortinet-ssl-vpn-fedora.md)
+- [Fortinet: NetworkManager vs OpenFortiVPN](case-studies/fortinet-networkmanager-vs-openfortivpn.md)
+- [RDP licensing failure behind a working VPN](case-studies/rdp-licensing-behind-wireguard.md)
 
 ## User documentation
 
-- [`user/GETTING_STARTED.md`](user/GETTING_STARTED.md)
-- [`user/TROUBLESHOOTING.md`](user/TROUBLESHOOTING.md)
+- [Quickstart](user/quickstart.md)
+- [Troubleshooting](user/troubleshooting.md)
+
+## Architecture Decision Records
+
+- [ADR-0001 Project vision](adr/0001-project-vision.md)
+- [ADR-0002 Python, GTK and Libadwaita](adr/0002-python-gtk-libadwaita.md)
+- [ADR-0003 OpenFortiVPN first backend](adr/0003-openfortivpn-first-backend.md)
+- [ADR-0004 Diagnostics first](adr/0004-diagnostics-first.md)
+- [ADR-0005 Secret storage](adr/0005-secret-storage.md)
+- [ADR-0006 CLI first during early sprints](adr/0006-cli-first-during-early-sprints.md)
+- [ADR-0007 No real secrets in repository](adr/0007-no-real-secrets-in-repository.md)
+- [ADR-0008 Safe backend lifecycle](adr/0008-safe-openfortivpn-lifecycle.md)
+- [ADR-0009 Event-driven backend status](adr/0009-event-driven-backend-status.md)
+- [ADR-0010 Privilege escalation through pkexec](adr/0010-pkexec-privilege-escalation.md)
+- [ADR-0011 NetworkManager overlay](adr/0011-networkmanager-overlay.md)
+- [ADR-0012 Privileged helper](adr/0012-privileged-helper.md)
+- [ADR-0013 Approved gateways](adr/0013-approved-gateways.md)

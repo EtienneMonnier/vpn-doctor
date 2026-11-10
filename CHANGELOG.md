@@ -1,7 +1,247 @@
 # Changelog
 
+## 0.3.0 - 2026-11-10
+
+### Added
+
+- Sprint 2 architecture review pack.
+- Master architecture documentation.
+- OpenFortiVPN backend specification.
+- Diagnostics engine specification.
+- Backend state machine documentation.
+- Event system documentation.
+- Plugin system documentation.
+- Test strategy documentation.
+- Additional ADRs.
+- Repository review report.
+
+### Changed
+
+- Clarified that VPN Doctor is a diagnostics-first assistant, not a NetworkManager replacement.
+- Strengthened security and sanitization guidelines.
+- Expanded roadmap and sprint structure.
+
+## v0.0.1-foundation
+
+### Added
+
+- Initial repository structure.
+- Documentation foundation.
+- Project identity.
+- GitHub workflow and contribution files.
+
+
+## Sprint 2.4
+
+- Added experimental GTK4/libadwaita UI skeleton.
+- Added `vpn-doctor gui` and `vpn-doctor-gui`.
+- Added UI view models and tests.
+- Updated README and roadmap with GUI progress.
+
+
+## Sprint 2.5
+
+### Fixed
+
+- Restored Sprint 2.3 profile loading and `connect --wait`, which were never
+  merged and made `vpn-doctor profiles` crash.
+- Recognized real openfortivpn 1.23 failure messages (wrong password, root
+  privileges, unreachable gateway) and kept the `failed` state after them.
+- Fixed log lines joined by a literal `\n` in the GUI.
+
+### Added
+
+- Readable failure suggestions in the CLI and the GUI.
+- `pkexec` privilege escalation and `-c /dev/null` configuration isolation
+  (ADR-0010).
+- Profiles from `~/.config/vpn-doctor/profiles.json`, rejecting secrets.
+- GUI connect/disconnect, password dialog, live logs, timer and Diagnose button.
+
+### Removed
+
+- Accidental nested `vpn-doctor/` copy of the repository.
+
+## Sprint 3.1
+
+### Added
+
+- `vpn-doctor rdp` to diagnose a Remote Desktop server behind the VPN, with
+  FreeRDP/Remmina log explanations.
+- Client certificate support in profiles (`user_cert`, `user_key`).
+- Case study: RDP licensing failure behind a working WireGuard tunnel.
+
+### Fixed
+
+- The GUI hung on "VPN account password:" when the gateway asked a further
+  question: prompts printed without a newline (two-factor token) were never
+  shown. They now open a dialog and the answer is sent to openfortivpn.
+- openfortivpn logs arrived late or never: its output is now line-buffered
+  through `stdbuf`.
+- Tests no longer read the developer's real `~/.config/vpn-doctor` profiles.
+
+## Sprint 4.1
+
+### Added
+
+- NetworkManager overlay: discover, connect and disconnect VPN and WireGuard
+  connections, with failures explained from the NetworkManager reason and
+  the VPN plugin log (ADR-0011).
+- `--profile NAME` for `connect`, `disconnect`, `status` and `diagnose`.
+- Redesigned GTK UI with a connection selector.
+- Custom skins (GTK CSS) with live reload, and the "Wasteland Terminal" skin.
+
+## Sprint 4.2
+
+### Added
+
+- Remember the openfortivpn password and PEM pass phrase in the desktop
+  keyring (Secret Service), and answer prompts from it automatically.
+- `vpn-doctor forget-secrets`.
+- Explanation for a wrong PEM pass phrase.
+
+## Sprint 4.3
+
+### Added
+
+- Several NetworkManager connections at once, one tab per connection with
+  its own status, timer, logs and failure explanations.
+- Conflict detection between active VPNs and the local network (routes and
+  DNS), shown in a banner and with `vpn-doctor conflicts`.
+- Main menu (☰) with "Forget saved secrets" and the skin choice.
+
+### Fixed
+
+- A reader thread could read a closed descriptor after a process stopped.
+
+## Sprint 5.1
+
+### Added
+
+- Logo (default and wasteland variants), drawn with VectorCraft; generator in
+  `assets/logo/generate_logo.py`. Used as window and About icon.
+- Startup animation reporting real checks (NetworkManager, keyring,
+  connections), skippable and optional.
+- Preferences dialog: skin, custom skins folder, startup animation, saved
+  secrets of openfortivpn profiles.
+- About dialog.
+- `@logo` skin metadata.
+
+### Changed
+
+- The skin choice moved from the main menu to Preferences.
+
+### Fixed
+
+- Conflict checks took the Wi-Fi interface for an OpenVPN tunnel.
+
+## 0.1.0 - Sprint 6
+
+### Added
+
+- Dedicated privileged helper for openfortivpn with its own polkit action
+  (ADR-0012): validated profile fields only, PEM files checked and passed as
+  open descriptors, one authentication per connection, tunnel stopped when
+  VPN Doctor closes the pipe.
+- Approved gateways (ADR-0013): an administrator approves an openfortivpn
+  gateway and its certificate once, then connections need no administrator
+  password; any other gateway or certificate is refused. Replaces
+  `auth_admin_keep`, after the security review of 0.1.0.
+- `vpn-doctor gateways`, `approve-gateway`, `revoke-gateway`.
+- `launch.sh` to run VPN Doctor from the source tree.
+- RPM packaging: launcher, AppStream metainfo, icon, helper and policy.
+- "New VPN connection…" and "Settings…" open the NetworkManager editor.
+- Preferences: default connection and auto-connect at startup.
+
+## Sprint 7.1
+
+### Added
+
+- `--json` on every CLI command except `gui`, before or after the command:
+  one JSON object on stdout, same exit codes, documented schema
+  (`docs/development/CLI_SPECIFICATION.md`). Profiles never expose user
+  names or certificate paths.
+
+### Fixed
+
+- `vpn-doctor rdp --log` with an unreadable file printed a Python traceback;
+  it now reports the error and exits with code 2.
+
+## Sprint 7.2
+
+### Added
+
+- Translations: French, German, Spanish, Italian, Dutch, Portuguese and
+  Polish, for the GUI, the CLI and every diagnostic explanation.
+- `po/update.sh` (extract and merge) and `po/compile.sh` (compile with
+  `msgfmt --check`); `launch.sh` and the RPM compile the translations.
+- Tests: every language compiles and keeps every placeholder.
+
+### Fixed
+
+- Translations were looked up in a relative `locale` folder, so an installed
+  VPN Doctor could never find them.
+- About 170 user-visible strings (CLI, diagnostics, backends) were not
+  translatable; plurals now use `ngettext`.
+
 ## Unreleased
 
-- Initial project structure.
-- Documentation draft.
-- Planned MVP architecture.
+### Added
+
+- OpenVPN diagnostics, from the messages of OpenVPN 2.7 and OpenSSL 3: weak
+  certificates refused by the system crypto policy, expired or not yet valid
+  certificates, legacy PKCS#12 files, no common TLS version, `tls-auth` /
+  `tls-crypt` key mismatch, failed data cipher negotiation and compression
+  pushed by the server. Each one comes before the generic explanation it
+  refines. Translated in all seven languages.
+- `vpn-doctor check-ovpn FILE` (and `--json`): checks an OpenVPN file before
+  importing it into NetworkManager. Reports options NetworkManager silently
+  drops (measured on NetworkManager-openvpn 1.12), options OpenVPN 2.7 refuses,
+  ciphers OpenSSL 3 no longer provides, compression, missing server
+  verification, missing files, passwords stored in the file, damaged files,
+  and expired, weak or soon expiring certificates (inline or referenced).
+  Validated on the 52 providers of a public collection of OpenVPN configs.
+
+## 0.2.0 - 2026-11-10
+
+### Changed
+
+- New logo: a shield with a caduceus over a globe. App icon in PNG from 16 to
+  512 px, new in-app logo for the default skin, banner in the README.
+
+### Added
+
+- Optional Wasteland build (`packaging/rpm/build.sh --wasteland`): Wasteland
+  Terminal skin by default and a terminal app icon made from a local image.
+- `vpn_doctor/branding.py`: the default skin a package may set.
+
+### Fixed
+
+- Tests used the privileged helper of an installed package instead of their
+  fake openfortivpn.
+
+Includes Sprint 7.1 and 7.2 above.
+
+### Changed
+
+- GUI: every available connection gets its own tab at startup, the default
+  connection selected. The "+" menu now only creates a new connection or
+  reloads them; a reload opens tabs for new connections, brings back closed
+  tabs and closes the tab of a connection that disappeared (unless it is still
+  active).
+- GUI: tab titles carry a colored dot (green connected, orange in progress,
+  red failed) instead of text marks, and a tab whose VPN was already up when
+  VPN Doctor started says so in its log.
+- GUI: the NetworkManager connection editor (GTK3) opens in its dark variant
+  when the VPN Doctor window is dark, unless the user set `GTK_THEME`.
+- Latency checks: `diagnose` (CLI, `--json`, GUI) measures the latency to the
+  gateway (ping, or TCP connection time when ping is blocked) and, while
+  connected, through the tunnel, with a good / fair / poor verdict, jitter and
+  packet loss. The GUI logs them once when a connection comes up. Translated in
+  all seven languages.
+
+- openfortivpn "Could not authenticate to gateway" now has its own explanation:
+  the gateway was reached and the client key loaded, so the gateway itself
+  refused the login (wrong or expired password, locked account, revoked
+  certificate). It warns that repeated attempts can lock the account, which
+  matters for gateways backed by Active Directory. Translated in all seven
+  languages.

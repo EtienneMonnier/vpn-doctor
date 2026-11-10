@@ -1,1 +1,0 @@
-Internationalization from day one.

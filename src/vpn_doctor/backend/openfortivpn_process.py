@@ -1,0 +1,209 @@
+"""OpenFortiVPN command construction and process lifecycle."""
+
+from __future__ import annotations
+
+import json
+import time
+from collections.abc import Callable
+from dataclasses import dataclass, field
+
+from vpn_doctor.backend.log_parser import OpenFortiVPNLogParser
+from vpn_doctor.backend.process_runner import ProcessRunner
+from vpn_doctor.backend.state_machine import ConnectionStateMachine
+from vpn_doctor.i18n import _
+from vpn_doctor.models.profile import VPNProfile
+from vpn_doctor.models.status import VPNConnectionState, VPNStatus
+
+TERMINAL_OR_CONNECTED_STATES = frozenset(
+    {
+        VPNConnectionState.CONNECTED,
+        VPNConnectionState.FAILED,
+        VPNConnectionState.DISCONNECTED,
+    }
+)
+
+ACTIVE_STATES = frozenset(
+    {
+        VPNConnectionState.CONNECTING,
+        VPNConnectionState.AUTHENTICATING,
+        VPNConnectionState.NEGOTIATING,
+        VPNConnectionState.CONNECTED,
+    }
+)
+
+
+def helper_request(profile: VPNProfile) -> dict:
+    """Profile fields sent to the privileged helper, which validates them."""
+    fields = {
+        "host": profile.host,
+        "port": profile.port,
+        "username": profile.username,
+        "trusted_cert": profile.trusted_cert,
+        "realm": profile.realm,
+        "user_cert": profile.user_cert,
+        "user_key": profile.user_key,
+    }
+    return {key: value for key, value in fields.items() if value is not None}
+
+
+@dataclass
+class OpenFortiVPNProcess:
+    """Manage one openfortivpn process."""
+
+    runner: ProcessRunner = field(default_factory=ProcessRunner)
+    parser: OpenFortiVPNLogParser = field(default_factory=OpenFortiVPNLogParser)
+    state_machine: ConnectionStateMachine = field(default_factory=ConnectionStateMachine)
+    logs: list[str] = field(default_factory=list)
+    privilege_command: tuple[str, ...] = ()
+    output_wrapper: tuple[str, ...] = ()
+    # When set, the privileged helper builds and supervises openfortivpn
+    # (ADR-0012); privilege_command and output_wrapper are then unused.
+    helper_command: tuple[str, ...] = ()
+    _password_sent: bool = field(default=False, init=False, repr=False)
+    _prompt_handler: Callable[[str], str | None] | None = field(default=None, init=False, repr=False)
+
+    def build_command(self, profile: VPNProfile) -> list[str]:
+        command = [
+            "openfortivpn",
+            f"{profile.host}:{profile.port}",
+            # The profile is the only source of truth: never merge options from
+            # /etc/openfortivpn/config, which root would otherwise read.
+            "-c",
+            "/dev/null",
+        ]
+
+        if profile.username:
+            command.extend(["-u", profile.username])
+
+        if profile.trusted_cert:
+            command.extend(["--trusted-cert", profile.trusted_cert])
+
+        if profile.realm:
+            command.extend(["--realm", profile.realm])
+
+        if profile.user_cert:
+            command.extend(["--user-cert", profile.user_cert])
+
+        if profile.user_key:
+            command.extend(["--user-key", profile.user_key])
+
+        return command
+
+    def connect(
+        self,
+        profile: VPNProfile,
+        password: str | None = None,
+        on_log: Callable[[str], None] | None = None,
+        dry_run: bool = False,
+        prompt_handler: Callable[[str], str | None] | None = None,
+    ) -> list[str]:
+        """Start openfortivpn.
+
+        prompt_handler may answer interactive prompts (e.g. from the keyring);
+        it returns None to leave the prompt to the user.
+        """
+        if self.helper_command:
+            command = list(self.helper_command)
+            if dry_run:
+                return [*command, "→", *self.build_command(profile)]
+        else:
+            command = [*self.privilege_command, *self.output_wrapper, *self.build_command(profile)]
+            if dry_run:
+                return command
+
+        self.logs.clear()
+        self.state_machine.transition(VPNConnectionState.CONNECTING, _("Starting openfortivpn"))
+
+        stdin_text = None
+        if password is not None:
+            stdin_text = f"{password}\n"
+        if self.helper_command:
+            # The helper reads the profile first, then hands stdin to openfortivpn.
+            stdin_text = json.dumps(helper_request(profile)) + "\n" + (stdin_text or "")
+        self._password_sent = password is not None
+        self._prompt_handler = prompt_handler
+
+        self.runner.start(
+            command,
+            on_line=lambda line: self._handle_line(line, on_log),
+            on_prompt=lambda prompt: self._handle_prompt(prompt, on_log),
+            stdin_text=stdin_text,
+        )
+        return command
+
+    def answer_prompt(self, answer: str) -> None:
+        """Send the user's answer to the pending backend prompt."""
+        self.state_machine.prompt = None
+        self.runner.write_stdin(f"{answer}\n")
+
+    def _handle_line(self, line: str, on_log: Callable[[str], None] | None = None) -> None:
+        if not line.strip():
+            return
+
+        self.logs.append(line)
+        parsed = self.parser.parse(line)
+        self.state_machine.apply_log(parsed)
+
+        if on_log is not None:
+            on_log(line)
+
+    def _handle_prompt(self, prompt: str, on_log: Callable[[str], None] | None = None) -> None:
+        prompt = prompt.strip()
+        self.logs.append(prompt)
+        if on_log is not None:
+            on_log(prompt)
+
+        # The password was already written to stdin before the prompt showed up.
+        if self._password_sent and "password" in prompt.lower() and "one-time" not in prompt.lower():
+            return
+
+        answer = self._prompt_handler(prompt) if self._prompt_handler is not None else None
+        if answer is not None:
+            self.runner.write_stdin(f"{answer}\n")
+            if on_log is not None:
+                on_log("(answered from the keyring)")
+            return
+
+        self.state_machine.prompt = prompt
+
+    def _refresh_from_process(self) -> None:
+        """Detect an openfortivpn process that exited on its own."""
+        if self.runner.process is None or self.runner.is_running:
+            return
+
+        if self.state_machine.state in ACTIVE_STATES:
+            self.state_machine.transition(
+                VPNConnectionState.DISCONNECTED,
+                "openfortivpn process exited",
+            )
+
+    def disconnect(self) -> None:
+        self.state_machine.transition(VPNConnectionState.DISCONNECTING, _("Stopping openfortivpn"))
+        self.runner.terminate(
+            privilege_command=self.privilege_command,
+            close_stdin_first=bool(self.helper_command),
+        )
+        self.state_machine.transition(VPNConnectionState.DISCONNECTED, "Disconnected")
+
+    def wait_until_terminal_or_connected(self, timeout_seconds: float = 60.0) -> VPNStatus:
+        """Wait until connected, failed, disconnected or timeout."""
+        deadline = time.monotonic() + timeout_seconds
+
+        while time.monotonic() < deadline:
+            status = self.status()
+            if status.state in TERMINAL_OR_CONNECTED_STATES:
+                return status
+            time.sleep(0.1)
+
+        self.state_machine.transition(VPNConnectionState.FAILED, _("Connection timeout"))
+        return self.status()
+
+    def status(self) -> VPNStatus:
+        self._refresh_from_process()
+        return VPNStatus(
+            backend="openfortivpn",
+            state=self.state_machine.state,
+            message=self.state_machine.last_message,
+            suggestion=self.state_machine.suggestion,
+            prompt=self.state_machine.prompt,
+        )

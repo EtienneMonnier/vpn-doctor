@@ -2,25 +2,21 @@
 
 ## MVP
 
-- OpenFortiVPN profile
-- Connect / disconnect
-- Connection timer
-- Logs
-- Notifications
+- CLI entry point.
+- Profile listing.
+- Basic diagnostics.
+- OpenFortiVPN command construction.
+- OpenFortiVPN log parsing.
+- Safe backend abstraction.
 
-## Diagnostics
+## Planned
 
-- Gateway check
-- Certificate check
-- DNS check
-- Route check
-- Internal reachability check
-- Tunnel health check
-
-## Later
-
-- Multiple backends
-- Reports
-- Auto-fixes
-- Packaging
-- Translations
+- real OpenFortiVPN connection lifecycle;
+- diagnostics engine;
+- GTK4 interface;
+- profile management;
+- GNOME Keyring integration;
+- report export;
+- backend comparison;
+- NetworkManager inspection;
+- multiple VPN backends.

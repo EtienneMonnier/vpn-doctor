@@ -2,84 +2,57 @@
 
 ## Core rule
 
-VPN Doctor handles sensitive infrastructure data.
+VPN Doctor must never leak secrets.
 
-Security must be part of the design from day one.
+## Forbidden in repository
 
-## Never store in files
+- passwords;
+- tokens;
+- private keys;
+- real customer VPN endpoints;
+- unredacted logs;
+- sensitive certificate material.
 
-- VPN passwords
-- MFA tokens
-- private keys
-- private certificates
-- customer-specific secrets
+## Profile safety
 
-## Secrets storage
+Profiles may contain configuration but not passwords.
 
-Use Secret Service / GNOME Keyring.
+Allowed:
 
-Password lookup keys should include:
+- backend;
+- host;
+- port;
+- username if user agrees;
+- realm;
+- trusted certificate fingerprint.
 
-- application name
-- profile id
-- backend type
+Forbidden:
 
-## Logging rules
+- password;
+- MFA token;
+- private key passphrase.
 
-Never log:
+## Logging
 
-- passwords
-- tokens
-- full private certificates
-- session cookies
+Logs must redact:
 
-Mask values:
+- passwords;
+- tokens;
+- command stdin;
+- private key material.
 
-```text
-password=<redacted>
-token=<redacted>
-```
+## Subprocess safety
 
-## Profiles
-
-Profiles may store:
-
-- display name
-- backend type
-- gateway
-- port
-- username
-- realm
-- trusted certificate fingerprint
-- expected DNS
-- expected routes
-
-Profiles must not store:
-
-- password
-- private key content
-- MFA seed
-
-## Case studies
-
-Public case studies must be sanitized.
+Avoid shell execution.
 
 Use:
 
-```text
-vpn.example.com
-203.0.113.10
-192.0.2.0/24
+```python
+subprocess.Popen(["openfortivpn", "vpn.example.com:443"])
 ```
 
-instead of real production data.
+Avoid:
 
-## Certificate handling
-
-When certificate fingerprint changes:
-
-- show old fingerprint
-- show new fingerprint
-- explain risk
-- require explicit user confirmation
-- never silently trust a new certificate
+```python
+subprocess.Popen("openfortivpn vpn.example.com:443", shell=True)
+```
