@@ -34,6 +34,15 @@ def isolated_networkmanager(tmp_path, monkeypatch):
     return bin_dir
 
 
+@pytest.fixture(autouse=True)
+def isolated_helper(monkeypatch):
+    """Ignore the privileged helper of an installed VPN Doctor package.
+
+    Tests that need the helper pass their own helper command explicitly.
+    """
+    monkeypatch.setattr("vpn_doctor.core.controller.helper_command", lambda *a, **k: ())
+
+
 class FakeKeyring:
     """In-memory stand-in for the desktop keyring."""
 
