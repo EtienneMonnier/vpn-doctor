@@ -33,8 +33,9 @@ checklist.
   ranges, 64-hex fingerprints, PEM blocks, passwords, home paths and domain
   names: nothing left except test placeholders and fake keys in tests.
 - Case studies in `docs/case-studies/` are sanitized.
-- Left as is: the author's name and e-mail in commits and in the RPM
-  changelog (a decision for the author).
+- The author's work e-mail was replaced by the GitHub noreply address in
+  every commit and in the RPM changelog (second history rewrite); the
+  repository's `user.email` now uses the noreply address.
 - The terminal artwork used by the Wasteland build stays out of the
   repository (`.gitignore`): it resembles a game's trade dress.
 
