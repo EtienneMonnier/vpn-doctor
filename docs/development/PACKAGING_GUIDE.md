@@ -4,7 +4,7 @@
 
 | Target | Status |
 | --- | --- |
-| RPM (Fedora) | done: `packaging/rpm/vpn-doctor.spec` |
+| RPM (Fedora) | done: `packaging/rpm/vpn-doctor.spec`, published on COPR `etienne-monnier/vpn-doctor` |
 | DEB (Debian, Ubuntu) | planned, same file layout |
 | Flatpak | not suitable today, see below |
 
@@ -75,6 +75,22 @@ magick /tmp/square.png -resize 440x440 -strip src/vpn_doctor/ui/assets/logo-defa
 
 `%check` validates the launcher and the AppStream file and imports the
 non-GUI modules.
+
+## COPR
+
+Releases are published on https://copr.fedorainfracloud.org/coprs/etienne-monnier/vpn-doctor/
+(Fedora 43, 44, 45 and rawhide; x86_64 and aarch64). Only the normal build,
+never the Wasteland one.
+
+```bash
+# once: copr-cli installed, API token from https://copr.fedorainfracloud.org/api/
+#       in ~/.config/copr (mode 600)
+packaging/rpm/build.sh                      # from the release commit
+copr-cli build vpn-doctor build/rpm/SRPMS/vpn-doctor-<version>-1.*.src.rpm
+```
+
+Tag the commit that was built (`git tag -a v<version>`), then bring `main` to
+it. The token expires after 180 days.
 
 ## DEB
 

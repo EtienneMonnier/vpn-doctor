@@ -31,7 +31,7 @@ VPN Doctor is in early development.
 | Real OpenFortiVPN process lifecycle | Experimental |
 | GTK4 / Libadwaita UI | Experimental |
 | Diagnostics engine | Started (RDP) |
-| Packaging | RPM done, DEB planned |
+| Packaging | RPM on Fedora COPR, DEB planned |
 
 ## First backend
 
@@ -57,6 +57,19 @@ It should say things like:
 - "NetworkManager failed, but OpenFortiVPN works with the same gateway."
 
 ## Install (Fedora)
+
+From [Fedora COPR](https://copr.fedorainfracloud.org/coprs/etienne-monnier/vpn-doctor/)
+(Fedora 43 and later, x86_64 and aarch64):
+
+```bash
+sudo dnf copr enable etienne-monnier/vpn-doctor
+sudo dnf install vpn-doctor
+```
+
+Updates then come with `dnf upgrade`. COPR is a community repository: the
+package is built by Fedora's infrastructure but not reviewed by Fedora.
+
+Or build the RPM from this checkout:
 
 ```bash
 packaging/rpm/build.sh
