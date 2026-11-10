@@ -183,7 +183,9 @@
 - About 170 user-visible strings (CLI, diagnostics, backends) were not
   translatable; plurals now use `ngettext`.
 
-## Unreleased (after Sprint 7.2)
+## 0.2.0 - 2026-11-10
+
+Includes Sprint 7.1 and 7.2 above.
 
 ### Changed
 

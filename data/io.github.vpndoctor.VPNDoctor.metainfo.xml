@@ -36,6 +36,12 @@
   </categories>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.2.0" date="2026-11-10">
+      <description>
+        <p>Translations in seven languages, JSON output for every command, one tab
+        per connection, latency checks and clearer gateway login refusals.</p>
+      </description>
+    </release>
     <release version="0.1.0" date="2026-10-29">
       <description>
         <p>First packaged release: NetworkManager overlay, tabs, conflict detection,

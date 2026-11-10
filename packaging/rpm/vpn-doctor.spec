@@ -1,5 +1,5 @@
 Name:           vpn-doctor
-Version:        0.1.0
+Version:        0.2.0
 Release:        1%{?dist}
 Summary:        Linux VPN troubleshooting and connection assistant
 
@@ -83,6 +83,10 @@ appstreamcli validate --no-net %{buildroot}%{_metainfodir}/io.github.vpndoctor.V
 %{_datadir}/icons/hicolor/scalable/apps/io.github.vpndoctor.VPNDoctor.svg
 
 %changelog
+* Tue Nov 10 2026 Etienne Monnier <128474711+EtienneMonnier@users.noreply.github.com> - 0.2.0-1
+- Translations in seven languages, --json on every CLI command, one tab per
+  connection, latency checks, explanation of gateway login refusals.
+
 * Thu Oct 29 2026 Etienne Monnier <128474711+EtienneMonnier@users.noreply.github.com> - 0.1.0-1
 - First package: NetworkManager overlay, tabs, conflict detection, keyring
   secrets, privileged helper for openfortivpn, custom skins.
