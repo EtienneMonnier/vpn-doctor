@@ -4,7 +4,7 @@
 %bcond wasteland 0
 
 Name:           vpn-doctor
-Version:        0.2.0
+Version:        0.3.0
 Release:        1%{?with_wasteland:.wasteland}%{?dist}
 Summary:        Linux VPN troubleshooting and connection assistant
 
@@ -100,6 +100,11 @@ appstreamcli validate --no-net %{buildroot}%{_metainfodir}/io.github.vpndoctor.V
 %{_datadir}/icons/hicolor/*/apps/io.github.vpndoctor.VPNDoctor.png
 
 %changelog
+* Tue Nov 10 2026 Etienne Monnier <128474711+EtienneMonnier@users.noreply.github.com> - 0.3.0-1
+- OpenVPN: explain common failures (weak or expired certificates, legacy
+  PKCS#12, TLS version, tls-auth/tls-crypt mismatch, ciphers, compression).
+- New command check-ovpn: check an .ovpn file before importing it.
+
 * Tue Nov 10 2026 Etienne Monnier <128474711+EtienneMonnier@users.noreply.github.com> - 0.2.0-1
 - New shield logo and app icon; optional Wasteland build (--with wasteland).
 - Translations in seven languages, --json on every CLI command, one tab per

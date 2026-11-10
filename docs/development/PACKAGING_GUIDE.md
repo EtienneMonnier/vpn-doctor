@@ -39,13 +39,13 @@ commit first):
 
 ```bash
 packaging/rpm/build.sh            # RPMs in build/rpm/RPMS and build/rpm/SRPMS
-sudo dnf install ./build/rpm/RPMS/noarch/vpn-doctor-0.2.0-1.*.noarch.rpm
+sudo dnf install ./build/rpm/RPMS/noarch/vpn-doctor-0.3.0-1.*.noarch.rpm
 ```
 
 ### Wasteland build
 
 ```bash
-packaging/rpm/build.sh --wasteland   # vpn-doctor-0.2.0-1.wasteland.*.noarch.rpm
+packaging/rpm/build.sh --wasteland   # vpn-doctor-0.3.0-1.wasteland.*.noarch.rpm
 ```
 
 `rpmbuild --with wasteland` makes Wasteland Terminal the default skin

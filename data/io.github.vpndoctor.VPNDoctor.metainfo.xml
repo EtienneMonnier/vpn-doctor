@@ -36,6 +36,12 @@
   </categories>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.3.0" date="2026-11-10">
+      <description>
+        <p>OpenVPN diagnostics for current Linux systems, and a check of .ovpn
+        files before they are imported into NetworkManager.</p>
+      </description>
+    </release>
     <release version="0.2.0" date="2026-11-10">
       <description>
         <p>Translations in seven languages, JSON output for every command, one tab
