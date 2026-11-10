@@ -114,7 +114,12 @@ compatible backend.
 VPN Doctor is a companion to NetworkManager, not a replacement. It lists the
 VPN and WireGuard connections you already created in GNOME Settings, connects
 them, shows the plugin log live and explains failures that GNOME only reports
-as "activation failed". Passwords stay with the GNOME keyring.
+as "activation failed". Passwords stay with the GNOME keyring. For OpenVPN it
+recognizes the usual causes on a current Linux system: certificates too weak
+for the system's crypto policy, expired certificates or a wrong clock, legacy
+`.p12` files OpenSSL 3 cannot read, old TLS versions, mismatched `tls-auth` /
+`tls-crypt` keys, no common data cipher (BF-CBC) and compression pushed by the
+server.
 
 ```bash
 vpn-doctor profiles

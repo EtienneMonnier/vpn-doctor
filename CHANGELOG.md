@@ -183,6 +183,17 @@
 - About 170 user-visible strings (CLI, diagnostics, backends) were not
   translatable; plurals now use `ngettext`.
 
+## Unreleased
+
+### Added
+
+- OpenVPN diagnostics, from the messages of OpenVPN 2.7 and OpenSSL 3: weak
+  certificates refused by the system crypto policy, expired or not yet valid
+  certificates, legacy PKCS#12 files, no common TLS version, `tls-auth` /
+  `tls-crypt` key mismatch, failed data cipher negotiation and compression
+  pushed by the server. Each one comes before the generic explanation it
+  refines. Translated in all seven languages.
+
 ## 0.2.0 - 2026-11-10
 
 ### Changed

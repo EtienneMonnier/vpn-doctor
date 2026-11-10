@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vpn-doctor 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/EtienneMonnier/vpn-doctor/issues\n"
-"POT-Creation-Date: 2026-11-06 09:48+0100\n"
+"POT-Creation-Date: 2026-11-10 09:30+0100\n"
 "PO-Revision-Date: 2026-10-30 12:28+0100\n"
 "Last-Translator: Claude (AI-assisted)\n"
 "Language-Team: German\n"
@@ -127,7 +127,7 @@ msgstr "Überprüfen Sie, ob NetworkManager installiert ist und läuft: {command
 
 #: src/vpn_doctor/backend/networkmanager.py:501
 #: src/vpn_doctor/backend/networkmanager.py:506
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:45
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:46
 msgid "VPN plugin"
 msgstr "VPN-Plugin"
 
@@ -455,8 +455,7 @@ msgstr ""
 "~corp.example.com) in den Verbindungseinstellungen ein, unter IPv4 > DNS "
 "search domains."
 
-#. TRANSLATORS: separator between VPN connection names, as in "Office and
-#. Lab".
+#. TRANSLATORS: separator between VPN connection names, as in "Office and Lab".
 #: src/vpn_doctor/diagnostics/conflicts.py:233
 msgid " and "
 msgstr " und "
@@ -733,8 +732,8 @@ msgstr ""
 "den lokalen Benutzern des Servers zu überprüfen."
 
 #: src/vpn_doctor/diagnostics/rdp.py:255
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:24
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:82
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:25
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:83
 msgid "Credentials"
 msgstr "Zugangsdaten"
 
@@ -782,7 +781,7 @@ msgstr ""
 "Advanced > TLS Security Level = 0)."
 
 #: src/vpn_doctor/diagnostics/rdp.py:280
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:116
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:212
 msgid "Server name"
 msgstr "Servername"
 
@@ -829,11 +828,11 @@ msgstr "Client-Protokoll"
 msgid "No known FreeRDP error was found."
 msgstr "Es wurde kein bekannter FreeRDP-Fehler gefunden."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:25
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:26
 msgid "NetworkManager reports that the VPN refused the credentials."
 msgstr "NetworkManager meldet, dass das VPN die Zugangsdaten abgelehnt hat."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:26
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:27
 msgid ""
 "Check the username and the password in the connection settings, then try "
 "again."
@@ -841,15 +840,15 @@ msgstr ""
 "Überprüfen Sie Benutzername und Passwort in den Verbindungseinstellungen und "
 "versuchen Sie es erneut."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:30
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:31
 msgid "WireGuard key"
 msgstr "WireGuard-Schlüssel"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:31
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:32
 msgid "The WireGuard private key is missing from the connection."
 msgstr "In der Verbindung fehlt der private WireGuard-Schlüssel."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:32
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:33
 msgid ""
 "Import the configuration again, or set the private key in the connection "
 "settings."
@@ -857,15 +856,15 @@ msgstr ""
 "Importieren Sie die Konfiguration erneut oder tragen Sie den privaten "
 "Schlüssel in den Verbindungseinstellungen ein."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:36
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:37
 msgid "Password prompt"
 msgstr "Passwortabfrage"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:37
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:38
 msgid "The VPN needed a password, but none was entered."
 msgstr "Das VPN benötigte ein Passwort, aber es wurde keines eingegeben."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:39
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:40
 msgid ""
 "Enter the password when GNOME asks for it. Without a desktop session, "
 "connect with `nmcli --ask connection up <name>`."
@@ -873,12 +872,12 @@ msgstr ""
 "Geben Sie das Passwort ein, wenn GNOME danach fragt. Ohne Desktop-Sitzung "
 "verbinden Sie sich mit `nmcli --ask connection up <name>`."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:46
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:47
 msgid "NetworkManager could not start the VPN plugin for this connection type."
 msgstr ""
 "NetworkManager konnte das VPN-Plugin für diesen Verbindungstyp nicht starten."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:48
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:49
 msgid ""
 "Check that the matching plugin package is installed (for example "
 "NetworkManager-openvpn), then restart NetworkManager."
@@ -886,17 +885,17 @@ msgstr ""
 "Überprüfen Sie, ob das passende Plugin-Paket installiert ist (zum Beispiel "
 "NetworkManager-openvpn), und starten Sie dann NetworkManager neu."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:54
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:55
 msgid "Server configuration"
 msgstr "Serverkonfiguration"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:55
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:56
 msgid "The VPN server sent settings that NetworkManager could not apply."
 msgstr ""
 "Der VPN-Server hat Einstellungen gesendet, die NetworkManager nicht anwenden "
 "konnte."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:56
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:57
 msgid ""
 "Ask the VPN administrator to check the addresses and routes pushed to "
 "clients."
@@ -904,32 +903,32 @@ msgstr ""
 "Bitten Sie den VPN-Administrator, die an die Clients übermittelten Adressen "
 "und Routen zu überprüfen."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:60
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:61
 msgid "IP address"
 msgstr "IP-Adresse"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:61
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:62
 msgid "The tunnel started but no IP address could be configured."
 msgstr ""
 "Der Tunnel wurde gestartet, aber es konnte keine IP-Adresse eingerichtet "
 "werden."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:62
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:63
 msgid ""
 "The VPN server may have no free address left. Contact the VPN administrator."
 msgstr ""
 "Der VPN-Server hat möglicherweise keine freie Adresse mehr. Wenden Sie sich "
 "an den VPN-Administrator."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:66
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:67
 msgid "Timeout"
 msgstr "Zeitüberschreitung"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:67
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:68
 msgid "The connection did not complete in time."
 msgstr "Die Verbindung wurde nicht rechtzeitig hergestellt."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:68
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:69
 msgid ""
 "Check that the gateway is reachable, and answer any two-factor prompt "
 "quickly."
@@ -937,26 +936,26 @@ msgstr ""
 "Überprüfen Sie, ob das Gateway erreichbar ist, und beantworten Sie eine Zwei-"
 "Faktor-Abfrage zügig."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:72
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:73
 msgid "VPN program"
 msgstr "VPN-Programm"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:73
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:74
 msgid "The VPN program started, then stopped. Its own log explains why."
 msgstr ""
 "Das VPN-Programm wurde gestartet und dann beendet. Sein eigenes Protokoll "
 "erklärt den Grund."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:74
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:75
 msgid "Look at the plugin log lines just before the failure."
 msgstr ""
 "Sehen Sie sich die Protokollzeilen des Plugins direkt vor dem Fehler an."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:83
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:84
 msgid "The VPN server refused the login."
 msgstr "Der VPN-Server hat die Anmeldung abgelehnt."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:85
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:86
 msgid ""
 "Check the username, the password and, for FortiGate, the realm. If they are "
 "correct, the account may be locked or not allowed to use the VPN."
@@ -965,30 +964,154 @@ msgstr ""
 "diese stimmen, ist das Konto möglicherweise gesperrt oder nicht für das VPN "
 "zugelassen."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:91
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:92
 msgid "Private key"
 msgstr "Privater Schlüssel"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:92
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:93
 msgid "The password protecting the client private key is wrong."
 msgstr ""
 "Das Passwort, das den privaten Schlüssel des Clients schützt, ist falsch."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:93
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:94
 msgid "Enter the private key password again in the connection settings."
 msgstr ""
 "Geben Sie das Passwort des privaten Schlüssels in den "
 "Verbindungseinstellungen erneut ein."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:98
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:101
+#
+msgid "Weak certificate"
+msgstr "Schwaches Zertifikat"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:103
+msgid ""
+"A certificate of this VPN uses a key or a signature that the system's "
+"cryptographic policy refuses (RSA shorter than 2048 bits, SHA-1 or MD5)."
+msgstr "Ein Zertifikat dieses VPN verwendet einen Schlüssel oder eine Signatur, die die kryptografische Richtlinie des Systems ablehnt (RSA kürzer als 2048 Bit, SHA-1 oder MD5)."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:107
+msgid ""
+"Ask the VPN administrator for new certificates (RSA 2048 bits or more, "
+"SHA-256). As a temporary workaround on Fedora or RHEL, an administrator can "
+"relax the policy, e.g. `update-crypto-policies --set DEFAULT:SHA1`; this "
+"weakens the whole system."
+msgstr "Bitten Sie den VPN-Administrator um neue Zertifikate (RSA 2048 Bit oder mehr, SHA-256). Als vorübergehende Lösung unter Fedora oder RHEL kann ein Administrator die Richtlinie lockern, z. B. `update-crypto-policies --set DEFAULT:SHA1`; das schwächt das gesamte System."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:115
+#
+msgid "Certificate dates"
+msgstr "Gültigkeit des Zertifikats"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:117
+msgid ""
+"A certificate of this VPN (the server's, its authority's or yours) has "
+"expired or is not valid yet, or the clock of this computer is wrong."
+msgstr "Ein Zertifikat dieses VPN (das des Servers, seiner Zertifizierungsstelle oder Ihres) ist abgelaufen oder noch nicht gültig, oder die Uhr dieses Computers geht falsch."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:121
+msgid ""
+"Check the date and time of this computer. If they are right, ask the VPN "
+"administrator to renew the certificate."
+msgstr "Überprüfen Sie Datum und Uhrzeit dieses Computers. Wenn sie stimmen, bitten Sie den VPN-Administrator, das Zertifikat zu erneuern."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:127
+#
+msgid "Certificate file"
+msgstr "Zertifikatsdatei"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:129
+msgid ""
+"The PKCS#12 (.p12) file could not be opened: either its password is wrong, "
+"or it uses an old encryption (RC2, 3DES) that OpenSSL 3 no longer reads."
+msgstr "Die PKCS#12-Datei (.p12) konnte nicht geöffnet werden: Entweder ist ihr Passwort falsch, oder sie verwendet eine alte Verschlüsselung (RC2, 3DES), die OpenSSL 3 nicht mehr liest."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:133
+msgid ""
+"Check its password. If it is right, re-encrypt the file: `openssl pkcs12 "
+"-legacy -in old.p12 -out tmp.pem`, then `openssl pkcs12 -export -in tmp.pem "
+"-out new.p12`, and delete tmp.pem."
+msgstr "Überprüfen Sie das Passwort. Wenn es stimmt, verschlüsseln Sie die Datei neu: `openssl pkcs12 -legacy -in old.p12 -out tmp.pem`, dann `openssl pkcs12 -export -in tmp.pem -out new.p12`, und löschen Sie tmp.pem."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:140
+#
+msgid "TLS version"
+msgstr "TLS-Version"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:142
+msgid ""
+"The VPN server and this computer have no TLS version in common: the server "
+"probably only offers TLS 1.0 or 1.1, which the system refuses."
+msgstr "Der VPN-Server und dieser Computer haben keine gemeinsame TLS-Version: Der Server bietet wahrscheinlich nur TLS 1.0 oder 1.1 an, die das System ablehnt."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:146
+msgid ""
+"Ask the VPN administrator to enable TLS 1.2 or newer. Also check the minimum "
+"TLS version in the advanced settings of the connection."
+msgstr "Bitten Sie den VPN-Administrator, TLS 1.2 oder neuer zu aktivieren. Überprüfen Sie auch die minimale TLS-Version in den erweiterten Verbindungseinstellungen."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:153
+#
+msgid "TLS key"
+msgstr "TLS-Schlüssel"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:155
+msgid ""
+"The packets of the VPN server fail the extra TLS key check (tls-auth or tls-"
+"crypt): this computer and the server do not use the same key, or the same "
+"key direction."
+msgstr "Die Pakete des VPN-Servers bestehen die zusätzliche TLS-Schlüsselprüfung (tls-auth oder tls-crypt) nicht: Dieser Computer und der Server verwenden nicht denselben Schlüssel oder nicht dieselbe Schlüsselrichtung."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:160
+msgid ""
+"Import the configuration file from the VPN administrator again, or check the "
+"TLS authentication key and its direction (0 or 1) in the advanced settings "
+"of the connection."
+msgstr "Importieren Sie die Konfigurationsdatei des VPN-Administrators erneut, oder überprüfen Sie den TLS-Authentifizierungsschlüssel und seine Richtung (0 oder 1) in den erweiterten Verbindungseinstellungen."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:167
+msgid "Data cipher"
+msgstr "Datenverschlüsselung"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:169
+msgid ""
+"This computer and the VPN server have no data encryption algorithm in "
+"common. Recent OpenVPN versions no longer accept old ciphers such as BF-CBC."
+msgstr "Dieser Computer und der VPN-Server haben keinen gemeinsamen Algorithmus zur Datenverschlüsselung. Neuere OpenVPN-Versionen akzeptieren alte Verfahren wie BF-CBC nicht mehr."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:173
+msgid ""
+"Ask the VPN administrator to enable a modern cipher such as AES-256-GCM on "
+"the server. Until then, the server's cipher can be added to the data ciphers "
+"in the advanced settings of the connection, if your security policy allows "
+"it."
+msgstr "Bitten Sie den VPN-Administrator, auf dem Server ein modernes Verfahren wie AES-256-GCM zu aktivieren. Bis dahin kann das Verfahren des Servers in den erweiterten Verbindungseinstellungen zu den Datenverschlüsselungen hinzugefügt werden, sofern Ihre Sicherheitsrichtlinie das erlaubt."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:181
+msgid "Compression"
+msgstr "Komprimierung"
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:183
+msgid ""
+"The VPN server asks for compression, which recent OpenVPN versions refuse "
+"because compressing encrypted traffic can leak its content (VORACLE)."
+msgstr "Der VPN-Server verlangt Komprimierung, die neuere OpenVPN-Versionen ablehnen, weil das Komprimieren verschlüsselten Datenverkehrs dessen Inhalt preisgeben kann (VORACLE)."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:187
+msgid ""
+"Ask the VPN administrator to disable compression on the server (comp-lzo, "
+"compress). Allowing it on this computer is a security risk."
+msgstr "Bitten Sie den VPN-Administrator, die Komprimierung auf dem Server zu deaktivieren (comp-lzo, compress). Sie auf diesem Computer zu erlauben, ist ein Sicherheitsrisiko."
+
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:194
 msgid "Server certificate"
 msgstr "Serverzertifikat"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:99
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:195
 msgid "The VPN server certificate is not trusted."
 msgstr "Dem Zertifikat des VPN-Servers wird nicht vertraut."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:101
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:197
 msgid ""
 "Verify the certificate with the VPN administrator, then set the right CA "
 "certificate or fingerprint in the connection settings."
@@ -997,15 +1120,15 @@ msgstr ""
 "das richtige CA-Zertifikat oder den Fingerabdruck in den "
 "Verbindungseinstellungen ein."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:107
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:203
 msgid "No answer from the server"
 msgstr "Keine Antwort vom Server"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:108
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:204
 msgid "The VPN server did not complete the secure handshake."
 msgstr "Der VPN-Server hat den sicheren Verbindungsaufbau nicht abgeschlossen."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:110
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:206
 msgid ""
 "The port or protocol may be blocked by the local network (OpenVPN often uses "
 "UDP). Try another network, or check the port and protocol in the settings."
@@ -1014,24 +1137,24 @@ msgstr ""
 "(OpenVPN nutzt oft UDP). Versuchen Sie ein anderes Netzwerk oder überprüfen "
 "Sie Port und Protokoll in den Einstellungen."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:117
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:213
 msgid "The VPN server name could not be resolved."
 msgstr "Der Name des VPN-Servers konnte nicht aufgelöst werden."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:118
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:214
 msgid "Check the gateway name in the connection settings and your DNS."
 msgstr ""
 "Überprüfen Sie den Gateway-Namen in den Verbindungseinstellungen und Ihr DNS."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:123
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:219
 msgid "Gateway unreachable"
 msgstr "Gateway nicht erreichbar"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:124
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:220
 msgid "The VPN gateway could not be reached."
 msgstr "Das VPN-Gateway konnte nicht erreicht werden."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:125
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:221
 msgid ""
 "Check your Internet connection, the gateway address and port, and any "
 "firewall."
@@ -1039,15 +1162,15 @@ msgstr ""
 "Überprüfen Sie Ihre Internetverbindung, Adresse und Port des Gateways sowie "
 "eventuelle Firewalls."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:129
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:225
 msgid "Session expired"
 msgstr "Sitzung abgelaufen"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:130
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:226
 msgid "The VPN server ended the session."
 msgstr "Der VPN-Server hat die Sitzung beendet."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:131
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:227
 msgid ""
 "Connect again. If it happens often, ask the administrator about session "
 "limits."
@@ -1055,30 +1178,30 @@ msgstr ""
 "Verbinden Sie sich erneut. Wenn das häufig passiert, fragen Sie den "
 "Administrator nach Sitzungsbegrenzungen."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:135
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:231
 msgid "Configuration file"
 msgstr "Konfigurationsdatei"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:136
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:232
 msgid "The VPN configuration contains an option the VPN program rejects."
 msgstr ""
 "Die VPN-Konfiguration enthält eine Option, die das VPN-Programm ablehnt."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:137
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:233
 msgid "Import the configuration again, or remove the reported option."
 msgstr ""
 "Importieren Sie die Konfiguration erneut oder entfernen Sie die gemeldete "
 "Option."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:141
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:237
 msgid "Connection lost"
 msgstr "Verbindung verloren"
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:142
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:238
 msgid "The VPN server stopped answering keepalive messages."
 msgstr "Der VPN-Server antwortet nicht mehr auf Keepalive-Nachrichten."
 
-#: src/vpn_doctor/diagnostics/vpn_plugins.py:143
+#: src/vpn_doctor/diagnostics/vpn_plugins.py:239
 msgid "The network may be unstable, or the server dropped the session."
 msgstr ""
 "Das Netzwerk ist möglicherweise instabil oder der Server hat die Sitzung "
